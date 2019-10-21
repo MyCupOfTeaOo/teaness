@@ -1,0 +1,50 @@
+{
+  "scripts": {
+    "lint:ts": "tslint \"src/**/*.ts\" \"src/**/*.tsx\"",
+    "lint:fix": "eslint --fix --cache --ext .js,.jsx,.ts,.tsx --format=pretty ./src",
+    "lint-staged": "lint-staged",
+    "lint-staged:js": "eslint --ext .js,.jsx,.ts,.tsx ./src",
+    "prettier": "prettier-eslint --write 'src/**/*'"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^2.4.0",
+    "babel-eslint": "^10.0.3",
+    "eslint": "^6.5.1",
+    "eslint-config-airbnb": "^18.0.1",
+    "eslint-config-airbnb-typescript": "^5.0.0",
+    "eslint-config-prettier": "^6.4.0",
+    "eslint-plugin-flowtype": "^4.3.0",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-jest": "^22.19.0",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-prettier": "^3.1.1",
+    "eslint-plugin-react": "^7.16.0",
+    "eslint-plugin-react-hooks": "^2.1.2",
+    "eslint-plugin-unicorn": "^12.1.0",
+    "husky": "^3.0.9",
+    "lint-staged": "^9.4.2",
+    "node-sass": "^4.12.0",
+    "prettier-eslint": "^9.0.0",
+    "prettier-eslint-cli": "^5.0.0",
+    "tslint": "^5.20.0",
+    "tslint-eslint-rules": "^5.4.0",
+    "tslint-react": "^4.1.0",
+    "umi-library": "^1.6.0"
+  },
+  "dependencies": {
+    "react": "^16.10.2",
+    "react-dom": "^16.10.2"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint-staged"
+    }
+  },
+  "lint-staged": {
+    "**/*.{js,jsx,tsx,ts,less,md,json}": [
+      "prettier-eslint --write",
+      "git add"
+    ],
+    "**/*.{js,jsx,ts,tsx}": "npm run lint-staged:js"
+  }
+}
