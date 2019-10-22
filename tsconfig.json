@@ -10,10 +10,7 @@
     "experimentalDecorators": true,
     "baseUrl": ".",
     "strict": true,
-    "paths": {
-      "@/*": ["src/*"],
-      "#/*": ["config/*"]
-    },
+
     "allowSyntheticDefaultImports": true
   },
   "exclude": [

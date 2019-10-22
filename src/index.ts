@@ -1,5 +1,5 @@
-import bar from './bar';
+import Bar from './Bar';
 
 export default function() {
-  console.error(bar());
+  return Bar;
 }
