@@ -1,8 +1,8 @@
 {
   "name": "teaness",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "main": "./dist/index.js",
-  "module": "./dist/index.esm.js",
+  "module": "./es/index.js",
   "authors": {
     "name": "tea",
     "email": "tz310200@gmail.com"
@@ -19,6 +19,7 @@
     "prettier": "prettier-eslint --write 'src/**/*'"
   },
   "devDependencies": {
+    "@types/classnames": "^2.2.9",
     "@types/react": "^16.9.9",
     "@types/react-dom": "^16.9.2",
     "@typescript-eslint/eslint-plugin": "^2.4.0",
@@ -40,7 +41,7 @@
     "eslint-plugin-react": "^7.16.0",
     "eslint-plugin-react-hooks": "^2.1.2",
     "eslint-plugin-unicorn": "^12.1.0",
-    "father": "^2.16.0",
+    "father": "^2.23.1",
     "gatsby-plugin-sass": "^2.1.20",
     "husky": "^3.0.9",
     "lint-staged": "^9.4.2",
@@ -50,7 +51,8 @@
     "tslint": "^5.20.0",
     "tslint-eslint-rules": "^5.4.0",
     "tslint-react": "^4.1.0",
-    "typescript": "^3.3.3"
+    "typescript": "^3.6.4",
+    "react-docgen-props-table": "^1.0.3"
   },
   "husky": {
     "hooks": {
@@ -65,10 +67,18 @@
     "**/*.{js,jsx,ts,tsx}": "npm run lint-staged:js"
   },
   "files": [
-    "dist"
+    "dist",
+    "es"
   ],
   "license": "MIT",
   "dependencies": {
+    "ag-grid-community": "^21.2.2",
+    "ag-grid-react": "^21.2.2",
+    "antd": "^3.24.2",
+    "async-validator": "^3.2.0",
+    "classnames": "^2.2.6",
+    "mobx": "^5.14.2",
+    "mobx-react": "^6.1.4",
     "react": "^16.10.2",
     "react-dom": "^16.10.2"
   }

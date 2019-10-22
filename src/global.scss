@@ -1,0 +1,67 @@
+$primary-color: #1ab394;
+$primary-1: mix($primary-color, #fff, 10%);
+$primary-2: mix($primary-color, #fff, 20%);
+$primary-3: mix($primary-color, #fff, 30%);
+$primary-4: mix($primary-color, #fff, 40%);
+$primary-5: mix($primary-color, #fff, 50%);
+$primary-6: mix($primary-color, #fff, 60%);
+$primary-7: mix($primary-color, #fff, 70%);
+$primary-8: mix($primary-color, #fff, 80%);
+$primary-9: mix($primary-color, #fff, 90%);
+$primary-10: mix($primary-color, #fff, 100%);
+$text-color: rgb(25, 31, 37);
+$red-color: #ff0000;
+$red-1: mix($red-color, #fff, 10%);
+$red-2: mix($red-color, #fff, 20%);
+$red-3: mix($red-color, #fff, 30%);
+$red-4: mix($red-color, #fff, 40%);
+$red-5: mix($red-color, #fff, 50%);
+$red-6: mix($red-color, #fff, 60%);
+$red-7: mix($red-color, #fff, 70%);
+$red-8: mix($red-color, #fff, 80%);
+$red-9: mix($red-color, #fff, 90%);
+$red-10: mix($red-color, #fff, 100%);
+
+$black-color: #000;
+$black-1: mix($black-color, #fff, 10%);
+$black-2: mix($black-color, #fff, 20%);
+$black-3: mix($black-color, #fff, 30%);
+$black-4: mix($black-color, #fff, 40%);
+$black-5: mix($black-color, #fff, 50%);
+$black-6: mix($black-color, #fff, 60%);
+$black-7: mix($black-color, #fff, 70%);
+$black-8: mix($black-color, #fff, 80%);
+$black-9: mix($black-color, #fff, 90%);
+$black-10: mix($black-color, #fff, 100%);
+
+// Media queries breakpoints
+// Extra small screen / phone
+$screen-xs: 480px;
+$screen-xs-min: $screen-xs;
+
+// Small screen / tablet
+$screen-sm: 576px;
+$screen-sm-min: $screen-sm;
+
+// Medium screen / desktop
+$screen-md: 768px;
+$screen-md-min: $screen-md;
+
+// Large screen / wide desktop
+$screen-lg: 992px;
+$screen-lg-min: $screen-lg;
+
+// Extra large screen / full hd
+$screen-xl: 1200px;
+$screen-xl-min: $screen-xl;
+
+// Extra extra large screen / large desktop
+$screen-xxl: 1600px;
+$screen-xxl-min: $screen-xxl;
+
+// provide a maximum
+$screen-xs-max: ($screen-sm-min - 1px);
+$screen-sm-max: ($screen-md-min - 1px);
+$screen-md-max: ($screen-lg-min - 1px);
+$screen-lg-max: ($screen-xl-min - 1px);
+$screen-xl-max: ($screen-xxl-min - 1px);

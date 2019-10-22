@@ -1,0 +1,28 @@
+---
+name: GlobalFooter(全局footer)
+route: /GlobalFooter
+menu: 'components'
+---
+
+import { Playground, Props } from 'docz';
+import { Icon } from 'antd';
+import GlobalFooter from './';
+
+# GlobalFooter(全局 footer)
+
+## 属性(Properties)
+
+<Props of={GlobalFooter} />
+
+## 基本用法(Basic usage)
+
+<Playground>
+  <GlobalFooter
+    copyright={
+      <React.Fragment>
+        Copyright <Icon type="copyright" /> {new Date().getFullYear()}{' '}
+        南京全高出品
+      </React.Fragment>
+    }
+  />
+</Playground>

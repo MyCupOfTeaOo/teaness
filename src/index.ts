@@ -1,5 +1,7 @@
-import Bar from './Bar';
+import FoldCard from './FoldCard/index';
 
-export default function() {
-  return Bar;
-}
+export { Row, Col } from './Grid';
+
+export * from './Spin';
+
+export { FoldCard };

@@ -2,7 +2,7 @@ import { css } from 'docz-plugin-css';
 
 export default {
   typescript: true,
-  menu: ['Getting Started', 'components'],
+  menu: ['Getting Started', 'components', 'hooks'],
   theme: 'docz-theme-ztopia',
   themeConfig: {
     colors: {
@@ -14,10 +14,10 @@ export default {
       whiteDark: '#f5f7f9', // sidebar background (light), table header background (light), preview handle background (light), <blockquote> background, <code> background
       grey: '#d1d4db', // table border, preview border, preview handle bars
       primaryLight: '#d9eaff', // sidebar menu item (hovered)
-      primary: '#595959', // brand background, link, thematic break, preview error type, props table property name, <h1>, <blockquote> border left, search result
+      primary: '#40a9ff', // brand background, link, thematic break, preview error type, props table property name, <h1>, <blockquote> border left, search result
       primaryDark: '#0046a3', // link (hovered)
-      secondary: '#bae7ff', // props table shape type, brand background, <hr>, search result
-      highlight: '#fadb14', // matched search query
+      secondary: '#595959', // props table shape type, brand background, <hr>, search result
+      highlight: '#fa8c16', // matched search query
       error: 'rgba(200,0,0,0.8)', // preview error background
     },
     fonts: {
@@ -45,4 +45,6 @@ export default {
       },
     }),
   ],
+  filterComponents: files =>
+    files.filter(filepath => /[w-]*.(js|jsx|ts|tsx)$/.test(filepath)),
 };

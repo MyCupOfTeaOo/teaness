@@ -1,5 +1,6 @@
 /scripts
 /config
 /dist
+/es
 /node_modules
 .*

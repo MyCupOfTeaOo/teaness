@@ -4,3 +4,4 @@
 **/*.html
 package.json
 /dist
+/es
