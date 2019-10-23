@@ -1,0 +1,71 @@
+---
+name: DatePicker(日期选择)
+route: /DatePicker
+menu: Form Component
+---
+
+import { Playground, Props } from 'docz';
+import { useState } from 'react';
+import 'antd/dist/antd.css';
+import DatePicker from './DatePicker';
+import DateGroup from './Utils/DateGroup';
+
+# DatePicker(日期选择)
+
+antd [DatePicker](https://ant.design/components/datePicker-cn/) 差不多
+这是一个完全受控的组件,也就是不处理 onchange value 选择不会有任何用
+
+## 基本用法(Basic usage)
+
+<Playground>
+  {() => {
+    const [value, setValue] = useState(undefined);
+    return (
+      <div>
+        <DatePicker value={value} onChange={setValue} />
+        <DatePicker value={value} onChange={setValue} format={DatePicker.sec}/>
+      </div>
+    );
+
+}}
+
+</Playground>
+
+## 属性(Properties)
+
+> 比 antd 新增部分是对 format 做了特殊处理 无需关注
+> 并且 `DatePicker` 组件原型上增加了几个静态变量和静态方法
+
+| 值或函数      | 类型                      | 描述                       |
+| ------------- | ------------------------- | -------------------------- |
+| sec           | string                    | 秒 format                  |
+| min           | string                    | 分 format                  |
+| hour          | string                    | 小时 format                |
+| day           | string                    | 天 format                  |
+| month         | string                    | 月 format                  |
+| year          | string                    | 年 format                  |
+| year          | string                    | 年 format                  |
+| getFormatMode | (format:string) => string | 获取上述 format 对应的 key |
+
+# DateGroup
+
+## 基本用法(Basic usage)
+
+<Playground>
+  {() => {
+    const [value, setValue] = useState(undefined);
+    const [value2, setValue2] = useState(undefined);
+    return (
+      <DateGroup>
+        <DatePicker value={value} onChange={setValue} />
+        <DatePicker value={value2} onChange={setValue2} />
+      </DateGroup>
+    );
+
+}}
+
+</Playground>
+
+## 属性(Properties)
+
+<Props of={DateGroup} />

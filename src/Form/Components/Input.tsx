@@ -1,5 +1,6 @@
 import React from 'react';
 import { Input as AntInput } from 'antd';
+
 import './styles/Input.scss';
 import { InputProps as AntInputProps } from 'antd/lib/input';
 

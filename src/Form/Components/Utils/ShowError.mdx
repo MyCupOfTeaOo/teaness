@@ -1,0 +1,35 @@
+---
+name: ShowError(错误信息)
+route: /ShowError
+menu: Form Component
+---
+
+import { Playground, Props } from 'docz';
+import 'antd/dist/antd.css';
+import ShowError from './ShowError';
+import Input from '../Input';
+
+# ShowError(错误信息)
+
+## 基本用法(Basic usage)
+
+<Playground>
+  <ShowError error={[{ message: '这是错误信息' }]}>
+    <Input />
+  </ShowError>
+</Playground>
+
+## 属性(Properties)
+
+<Props of={ShowError} />
+
+> 此外还提供一个 HOC
+> ShowErrorHOC
+
+使用方法
+
+```tsx
+import { Input } from 'teaness';
+import { ShowErrorHoc } from 'teaness';
+const InputHasError = ShowErrorHoc(Input);
+```

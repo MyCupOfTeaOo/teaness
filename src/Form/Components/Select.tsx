@@ -63,7 +63,6 @@ const Select: React.FC<SelectProps> & {
       }
     };
   }, [requestMethod]);
-
   return (
     <AntSelect
       className={classnames('tea-select', props.className)}

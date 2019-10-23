@@ -112,6 +112,7 @@ export interface FormStoreInstance<T extends {}> {
   /**
    * 重置
    */
+  setChangeState: (isChange: boolean) => void;
   reset: () => void;
   getValue<U extends T[keyof T]>(key: keyof T): U | undefined;
   getValues<U extends T = T>(keys: (keyof T)[]): Partial<U>;

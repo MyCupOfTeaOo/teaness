@@ -1,0 +1,194 @@
+---
+name: DataGrid(数据表格)
+route: /DataGrid
+menu: 'components'
+---
+
+import { Playground, Props } from 'docz';
+import 'antd/dist/antd.css';
+
+import { DataGrid, useDataGrid, BaseGrid } from './';
+
+# DataGrid(数据表格)
+
+## 基本用法(Basic usage)
+
+<Playground>
+  {() => {
+    const columnDefs = [
+      {
+        headerName: '姓名',
+        field: 'realName',
+      },
+      {
+        headerName: '电话',
+        field: 'mobile',
+      },
+      {
+        headerName: '邮箱',
+        field: 'email',
+      },
+      {
+        headerName: '角色',
+        field: 'roleValue',
+      },
+      {
+        headerName: '用户id',
+        field: 'userId',
+      },
+      {
+        headerName: '电话',
+        field: 'tel',
+      },
+      {
+        headerName: '性别',
+        field: 'gender',
+      },
+    ];
+    return (
+      <div style={{ height: 500 }}>
+        <DataGrid
+          columnDefs={columnDefs}
+          fetchErrorCallback={() => {}}
+          fetchUrl="http://192.168.117.102:1328/api/user/personManage/"
+        />
+      </div>
+    );
+  }}
+</Playground>
+
+## 属性(Properties)
+
+<Props of={DataGrid} />
+
+```ts
+interface Sorter {
+  colId: string;
+  sort: string;
+}
+import * as H from 'history';
+type Location<S = any> = H.Location<S> & {
+  query: { [key: string]: any };
+};
+```
+
+# useDataGrid
+
+## 基本用法(Basic usage)
+
+<Playground>
+  {() => {
+    const columnDefs = [
+      {
+        headerName: '姓名',
+        field: 'realName',
+      },
+      {
+        headerName: '电话',
+        field: 'mobile',
+      },
+      {
+        headerName: '邮箱',
+        field: 'email',
+      },
+      {
+        headerName: '角色',
+        field: 'roleValue',
+      },
+      {
+        headerName: '用户id',
+        field: 'userId',
+      },
+      {
+        headerName: '电话',
+        field: 'tel',
+      },
+      {
+        headerName: '性别',
+        field: 'gender',
+      },
+    ];
+    const { DataGrid } = useDataGrid({
+      historyId: 'grid',
+      defaultPageSize: 30,
+      fetchUrl: 'http://192.168.117.102:1328/api/user/personManage/',
+    });
+    return (
+      <div style={{ height: 500 }}>
+        <DataGrid columnDefs={columnDefs} fetchErrorCallback={() => {}} />
+      </div>
+    );
+  }}
+</Playground>
+
+## 属性(Properties)
+
+<Props of={useDataGrid} />
+
+useDataGrid 返回的 api
+
+```json
+{
+  "page": 页码,
+  "setPage": 设置页码,
+  "pageSize": 每页显示数量,
+  "setPageSize": 设置每页显示数量,
+  "sorters": "排序",
+  "setSorters": "设置排序",
+  "reset": "重置页码 显示数量 排序",
+  "DataGrid": 表格组件
+}
+```
+
+# BaseGrid
+
+## 基本用法(Basic usage)
+
+<Playground>
+  {() => {
+    const columnDefs = [
+      {
+        headerName: '姓名',
+        field: 'realName',
+      },
+      {
+        headerName: '电话',
+        field: 'mobile',
+      },
+      {
+        headerName: '邮箱',
+        field: 'email',
+      },
+      {
+        headerName: '角色',
+        field: 'roleValue',
+      },
+      {
+        headerName: '用户id',
+        field: 'userId',
+      },
+      {
+        headerName: '电话',
+        field: 'tel',
+      },
+      {
+        headerName: '性别',
+        field: 'gender',
+      },
+    ];
+
+    return (
+      <div style={{ height: 500 }}>
+        <BaseGrid columnDefs={columnDefs} rowData={[{"realName":"schoolAdmin","userStatusCode":1,"roleValue":"校级管理员","gender":0,"userAccount":"schoolAdmin","mobile":null,"userDesc":null,"tel":null,"userId":"b6897cd7-356f-42c7-abd2-ea0ece366f97","userStatusValue":"可用","email":null},{"realName":"admin","userStatusCode":1,"roleValue":"admin","gender":0,"userAccount":"admin","mobile":null,"userDesc":null,"tel":null,"userId":"admin","userStatusValue":"可用","email":"xxx@qq.com"},{"realName":"联调老师（勿动）","userStatusCode":1,"roleValue":"校长","gender":1,"userAccount":"xz","mobile":null,"userDesc":null,"tel":null,"userId":"xld","userStatusValue":"可用","email":"xxx@qq.com"}]} />
+      </div>
+    );
+
+}}
+
+</Playground>
+
+## 属性(Properties)
+
+> 该 Gird 是对 [ag-grid](https://www.ag-grid.com/documentation-main/documentation.php) 开源版的封装
+
+<Props of={BaseGrid} />

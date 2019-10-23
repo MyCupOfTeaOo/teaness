@@ -1,0 +1,52 @@
+---
+name: Select(选择器)
+route: /Select
+menu: Form Component
+---
+
+import { Playground, Props } from 'docz';
+import { useState } from 'react';
+import 'antd/dist/antd.css';
+import Select from './Select';
+
+# Select(选择器)
+
+antd [Select](https://ant.design/components/select-cn/) 差不多
+这是一个完全受控的组件,也就是不处理 onchange value 选择不会有任何用
+
+## 基本用法(Basic usage)
+
+<Playground>
+  {() => {
+    const [value, setValue] = useState(undefined);
+    return (
+      <div>
+        <Select onChange={setValue} value={value}>
+          <Select.Option value="清华">清华</Select.Option>
+          <Select.Option value="北大">北大</Select.Option>
+        </Select>
+        <Select
+          onChange={setValue}
+          value={value}
+          options={[
+            { label: '清华', value: '清华' },
+            { label: '北大', value: '北大' },
+          ]}
+        />
+      </div>
+    );
+  }}
+</Playground>
+
+> 此外还支持 `requestMethod` 方法 需要一个 `() => CancellablePromise<{ label: string; value: any }[]>`这样的方法
+> 会自动请求 `requestMethod` 加载 `options`
+
+```ts
+type CancellablePromise<T> = Promise<T> & {
+  cancel(): void;
+};
+```
+
+## 属性(Properties)
+
+<Props of={Select} />

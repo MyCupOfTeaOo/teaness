@@ -1,6 +1,6 @@
 import React, { useMemo, memo, useContext } from 'react';
 import classnames from 'classnames';
-import uniqueId from 'lodash/uniqueId';
+import { uniqueId } from 'lodash-es';
 import './index.scss';
 import { Col } from '../Grid';
 import { LabelProps, FloatSize } from './typings';

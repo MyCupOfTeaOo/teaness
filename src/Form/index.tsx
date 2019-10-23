@@ -21,4 +21,6 @@ const Form: React.FC<FormProps<any>> = props => {
   return <React.Fragment>{children}</React.Fragment>;
 };
 
+export { useForm };
+
 export default Form;

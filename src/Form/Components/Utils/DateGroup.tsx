@@ -4,9 +4,15 @@ import classnames from 'classnames';
 import './styles.scss';
 
 export interface DateGroupProps {
+  /**
+   * children必须是两个 DatePicker
+   */
   children: [JSX.Element, JSX.Element];
   className?: string;
   style?: React.CSSProperties;
+  /**
+   * datePicker 的默认值
+   */
   values?: [string | Moment | undefined, string | Moment | undefined];
 }
 

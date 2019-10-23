@@ -1,7 +1,6 @@
 import { action, observable, flow, computed } from 'mobx';
-import isEmpty from 'lodash/isEmpty';
 import Scheme, { ErrorList, FieldErrorList } from 'async-validator';
-import omit from 'lodash/omit';
+import { omit, isEmpty } from 'lodash-es';
 import { SyntheticEvent } from 'react';
 import {
   FormStoreInstance,

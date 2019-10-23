@@ -2,7 +2,7 @@ import { css } from 'docz-plugin-css';
 
 export default {
   typescript: true,
-  menu: ['Getting Started', 'components', 'hooks'],
+  menu: ['Getting Started', 'components', 'Form Component', 'hooks'],
   theme: 'docz-theme-ztopia',
   themeConfig: {
     colors: {

@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import classnames from 'classnames';
 import { ErrorMessage } from '../../typings';
+import './styles.scss';
 
 interface ShowErrorProps {
   children: React.ReactNode;

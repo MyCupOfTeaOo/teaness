@@ -104,7 +104,8 @@
     "no-useless-constructor": 0,
     "no-restricted-syntax": 0,
     "jest/no-jest-import": 0,
-    "func-names": "off"
+    "func-names": "off",
+    "import/no-named-as-default": 0
   },
   "settings": {
     "import/resolver": {
