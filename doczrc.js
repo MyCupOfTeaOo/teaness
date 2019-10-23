@@ -1,6 +1,8 @@
 import { css } from 'docz-plugin-css';
 
 export default {
+  base: '/teaness/',
+  dest: 'docs',
   typescript: true,
   menu: ['Getting Started', 'components', 'Form Component', 'hooks'],
   theme: 'docz-theme-ztopia',

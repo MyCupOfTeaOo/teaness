@@ -3,11 +3,18 @@
   "version": "1.0.2",
   "main": "./es/index.js",
   "module": "./es/index.js",
-  "authors": {
-    "name": "tea",
-    "email": "tz310200@gmail.com"
+  "authors": [
+    "tea <tz310200@gmail.com> (https://github.com/tz310200)"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tz310200/teaness"
   },
-  "repository": "git@github.com:tz310200/teaness.git/teaness",
+  "keywords": [
+    "react",
+    "component"
+  ],
+  "description": "a react business component library",
   "scripts": {
     "dev": "docz dev",
     "build:doc": "docz build",
