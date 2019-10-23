@@ -1,3 +1,4 @@
+import 'antd/dist/antd.css';
 import FoldCard from './FoldCard';
 import GlobalFooter from './GlobalFooter';
 import Modal from './Modal';

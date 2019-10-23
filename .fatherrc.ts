@@ -1,7 +1,7 @@
 import { IBundleOptions } from 'father';
 
 const options: IBundleOptions = {
-  cjs: 'rollup',
+  // cjs: 'rollup',
   esm: 'babel',
 };
 

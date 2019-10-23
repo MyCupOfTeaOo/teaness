@@ -11,60 +11,16 @@ import { AgGridReact } from 'ag-grid-react/lib/agGridReact';
 import classNames from 'classnames';
 import { ColDef, GridApi } from 'ag-grid-community';
 import { stringify } from 'querystring';
-import { extend } from 'umi-request';
+
 import BaseGrid, { BaseGridProps } from './BaseGrid';
 import Modal from '../Modal';
 import locale from './locale';
 import { Location } from './typings';
-
-export interface Sorter {
-  colId: string;
-  sort: string;
-}
-
-interface RouteData {
-  pathname: string;
-  query?: any;
-  search?: string;
-  state?: any;
-}
-
-type Router = {
-  push: (path: string | RouteData) => void;
-  replace: (path: string | RouteData) => void;
-  go: (count: number) => void;
-  goBack: () => void;
-};
-
-enum respCode {
-  success = '0',
-  error = '1',
-  exception = '2',
-  cancel = '3',
-}
-
-const request = extend({
-  credentials: 'include', // 默认请求是否带上cookie
-});
-
-interface ReqResponse {
-  msg: string;
-  code: string;
-  data?: any;
-}
-
-export const reqRegister: {
-  respCode: any;
-  request: any;
-  router?: Router;
-} = {
+import DataGridRegister, {
+  ReqResponse,
+  Sorter,
   respCode,
-  request,
-};
-
-const defaultPage = 1;
-const defaultPageSize = 10;
-const defaultSorters: Sorter[] = [];
+} from './DataGridRegister';
 
 export interface DataGridProps
   extends Omit<
@@ -187,16 +143,19 @@ const DataGrid: React.FC<DataGridProps> = props => {
           queryData: props.queryData,
         }),
       };
-      if (reqRegister.router) {
-        reqRegister.router.replace({
+      if (DataGridRegister.router) {
+        DataGridRegister.router.replace({
           pathname: props.location.pathname,
           state: props.location.state,
           search: stringify(search),
         });
       }
     }
-    const { token: cancelToken, cancel } = request.CancelToken.source();
-    request
+    const {
+      token: cancelToken,
+      cancel,
+    } = DataGridRegister.request.CancelToken.source();
+    DataGridRegister.request
       .post<ReqResponse>(props.fetchUrl, {
         cancelToken,
         data: {
@@ -283,12 +242,15 @@ const DataGrid: React.FC<DataGridProps> = props => {
       props.reset();
       return;
     }
-    if (props.setPage) props.setPage(props.defaultPage || defaultPage);
-    else setPage(props.defaultPage || defaultPage);
-    if (props.setPageSize) props.setPageSize(props.defaultPageSize || defaultPageSize);
-    else setPageSize(props.defaultPageSize || defaultPageSize);
-    if (props.setSorters) props.setSorters(props.defaultSorters || defaultSorters);
-    else setSorters(props.defaultSorters || defaultSorters);
+    if (props.setPage) props.setPage(props.defaultPage || DataGridRegister.defaultPage);
+    else setPage(props.defaultPage || DataGridRegister.defaultPage);
+    if (props.setPageSize) {
+      props.setPageSize(
+        props.defaultPageSize || DataGridRegister.defaultPageSize,
+      );
+    } else setPageSize(props.defaultPageSize || DataGridRegister.defaultPageSize);
+    if (props.setSorters) props.setSorters(props.defaultSorters || DataGridRegister.defaultSorters);
+    else setSorters(props.defaultSorters || DataGridRegister.defaultSorters);
   }, [props.setPage, props.setPageSize, props.setSorters, props.reset]);
   return (
     <div className={classNames('tea-datagrid', props.className)}>
@@ -327,9 +289,9 @@ const DataGrid: React.FC<DataGridProps> = props => {
 
 DataGrid.defaultProps = {
   pageSizeOptions: ['5', '10', '30', '50', '100'],
-  defaultPageSize,
-  defaultPage,
-  defaultSorters,
+  defaultPageSize: DataGridRegister.defaultPageSize,
+  defaultPage: DataGridRegister.defaultPage,
+  defaultSorters: DataGridRegister.defaultSorters,
 };
 
 export default memo(DataGrid);

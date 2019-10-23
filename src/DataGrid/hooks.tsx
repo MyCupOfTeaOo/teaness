@@ -1,11 +1,8 @@
 import React, { useState, useCallback, useMemo } from 'react';
 
-import DataGrid, {
-  getLocationGridInit,
-  Sorter,
-  DataGridProps,
-} from './DataGrid';
+import DataGrid, { getLocationGridInit, DataGridProps } from './DataGrid';
 import { Location } from './typings';
+import { Sorter } from './DataGridRegister';
 
 export interface HookDataGridProps
   extends Omit<

@@ -18,4 +18,4 @@
 # umi
 .umi
 .umi-production
-
+*.tgz

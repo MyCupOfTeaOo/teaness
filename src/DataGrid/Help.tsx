@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { Location } from './typings';
-import { Sorter } from './DataGrid';
 import { useDataGrid } from './hooks';
+import { Sorter } from './DataGridRegister';
 
 export const DataGridHelp: React.FC<{
   children: (props: any) => React.ReactNode;
