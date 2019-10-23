@@ -1,0 +1,7 @@
+@import 'src/global.scss';
+
+.formErrorLayout {
+  .ant-input {
+    border-color: $red-9 !important;
+  }
+}

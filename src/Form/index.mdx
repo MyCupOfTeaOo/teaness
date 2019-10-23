@@ -1,0 +1,540 @@
+---
+name: Form(表单)
+route: /Form
+menu: 'components'
+---
+
+import { Playground, Props } from 'docz';
+import { useMemo, useState } from 'react';
+import { Radio, Icon, Button } from 'antd';
+import 'antd/dist/antd.css';
+import Form from './';
+import { useForm } from './hooks';
+import { ShowErrorHoc } from './Components/Utils/ShowError';
+import DateGroup from './Components/Utils/DateGroup';
+import Input from './Components/Input';
+import InputNumber from './Components/InputNumber';
+import Select from './Components/Select';
+import TextArea from './Components/TextArea';
+import DatePicker from './Components/DatePicker';
+import Label, { LabelRow } from '../Label';
+
+# Form(表单)
+
+## hooks
+
+### useForm
+
+#### 属性(Properties)
+
+```ts
+function useForm<
+  T,
+  C extends { [P in keyof T]: any } = { [P in keyof T]: any }
+>(
+  /**
+   * 表单配置
+   */
+  formConfigs: FormConfigs<T>,
+  /**
+   * 可选配置,目前支持交联验证,交联handle
+   */
+  options?: HookOptions<T>,
+): {
+  formStore: FormStore<T>;
+  components: C;
+};
+```
+
+```ts
+type FormConfigs<T = {}> = {
+  [P in keyof T]: FormConfig<T[P], T>;
+};
+
+export interface FormConfig<U, T, C = any> {
+  /**
+   * form组件,只要支持 onChange,value即可
+   */
+  component: C;
+  /**
+   * 校验规则 建议观看 https://github.com/yiminghe/async-validator
+   */
+  rules?: Rules;
+  /**
+   * 默认值
+   */
+  defaultValue?: U | undefined;
+  /**
+   * 组件props,不过不建议在这边传
+   */
+  props?: {
+    [key: string]: any;
+  };
+}
+```
+
+<Props of={useForm} />
+
+#### 基本用法(Basic usage)
+
+<Playground>
+{
+  () => {
+    const InputHasError = ShowErrorHoc(Input);
+    const InputNumberHasError = ShowErrorHoc(InputNumber);
+    const SelectHasError = ShowErrorHoc(Select);
+    const DatePickerHasError = ShowErrorHoc(DatePicker);
+    const TextAreaHasError = ShowErrorHoc(TextArea);
+    const RadioGroupHasError = ShowErrorHoc(Radio.Group);
+    const formConfigs = useMemo(() => {
+      return {
+        name: {
+          component: InputHasError,
+          defaultValue: 'zwd',
+          rules: [
+            {
+              type: 'string',
+              required: true,
+              message: '名称必填',
+            },
+            {
+              type: 'string',
+              min: 3,
+              message: '名称不能小于三位',
+            },
+          ],
+        },
+        age: {
+          component: InputNumberHasError,
+          rules: [
+            {
+              type: 'number',
+              required: true,
+              message: '年龄必填',
+            },
+            {
+              type: 'number',
+              min: 18,
+              message: '必须成年(>=18岁)',
+            },
+          ],
+        },
+        gender: {
+          component: RadioGroupHasError,
+        },
+        schoolType: {
+          component: SelectHasError,
+        },
+        startDate: {
+          component: DatePickerHasError,
+        },
+        endDate: {
+          component: DatePickerHasError,
+        },
+      }
+    }, [])
+    const { formStore, components } = useForm(formConfigs, {
+      autoValid: [
+        {
+          primaryKey: 'age',
+          listenKey: ['gender', 'age'],
+          effect: values => {
+            if (values.gender === 2 && (values.age || 0) < 19) {
+              return '女性必须大于19岁';
+            }
+            if (values.gender === 1 && (values.age || 0) < 20) {
+              return '男性必须大于20岁';
+            }
+          },
+        },
+        {
+          primaryKey: 'desc',
+          listenKey: ['gender'],
+          effect: values => {
+            if (values.gender === 1 && (values.desc || '').length < 5) {
+              return '男性介绍不能少于5个字';
+            }
+          },
+        },
+      ],
+      autoHandle: [
+        {
+          listenKey: ['gender'],
+          effect: (values, form) => {
+            form.setValue('age', '');
+          },
+        },
+      ],
+    });
+    const {
+      name: Name,
+      age: Age,
+      gender: Gender,
+      desc: Desc,
+      schoolType: SchoolType,
+      startDate: StartDate,
+      endDate: EndDate,
+    } = components
+    const infoColProps = {
+      colProps: {
+        label: {
+          xs: { span: 7 },
+          md: { span: 5 },
+          lg: { span: 2 },
+          xl: { span: 3 },
+        },
+        children: {
+          xs: { span: 15 },
+          md: { span: 7 },
+          lg: { span: 6 },
+          xl: { span: 5 },
+        },
+      },
+      labelFloat: {
+        xs: 'right',
+        md: 'right',
+      },
+      type: 'flex',
+      align: 'middle',
+      gutter: [6, 0],
+    }
+    const [info, setInfo] = useState({}) 
+    return <form style={{ padding: 24 }}>
+      <LabelRow {...infoColProps}>
+        <Label text="名称">
+          <Name prefix={<Icon type="user" />} />
+        </Label>
+        <Label text="年龄" required>
+          <Age />
+        </Label>
+        <Label text="性别">
+          <Gender>
+            <Radio value={1}>男</Radio>
+            <Radio value={2}>女</Radio>
+          </Gender>
+        </Label>
+        <Label text="学校">
+          <SchoolType>
+            <Select.Option value="清华">清华</Select.Option>
+            <Select.Option value="北大">北大</Select.Option>
+          </SchoolType>
+        </Label>
+        <Label text="日期范围">
+          <DateGroup>
+            <StartDate />
+            <EndDate />
+          </DateGroup>
+        </Label>
+        {Desc && (
+          <Col span={24}>
+            <LabelRow {...infoColProps}>
+              <Label
+                colProps={{
+                  label: infoColProps.colProps && infoColProps.colProps.label,
+                  children: {
+                    span: 12,
+                  },
+                }}
+                text="介绍"
+              >
+                <Desc />
+              </Label>
+            </LabelRow>
+          </Col>
+        )}
+      </LabelRow>
+      提交结果: <pre>{JSON.stringify(info)}</pre>
+      <Button
+        htmlType="submit"
+        onClick={e => {
+          e.preventDefault();
+          formStore.submit(({ values, errs }) => {
+            if (errs) console.error(errs);
+            else setInfo(values);
+          });
+        }}
+      >
+        提交
+      </Button>
+      <Button
+        onClick={() => {
+          formStore.reset();
+        }}
+      >
+        重置
+      </Button>
+    </form>;
+  }
+}
+
+</Playground>
+
+如果使用 TypeScript 如下
+
+```tsx
+import { FormConfigs } from 'teaness/Form/typings';
+
+const InputHasError = ShowErrorHoc(Input);
+const InputNumberHasError = ShowErrorHoc(InputNumber);
+const SelectHasError = ShowErrorHoc(Select);
+const DatePickerHasError = ShowErrorHoc(DatePicker);
+const TextAreaHasError = ShowErrorHoc(TextArea);
+const RadioGroupHasError = ShowErrorHoc(Radio.Group);
+
+type FormType = Partial<{
+  name: string;
+  age: number;
+  gender: number;
+  schoolType: string;
+  startDate: string;
+  endDate: string;
+  desc?: string;
+}>;
+
+interface FormComponentType {
+  name: typeof Input;
+  age: typeof InputNumber;
+  gender: typeof Radio.Group;
+  schoolType: typeof Select;
+  startDate: typeof DatePicker;
+  endDate: typeof DatePicker;
+  desc?: typeof TextArea;
+}
+
+interface DemoProps {}
+const Demo: React.FC<DemoProps> = () => {
+  const formConfigs = useMemo<FormConfigs<FormType>>(() => {
+    return {
+      name: {
+        component: InputHasError,
+        defaultValue: 'zwd',
+        rules: [
+          {
+            type: 'string',
+            required: true,
+            message: '名称必填',
+          },
+          {
+            type: 'string',
+            min: 3,
+            message: '名称不能小于三位',
+          },
+        ],
+      },
+      age: {
+        component: InputNumberHasError,
+        rules: [
+          {
+            type: 'number',
+            required: true,
+            message: '年龄必填',
+          },
+          {
+            type: 'number',
+            min: 18,
+            message: '必须成年(>=18岁)',
+          },
+        ],
+      },
+      gender: {
+        component: RadioGroupHasError,
+      },
+      schoolType: {
+        component: SelectHasError,
+      },
+      startDate: {
+        component: DatePickerHasError,
+      },
+      endDate: {
+        component: DatePickerHasError,
+      },
+    };
+  }, []);
+  const { formStore, components } = useForm(formConfigs, {
+    autoValid: [
+      {
+        primaryKey: 'age',
+        listenKey: ['gender', 'age'],
+        effect: values => {
+          if (values.gender === 2 && (values.age || 0) < 19) {
+            return '女性必须大于19岁';
+          }
+          if (values.gender === 1 && (values.age || 0) < 20) {
+            return '男性必须大于20岁';
+          }
+        },
+      },
+      {
+        primaryKey: 'desc',
+        listenKey: ['gender'],
+        effect: values => {
+          if (values.gender === 1 && (values.desc || '').length < 5) {
+            return '男性介绍不能少于5个字';
+          }
+        },
+      },
+    ],
+    autoHandle: [
+      {
+        listenKey: ['gender'],
+        effect: (values, form) => {
+          form.setValue('age', '');
+        },
+      },
+    ],
+  });
+  const {
+    name: Name,
+    age: Age,
+    gender: Gender,
+    desc: Desc,
+    schoolType: SchoolType,
+    startDate: StartDate,
+    endDate: EndDate,
+  } = components as FormComponentType;
+  const infoColProps = {
+    colProps: {
+      label: {
+        xs: { span: 7 },
+        md: { span: 5 },
+        lg: { span: 2 },
+        xl: { span: 3 },
+      },
+      children: {
+        xs: { span: 15 },
+        md: { span: 7 },
+        lg: { span: 6 },
+        xl: { span: 5 },
+      },
+    },
+    labelFloat: {
+      xs: 'right',
+      md: 'right',
+    },
+    type: 'flex',
+    align: 'middle',
+    gutter: [6, 0],
+  };
+  const [info, setInfo] = useState({});
+  return (
+    <form style={{ padding: 24 }}>
+      <LabelRow {...infoColProps}>
+        <Label text="名称">
+          <Name prefix={<Icon type="user" />} />
+        </Label>
+        <Label text="年龄" required>
+          <Age />
+        </Label>
+        <Label text="性别">
+          <Gender>
+            <Radio value={1}>男</Radio>
+            <Radio value={2}>女</Radio>
+          </Gender>
+        </Label>
+        <Label text="学校">
+          <SchoolType>
+            <Select.Option value="清华">清华</Select.Option>
+            <Select.Option value="北大">北大</Select.Option>
+          </SchoolType>
+        </Label>
+        <Label text="日期范围">
+          <DateGroup>
+            <StartDate />
+            <EndDate />
+          </DateGroup>
+        </Label>
+        {Desc && (
+          <Col span={24}>
+            <LabelRow {...infoColProps}>
+              <Label
+                colProps={{
+                  label: infoColProps.colProps && infoColProps.colProps.label,
+                  children: {
+                    span: 12,
+                  },
+                }}
+                text="介绍"
+              >
+                <Desc />
+              </Label>
+            </LabelRow>
+          </Col>
+        )}
+      </LabelRow>
+      提交结果: <pre>{JSON.stringify(info)}</pre>
+      <Button
+        htmlType="submit"
+        onClick={e => {
+          e.preventDefault();
+          formStore.submit(({ values, errs }) => {
+            if (errs) console.error(errs);
+            else setInfo(values);
+          });
+        }}
+      >
+        提交
+      </Button>
+      <Button
+        onClick={() => {
+          formStore.reset();
+        }}
+      >
+        重置
+      </Button>
+    </form>
+  );
+};
+```
+
+formStore 的 api 如下
+
+```ts
+interface FormStoreInstance<T extends {}> {
+  /**
+   * 所有的component store
+   */
+  componentStores: ComponentStoresType<T>;
+  crossValidFuncsDict: {
+    [P in keyof T]?: (() => void)[];
+  };
+  /**
+   * 提交
+   */
+  submit: SubmitType<T>;
+  /**
+   * 表单是否输入过
+   */
+  isChange: boolean;
+  /**
+   * 重置
+   */
+  reset: () => void;
+  getValue<U extends T[keyof T]>(key: keyof T): U | undefined;
+  getValues<U extends T = T>(keys: (keyof T)[]): Partial<U>;
+  setValue(key: keyof T, value: T[keyof T]): void;
+  setValues(props: Partial<T>): void;
+  /**
+   * 跟上面 setValues 区别在于 此接口是把所有值更新成props,setValues({})不会更新任何值,setAllValues({})会把所有值更新成undefined
+   * @param props
+   */
+  setAllValues(props: Partial<T>): void;
+  /**
+   * 触发全局验证
+   */
+  valid: () => Promise<Partial<ErrorsType<T>> | undefined>;
+  /**
+   * 触发key对应的字段验证
+   * @param key
+   */
+  validValue(key: keyof T): Promise<ErrorType>;
+  /**
+   *  触发keys对应的字段集验证
+   * @param keys
+   */
+  validValues<U extends ErrorsType<T> = ErrorsType<T>>(
+    keys: (keyof T)[],
+  ): Promise<Partial<U>>;
+}
+
+
+```

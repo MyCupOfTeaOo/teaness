@@ -1,0 +1,27 @@
+@import 'src/global.scss';
+
+.tea-form-err-message {
+  color: $red-9;
+  font-size: 14px;
+  position: absolute;
+}
+
+.tea-date-group {
+  display: flex;
+  align-items: center;
+  &::after {
+    content: '~';
+    display: inline-block;
+    line-height: 1;
+    padding: 6px;
+    order: 1;
+  }
+  & > * {
+    &:first-child {
+      order: 0;
+    }
+    &:last-child {
+      order: 2;
+    }
+  }
+}

@@ -1,0 +1,53 @@
+@import 'src/global.scss';
+
+$selectorList: (
+  sm: $screen-sm-min,
+  md: $screen-md-min,
+  lg: $screen-lg-min,
+  xl: $screen-xl-min,
+  xxl: $screen-xxl-min,
+);
+$floatList: ('left', 'right', 'center');
+
+.tea-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: $black-6;
+  padding: 0 6px;
+  width: 100%;
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  &.label-required {
+    &::before {
+      display: inline-block;
+      margin-right: 4px;
+      color: #f5222d;
+      font-family: SimSun, sans-serif;
+      content: '*';
+    }
+  }
+
+  @each $float in $floatList {
+    &.label-#{$float} {
+      text-align: #{$float};
+    }
+  }
+  @each $float in $floatList {
+    &.label-xs-#{$float} {
+      text-align: #{$float};
+    }
+  }
+
+  @each $sizeName, $size in $selectorList {
+    @each $float in $floatList {
+      @media (min-width: $size) {
+        &.label-#{$sizeName}-#{$float} {
+          text-align: #{$float};
+        }
+      }
+    }
+  }
+}

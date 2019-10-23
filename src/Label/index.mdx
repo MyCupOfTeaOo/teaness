@@ -1,0 +1,63 @@
+---
+name: Label
+route: /Label
+menu: 'components'
+---
+
+import { Playground, Props } from 'docz';
+import { Input } from 'antd';
+import 'antd/dist/antd.css';
+import { Label } from './';
+import Col from '../Grid/Col';
+import LabelRow from './LabelRow';
+
+# Label
+
+## 属性(Properties)
+
+<Props of={Label} />
+
+## 基本用法(Basic usage)
+
+<Playground>
+  <Label text="姓名1">
+    <Input />
+  </Label>
+</Playground>
+
+# LabelRow
+
+## 属性(Properties)
+
+可以透传 label 的 colProps 与 labelFloat 属性
+其他属性参考 [Row](../Grid#Row)
+
+## 基本用法(Basic usage)
+
+<Playground>
+  <LabelRow
+    type="flex"
+    align="middle"
+    labelFloat="right"
+    colProps={{ label: { span: 4 }, children: { span: 4 } }}
+  >
+    <Label text="输入框1">
+      <Input />
+    </Label>
+    <Label text="输入框2">
+      <Input />
+    </Label>
+    <Col span={24}>
+      <LabelRow
+        type="flex"
+        align="middle"
+        labelFloat="right"
+        colProps={{ label: { span: 4 }, children: { span: 4 } }}
+      >
+        <Label text="输入框3">
+          <Input />
+        </Label>
+      </LabelRow>
+    </Col>
+  </LabelRow>
+</Playground>

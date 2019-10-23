@@ -48,11 +48,11 @@
     "node-sass": "^4.12.0",
     "prettier-eslint": "^9.0.0",
     "prettier-eslint-cli": "^5.0.0",
+    "react-docgen-props-table": "^1.0.3",
     "tslint": "^5.20.0",
     "tslint-eslint-rules": "^5.4.0",
     "tslint-react": "^4.1.0",
-    "typescript": "^3.6.4",
-    "react-docgen-props-table": "^1.0.3"
+    "typescript": "^3.6.4"
   },
   "husky": {
     "hooks": {
@@ -72,6 +72,7 @@
   ],
   "license": "MIT",
   "dependencies": {
+    "@types/lodash": "^4.14.144",
     "ag-grid-community": "^21.2.2",
     "ag-grid-react": "^21.2.2",
     "antd": "^3.24.2",

@@ -6,6 +6,7 @@ menu: components
 
 import { Playground, Props } from 'docz';
 import { Button } from 'antd';
+import 'antd/dist/antd.css';
 import { Row, Col } from './';
 
 # Grid(栅格)
@@ -20,7 +21,7 @@ import { Row, Col } from './';
 
 <Props of={Row} />
 
-Row 比 antd Row 增加了一个可选参数 colProps 即 antd Col 的所有属性
+Row 比 antd Row 增加了一个可选参数 colProps 即 antd Col 的所有属性,会传给 Col 然是可以被 Col 的属性覆盖
 
 ### Col
 
@@ -29,10 +30,10 @@ Row 比 antd Row 增加了一个可选参数 colProps 即 antd Col 的所有属�
 ## 基本用法(Basic usage)
 
 <Playground>
-  <Button>1</Button>
   <Row colProps={{ span: 8 }}>
     <Col>1111111111</Col>
     <Col>1111111111</Col>
+    <Col span={24}>1111111111</Col>
     <Col>1111111111</Col>
   </Row>
 </Playground>
