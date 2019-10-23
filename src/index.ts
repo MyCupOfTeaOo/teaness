@@ -1,4 +1,4 @@
-import 'antd/dist/antd.css';
+import 'antd/dist/antd.less';
 import FoldCard from './FoldCard';
 import GlobalFooter from './GlobalFooter';
 import Modal from './Modal';
