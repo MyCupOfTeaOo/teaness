@@ -1,5 +1,5 @@
 import { useMemo, useState, useEffect } from 'react';
-import mapValues from 'lodash/mapValues';
+import { mapValues } from 'lodash-es';
 import { IReactionDisposer } from 'mobx';
 import { FormConfigs, HookOptions } from './typings';
 import {

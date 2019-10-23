@@ -1,5 +1,5 @@
 import React, { memo, useCallback } from 'react';
-import mapValues from 'lodash/mapValues';
+import { mapValues } from 'lodash-es';
 import { observer } from 'mobx-react';
 import { reaction } from 'mobx';
 import { FormStore, ComponentStore } from './store';
