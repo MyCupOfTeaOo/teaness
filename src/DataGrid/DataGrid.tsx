@@ -216,7 +216,7 @@ const DataGrid: React.FC<DataGridProps> = (props, ref) => {
 
   useEffect(() => {
     if (!props.silence) {
-      fetch({
+      return fetch({
         page: current,
         pageSize: size,
         sorters: theSorters,
@@ -369,6 +369,26 @@ DataGridRef.defaultProps = {
   defaultPage: DataGridRegister.defaultPage,
   defaultSorters: DataGridRegister.defaultSorters,
   silence: false,
+};
+
+export type DataGridRef = {
+  gridRef: AgGridReact;
+  fetch: (searchProps: {
+    queryData: any;
+    page: number;
+    pageSize: number;
+    sorters: Sorter[];
+  }) => () => string;
+  reset: (toFetch?: string) => void;
+  setPage: (page: number | ((prevPage: number) => number)) => void;
+  setPageSize: (pageSize: number | ((prevPageSize: number) => number)) => void;
+  setSorters: (soters: Sorter[] | ((prevSoters: Sorter[]) => Sorter[])) => void;
+  setRowData: (rowData: any[] | ((prevRowData: any[]) => any[])) => void;
+  getDefaultValue: () => {
+    page: number;
+    pageSize: number;
+    sorters: Sorter[];
+  };
 };
 
 export default memo(DataGridRef);
