@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useRef } from 'react';
 
 import DataGrid, { getLocationGridInit, DataGridProps } from './DataGrid';
 import { Location } from './typings';
@@ -31,6 +31,7 @@ export function useDataGrid(props: {
     defaultPageSize = 10,
     defaultSorters = [],
   } = props;
+  const gridRef = useRef();
   const page = useMemo(
     () => getLocationGridInit('page', defaultPage || 1, historyId, location),
     [],
@@ -48,6 +49,7 @@ export function useDataGrid(props: {
     () => (rest: HookDataGridProps) => {
       return (
         <DataGrid
+          ref={gridRef}
           historyId={historyId}
           location={location}
           fetchUrl={fetchUrl}
@@ -61,6 +63,7 @@ export function useDataGrid(props: {
     [],
   );
   return {
+    gridRef,
     DataGrid: dataGrid,
   };
 }

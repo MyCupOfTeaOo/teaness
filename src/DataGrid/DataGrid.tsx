@@ -229,6 +229,12 @@ const DataGrid: React.FC<DataGridProps> = (props, ref) => {
     else setPage(curPage);
     if (props.setPageSize) props.setPageSize(curSize);
     else setPageSize(curSize);
+    fetch({
+      page: curPage,
+      pageSize: curSize,
+      sorters: theSorters,
+      queryData: props.queryData,
+    });
   }, []);
   const handleSortChange = useCallback(({ api }: { api: GridApi }) => {
     if (props.setSorters) {
@@ -241,6 +247,12 @@ const DataGrid: React.FC<DataGridProps> = (props, ref) => {
             prevSorters[0].sort === sortModal[0].sort
           ) return prevSorters;
         }
+        fetch({
+          page: current,
+          pageSize: size,
+          sorters: sortModal,
+          queryData: props.queryData,
+        });
         return sortModal;
       });
     } else {
@@ -253,25 +265,45 @@ const DataGrid: React.FC<DataGridProps> = (props, ref) => {
             prevSorters[0].sort === sortModal[0].sort
           ) return prevSorters;
         }
+        fetch({
+          page: current,
+          pageSize: size,
+          sorters: sortModal,
+          queryData: props.queryData,
+        });
         return sortModal;
       });
     }
   }, []);
-  const reset = useCallback(() => {
-    if (props.reset) {
-      props.reset();
-      return;
-    }
-    if (props.setPage) props.setPage(props.defaultPage || DataGridRegister.defaultPage);
-    else setPage(props.defaultPage || DataGridRegister.defaultPage);
-    if (props.setPageSize) {
-      props.setPageSize(
-        props.defaultPageSize || DataGridRegister.defaultPageSize,
-      );
-    } else setPageSize(props.defaultPageSize || DataGridRegister.defaultPageSize);
-    if (props.setSorters) props.setSorters(props.defaultSorters || DataGridRegister.defaultSorters);
-    else setSorters(props.defaultSorters || DataGridRegister.defaultSorters);
-  }, [props.setPage, props.setPageSize, props.setSorters, props.reset]);
+  const reset = useCallback(
+    (toFetch: boolean = false) => {
+      if (props.reset) {
+        props.reset();
+        return;
+      }
+      if (props.setPage) props.setPage(props.defaultPage || DataGridRegister.defaultPage);
+      else setPage(props.defaultPage || DataGridRegister.defaultPage);
+      if (props.setPageSize) {
+        props.setPageSize(
+          props.defaultPageSize || DataGridRegister.defaultPageSize,
+        );
+      } else setPageSize(props.defaultPageSize || DataGridRegister.defaultPageSize);
+      if (props.setSorters) {
+        props.setSorters(
+          props.defaultSorters || DataGridRegister.defaultSorters,
+        );
+      } else setSorters(props.defaultSorters || DataGridRegister.defaultSorters);
+      if (toFetch) {
+        fetch({
+          page: props.defaultPage || DataGridRegister.defaultPage,
+          pageSize: props.defaultPageSize || DataGridRegister.defaultPageSize,
+          sorters: props.defaultSorters || DataGridRegister.defaultSorters,
+          queryData: props.queryData,
+        });
+      }
+    },
+    [props.setPage, props.setPageSize, props.setSorters, props.reset],
+  );
   useImperativeHandle(
     ref,
     () => ({
@@ -282,6 +314,11 @@ const DataGrid: React.FC<DataGridProps> = (props, ref) => {
       setPageSize: props.setPageSize || setPageSize,
       setSorters: props.setSorters || setSorters,
       setRowData,
+      getDefaultValue: () => ({
+        page: props.defaultPage,
+        pageSize: props.defaultPageSize,
+        sorters: props.defaultSorters,
+      }),
     }),
     [],
   );
@@ -299,7 +336,12 @@ const DataGrid: React.FC<DataGridProps> = (props, ref) => {
         onSortChanged={handleSortChange}
       />
       <div className="tea-grid-bottom">
-        <Button icon="sync" size="small" onClick={reset} type="dashed">
+        <Button
+          icon="sync"
+          size="small"
+          onClick={() => reset(true)}
+          type="dashed"
+        >
           重置
         </Button>
         <Pagination
