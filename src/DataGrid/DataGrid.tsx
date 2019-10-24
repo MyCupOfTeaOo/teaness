@@ -5,6 +5,8 @@ import React, {
   useCallback,
   useRef,
   useMemo,
+  forwardRef,
+  useImperativeHandle,
 } from 'react';
 import { Pagination, Button } from 'antd';
 import { AgGridReact } from 'ag-grid-react/lib/agGridReact';
@@ -49,6 +51,10 @@ export interface DataGridProps
   sorters?: Sorter[];
   setSorters?: React.Dispatch<React.SetStateAction<Sorter[]>>;
   reset?: () => void;
+  /**
+   * 第一次不请求
+   */
+  silence?: boolean;
 }
 
 export function getLocationGridInit<T>(
@@ -68,14 +74,8 @@ export function getLocationGridInit<T>(
 export const showTotal = (item: number, range: [number, number]) =>
   (range[1] !== 0 ? `${range[0]}-${range[1]} 共 ${item} 条数据` : '暂无数据');
 
-const DataGrid: React.FC<DataGridProps> = props => {
-  const myGridRef = useRef<AgGridReact>(null);
-  const gridRef = useMemo(() => {
-    if (props.gridRef) {
-      return props.gridRef as React.RefObject<AgGridReact>;
-    }
-    return myGridRef;
-  }, []);
+const DataGrid: React.FC<DataGridProps> = (props, ref) => {
+  const gridRef = useRef<AgGridReact>(null);
   const defaultColDef = useMemo(() => {
     return {
       comparator: () => 0,
@@ -119,91 +119,111 @@ const DataGrid: React.FC<DataGridProps> = props => {
     props.sorters,
     sorters,
   ]);
-  useEffect(() => {
-    if (gridRef.current) {
-      if (gridRef.current.api) {
-        gridRef.current.api.showLoadingOverlay();
-        gridRef.current.api.setSortModel(theSorters);
-      }
-    }
-    let noData = !(Array.isArray(rowData) && rowData.length > 0);
-    const sorterMap = theSorters[0]
-      ? {
-          columnOrder: theSorters[0].sort,
-          columnProp: theSorters[0].colId,
+
+  const fetch = useCallback(
+    (searchProps: {
+      queryData: any;
+      page: number;
+      pageSize: number;
+      sorters: Sorter[];
+    }) => {
+      if (gridRef.current) {
+        if (gridRef.current.api) {
+          gridRef.current.api.showLoadingOverlay();
+          gridRef.current.api.setSortModel(searchProps.sorters);
         }
-      : {};
-    if (props.location && props.historyId) {
-      const search = {
-        ...props.location.query,
-        [props.historyId]: JSON.stringify({
-          pageSize: size,
-          page: current,
-          sorters: theSorters,
-          queryData: props.queryData,
-        }),
-      };
-      if (DataGridRegister.router) {
-        DataGridRegister.router.replace({
-          pathname: props.location.pathname,
-          state: props.location.state,
-          search: stringify(search),
-        });
       }
-    }
-    const {
-      token: cancelToken,
-      cancel,
-    } = DataGridRegister.request.CancelToken.source();
-    DataGridRegister.request
-      .post<ReqResponse>(props.fetchUrl, {
-        cancelToken,
-        data: {
-          ...props.queryData,
-          ...sorterMap,
-          len: size,
-          page: current,
-        },
-      })
-      .then(resp => {
-        if (resp.code === respCode.success) {
-          if (resp.data) {
-            setTotal(resp.data.totalitem);
-            setRowData(resp.data.list || []);
-            if (Array.isArray(resp.data.list) && resp.data.list.length > 0) {
-              noData = false;
+      let noData = !(Array.isArray(rowData) && rowData.length > 0);
+      const sorterMap = searchProps.sorters[0]
+        ? {
+            columnOrder: searchProps.sorters[0].sort,
+            columnProp: searchProps.sorters[0].colId,
+          }
+        : {};
+      if (props.location && props.historyId) {
+        const search = {
+          ...props.location.query,
+          [props.historyId]: JSON.stringify({
+            pageSize: searchProps.pageSize,
+            page: searchProps.page,
+            sorters: searchProps.sorters,
+            queryData: searchProps.queryData,
+          }),
+        };
+        if (DataGridRegister.router) {
+          DataGridRegister.router.replace({
+            pathname: props.location.pathname,
+            state: props.location.state,
+            search: stringify(search),
+          });
+        }
+      }
+      const {
+        token: cancelToken,
+        cancel,
+      } = DataGridRegister.request.CancelToken.source();
+      DataGridRegister.request
+        .post<ReqResponse>(props.fetchUrl, {
+          cancelToken,
+          data: {
+            ...searchProps.queryData,
+            ...sorterMap,
+            len: searchProps.pageSize,
+            page: searchProps.page,
+          },
+        })
+        .then(resp => {
+          if (resp.code === respCode.success) {
+            if (resp.data) {
+              setTotal(resp.data.totalitem);
+              setRowData(resp.data.list || []);
+              if (Array.isArray(resp.data.list) && resp.data.list.length > 0) {
+                noData = false;
+              }
+            }
+          } else if (resp.code === respCode.cancel) {
+            return undefined;
+          } else if (props.fetchErrorCallback) props.fetchErrorCallback(resp);
+          else {
+            Modal.error({
+              title: '列表加载失败',
+              content: resp.msg,
+            });
+          }
+        })
+        .catch(err => {
+          console.error(err);
+          if (props.fetchErrorCallback) props.fetchErrorCallback(err);
+          else {
+            Modal.error({
+              title: '列表加载失败',
+              content: '服务器异常',
+            });
+          }
+        })
+        .finally(() => {
+          if (gridRef.current) {
+            if (gridRef.current.api) {
+              gridRef.current.api.hideOverlay();
+              if (noData) gridRef.current.api.showNoRowsOverlay();
             }
           }
-        } else if (resp.code === respCode.cancel) {
-          return undefined;
-        } else if (props.fetchErrorCallback) props.fetchErrorCallback(resp);
-        else {
-          Modal.error({
-            title: '列表加载失败',
-            content: resp.msg,
-          });
-        }
-      })
-      .catch(err => {
-        console.error(err);
-        if (props.fetchErrorCallback) props.fetchErrorCallback(err);
-        else {
-          Modal.error({
-            title: '列表加载失败',
-            content: '服务器异常',
-          });
-        }
-      })
-      .finally(() => {
-        if (gridRef.current) {
-          if (gridRef.current.api) {
-            gridRef.current.api.hideOverlay();
-            if (noData) gridRef.current.api.showNoRowsOverlay();
-          }
-        }
+        });
+      return () => cancel('取消列表请求');
+    },
+    [props.fetchUrl],
+  );
+
+  useEffect(() => {
+    if (!props.silence) {
+      fetch({
+        page: current,
+        pageSize: size,
+        sorters: theSorters,
+        queryData: props.queryData,
       });
-    return () => cancel('取消列表请求');
-  }, [props.fetchUrl, props.queryData, current, size, theSorters]);
+    }
+  }, []);
   const handlePageChange = useCallback((curPage, curSize) => {
     if (props.setPage) props.setPage(curPage);
     else setPage(curPage);
@@ -252,13 +272,26 @@ const DataGrid: React.FC<DataGridProps> = props => {
     if (props.setSorters) props.setSorters(props.defaultSorters || DataGridRegister.defaultSorters);
     else setSorters(props.defaultSorters || DataGridRegister.defaultSorters);
   }, [props.setPage, props.setPageSize, props.setSorters, props.reset]);
+  useImperativeHandle(
+    ref,
+    () => ({
+      gridRef,
+      fetch,
+      reset,
+      setPage: props.setPage || setPage,
+      setPageSize: props.setPageSize || setPageSize,
+      setSorters: props.setSorters || setSorters,
+      setRowData,
+    }),
+    [],
+  );
   return (
     <div className={classNames('tea-datagrid', props.className)}>
       <BaseGrid
         localeText={locale.zh}
         {...props}
         defaultColDef={defaultColDef}
-        gridRef={gridRef}
+        ref={gridRef}
         className={props.gridClassName}
         rowData={rowData}
         suppressMultiSort
@@ -287,11 +320,13 @@ const DataGrid: React.FC<DataGridProps> = props => {
   );
 };
 
-DataGrid.defaultProps = {
+const DataGridRef = forwardRef(DataGrid);
+DataGridRef.defaultProps = {
   pageSizeOptions: ['5', '10', '30', '50', '100'],
   defaultPageSize: DataGridRegister.defaultPageSize,
   defaultPage: DataGridRegister.defaultPage,
   defaultSorters: DataGridRegister.defaultSorters,
+  silence: false,
 };
 
-export default memo(DataGrid);
+export default memo(DataGridRef);

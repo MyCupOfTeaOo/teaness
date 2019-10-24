@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useMemo } from 'react';
 
 import DataGrid, { getLocationGridInit, DataGridProps } from './DataGrid';
 import { Location } from './typings';
@@ -7,12 +7,6 @@ import { Sorter } from './DataGridRegister';
 export interface HookDataGridProps
   extends Omit<
     DataGridProps,
-    | 'page'
-    | 'setPage'
-    | 'pageSize'
-    | 'setPageSize'
-    | 'sorters'
-    | 'setSorters'
     | 'defaultPageSize'
     | 'defaultPage'
     | 'defaultSorters'
@@ -37,58 +31,36 @@ export function useDataGrid(props: {
     defaultPageSize = 10,
     defaultSorters = [],
   } = props;
-  const [page, setPage] = useState(
-    getLocationGridInit('page', defaultPage || 1, historyId, location),
+  const page = useMemo(
+    () => getLocationGridInit('page', defaultPage || 1, historyId, location),
+    [],
   );
-  const [pageSize, setPageSize] = useState(
-    getLocationGridInit('pageSize', defaultPageSize, historyId, location),
+  const pageSize = useMemo(
+    () => getLocationGridInit('pageSize', defaultPageSize, historyId, location),
+    [],
   );
-  const [sorters, setSorters] = useState<Sorter[]>(
-    getLocationGridInit('sorters', defaultSorters, historyId, location),
+  const sorters = useMemo(
+    () => getLocationGridInit('sorters', defaultSorters, historyId, location),
+    [],
   );
 
-  const reset = useCallback(() => {
-    setPage(defaultPage);
-    setPageSize(defaultPageSize);
-    setSorters(defaultSorters);
-  }, []);
   const dataGrid = useMemo(
     () => (rest: HookDataGridProps) => {
       return (
         <DataGrid
-          page={page}
-          setPage={setPage}
-          pageSize={pageSize}
-          setPageSize={setPageSize}
-          sorters={sorters}
-          setSorters={setSorters}
           historyId={historyId}
           location={location}
           fetchUrl={fetchUrl}
-          reset={reset}
+          defaultPage={page}
+          defaultPageSize={pageSize}
+          defaultSorters={sorters}
           {...rest}
         />
       );
     },
-    [
-      page,
-      setPage,
-      pageSize,
-      setPageSize,
-      sorters,
-      setSorters,
-      historyId,
-      fetchUrl,
-    ],
+    [],
   );
   return {
-    page,
-    setPage,
-    pageSize,
-    setPageSize,
-    reset,
-    sorters,
-    setSorters,
     DataGrid: dataGrid,
   };
 }

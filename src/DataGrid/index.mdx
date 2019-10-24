@@ -49,7 +49,7 @@ import { DataGrid, useDataGrid, BaseGrid } from './';
       <div style={{ height: 500 }}>
         <DataGrid
           columnDefs={columnDefs}
-          fetchErrorCallback={() => {}}
+          silence
           fetchUrl="http://192.168.117.102:1328/api/user/personManage/"
         />
       </div>
@@ -59,9 +59,39 @@ import { DataGrid, useDataGrid, BaseGrid } from './';
 
 ## 属性(Properties)
 
-<Props of={DataGrid} />
-
 ```ts
+interface DataGridProps
+  extends Omit<
+    BaseGridProps,
+    'rowData' | 'suppressMultiSort' | 'enableServerSideSorting' | 'className'
+  > {
+  /**
+   * 请求地址,相对或绝对路径
+   */
+  fetchUrl: string;
+  fetchErrorCallback?: (resp: ReqResponse | any) => void;
+  queryData: any;
+  defaultPageSize?: number;
+  defaultPage?: number;
+  pageSizeOptions?: string[];
+  className?: string;
+  gridClassName?: string;
+  defaultColDef?: ColDef;
+  defaultSorters?: Sorter[];
+  location?: Location;
+  historyId?: string;
+  page?: number;
+  setPage?: React.Dispatch<React.SetStateAction<number>>;
+  pageSize?: number;
+  setPageSize?: React.Dispatch<React.SetStateAction<number>>;
+  sorters?: Sorter[];
+  setSorters?: React.Dispatch<React.SetStateAction<Sorter[]>>;
+  reset?: () => void;
+  /**
+   * 第一次不请求
+   */
+  silence?: boolean;
+}
 interface Sorter {
   colId: string;
   sort: string;
@@ -73,6 +103,8 @@ type Location<S = any> = H.Location<S> & {
 ```
 
 # useDataGrid
+
+useDataGrid 只是会帮助你提取该 grid 渲染前 是否有过查询的历史值,放入 DataGrid
 
 ## 基本用法(Basic usage)
 
@@ -115,7 +147,7 @@ type Location<S = any> = H.Location<S> & {
     });
     return (
       <div style={{ height: 500 }}>
-        <DataGrid columnDefs={columnDefs} fetchErrorCallback={() => {}} />
+        <DataGrid silence columnDefs={columnDefs} />
       </div>
     );
   }}

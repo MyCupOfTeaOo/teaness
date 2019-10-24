@@ -1,4 +1,10 @@
-import React, { CSSProperties, useMemo, LegacyRef } from 'react';
+import React, {
+  CSSProperties,
+  useMemo,
+  useRef,
+  useImperativeHandle,
+  forwardRef,
+} from 'react';
 import { AgGridReact, AgGridReactProps } from 'ag-grid-react';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-material.css';
@@ -12,15 +18,14 @@ const NoData = () => <Empty />;
 export interface BaseGridProps extends AgGridReactProps {
   className?: string;
   style?: CSSProperties;
-  gridRef?: LegacyRef<AgGridReact>;
 }
 
-const BaseGrid: React.FC<BaseGridProps> = ({
-  className,
-  style,
-  gridRef,
-  ...gridProps
-}) => {
+const BaseGrid: React.FC<BaseGridProps> = (
+  { className, style, ...gridProps },
+  ref,
+) => {
+  const gridRef = useRef<AgGridReact>(null);
+  useImperativeHandle(ref, () => gridRef.current, []);
   const gridClassName = useMemo(
     () => classNames('ag-theme-material', 'tea-grid', className),
     [className],
@@ -33,7 +38,8 @@ const BaseGrid: React.FC<BaseGridProps> = ({
   );
 };
 
-BaseGrid.defaultProps = {
+const BaseGridRef = forwardRef(BaseGrid);
+BaseGridRef.defaultProps = {
   enableColResize: true,
   enableSorting: true,
   enableFilter: false,
@@ -47,4 +53,4 @@ BaseGrid.defaultProps = {
   scrollbarWidth: 8,
 };
 
-export default BaseGrid;
+export default BaseGridRef;

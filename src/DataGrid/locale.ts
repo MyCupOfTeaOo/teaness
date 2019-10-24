@@ -2,14 +2,14 @@ export default {
   zh: {
     // for filter panel
     page: '从',
-    more: 'daMore',
+    more: '加载更多',
     to: '从',
     of: '到',
     next: '下一页',
     last: '最后一页',
     first: '第一页',
     previous: '前一页',
-    loadingOoo: 'daLoading...',
+    loadingOoo: '等待加载...',
 
     // for set filter
     selectAll: 'daSelect Allen',
@@ -57,7 +57,7 @@ export default {
     toolPanelButton: 'la tool panel',
 
     // other
-    noRowsToShow: 'la no rows',
+    noRowsToShow: '无数据',
 
     // enterprise menu
     pinColumn: 'laPin Column',

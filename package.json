@@ -1,6 +1,6 @@
 {
   "name": "teaness",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "main": "./es/index.js",
   "module": "./es/index.js",
   "authors": [
@@ -19,6 +19,7 @@
     "dev": "docz dev",
     "build:doc": "docz build",
     "build": "father build",
+    "build:all": "father build && docz build",
     "lint:ts": "tslint \"src/**/*.ts\" \"src/**/*.tsx\"",
     "lint:fix": "eslint --fix --cache --ext .js,.jsx,.ts,.tsx --format=pretty ./src",
     "lint-staged": "lint-staged",
