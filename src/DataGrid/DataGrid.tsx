@@ -123,30 +123,32 @@ const DataGrid: React.FC<DataGridProps> = (props, ref) => {
   const fetch = useCallback(
     (searchProps: {
       queryData: any;
-      page: number;
-      pageSize: number;
-      sorters: Sorter[];
+      page?: number;
+      pageSize?: number;
+      sorters?: Sorter[];
     }) => {
+      const s = searchProps.sorters || theSorters;
+
       if (gridRef.current) {
         if (gridRef.current.api) {
           gridRef.current.api.showLoadingOverlay();
-          gridRef.current.api.setSortModel(searchProps.sorters);
+          gridRef.current.api.setSortModel(s);
         }
       }
       let noData = !(Array.isArray(rowData) && rowData.length > 0);
-      const sorterMap = searchProps.sorters[0]
+      const sorterMap = s[0]
         ? {
-            columnOrder: searchProps.sorters[0].sort,
-            columnProp: searchProps.sorters[0].colId,
+            columnOrder: s[0].sort,
+            columnProp: s[0].colId,
           }
         : {};
       if (props.location && props.historyId) {
         const search = {
           ...props.location.query,
           [props.historyId]: JSON.stringify({
-            pageSize: searchProps.pageSize,
-            page: searchProps.page,
-            sorters: searchProps.sorters,
+            pageSize: searchProps.pageSize || size,
+            page: searchProps.page || current,
+            sorters: s,
             queryData: searchProps.queryData,
           }),
         };
@@ -168,8 +170,8 @@ const DataGrid: React.FC<DataGridProps> = (props, ref) => {
           data: {
             ...searchProps.queryData,
             ...sorterMap,
-            len: searchProps.pageSize,
-            page: searchProps.page,
+            len: searchProps.pageSize || size,
+            page: searchProps.page || current,
           },
         })
         .then(resp => {
@@ -211,7 +213,7 @@ const DataGrid: React.FC<DataGridProps> = (props, ref) => {
         });
       return () => cancel('取消列表请求');
     },
-    [props.fetchUrl],
+    [props.fetchUrl, current, size, theSorters],
   );
 
   useEffect(() => {
@@ -224,57 +226,63 @@ const DataGrid: React.FC<DataGridProps> = (props, ref) => {
       });
     }
   }, []);
-  const handlePageChange = useCallback((curPage, curSize) => {
-    if (props.setPage) props.setPage(curPage);
-    else setPage(curPage);
-    if (props.setPageSize) props.setPageSize(curSize);
-    else setPageSize(curSize);
-    fetch({
-      page: curPage,
-      pageSize: curSize,
-      sorters: theSorters,
-      queryData: props.queryData,
-    });
-  }, []);
-  const handleSortChange = useCallback(({ api }: { api: GridApi }) => {
-    if (props.setSorters) {
-      props.setSorters(prevSorters => {
-        const sortModal = api.getSortModel();
-        if (prevSorters.length === sortModal.length) {
-          if (prevSorters.length === 0) return prevSorters;
-          if (
-            prevSorters[0].colId === sortModal[0].colId &&
-            prevSorters[0].sort === sortModal[0].sort
-          ) return prevSorters;
-        }
-        fetch({
-          page: current,
-          pageSize: size,
-          sorters: sortModal,
-          queryData: props.queryData,
-        });
-        return sortModal;
+  const handlePageChange = useCallback(
+    (curPage, curSize) => {
+      if (props.setPage) props.setPage(curPage);
+      else setPage(curPage);
+      if (props.setPageSize) props.setPageSize(curSize);
+      else setPageSize(curSize);
+      fetch({
+        page: curPage,
+        pageSize: curSize,
+        sorters: theSorters,
+        queryData: props.queryData,
       });
-    } else {
-      setSorters(prevSorters => {
-        const sortModal = api.getSortModel();
-        if (prevSorters.length === sortModal.length) {
-          if (prevSorters.length === 0) return prevSorters;
-          if (
-            prevSorters[0].colId === sortModal[0].colId &&
-            prevSorters[0].sort === sortModal[0].sort
-          ) return prevSorters;
-        }
-        fetch({
-          page: current,
-          pageSize: size,
-          sorters: sortModal,
-          queryData: props.queryData,
+    },
+    [theSorters],
+  );
+  const handleSortChange = useCallback(
+    ({ api }: { api: GridApi }) => {
+      if (props.setSorters) {
+        props.setSorters(prevSorters => {
+          const sortModal = api.getSortModel();
+          if (prevSorters.length === sortModal.length) {
+            if (prevSorters.length === 0) return prevSorters;
+            if (
+              prevSorters[0].colId === sortModal[0].colId &&
+              prevSorters[0].sort === sortModal[0].sort
+            ) return prevSorters;
+          }
+          fetch({
+            page: current,
+            pageSize: size,
+            sorters: sortModal,
+            queryData: props.queryData,
+          });
+          return sortModal;
         });
-        return sortModal;
-      });
-    }
-  }, []);
+      } else {
+        setSorters(prevSorters => {
+          const sortModal = api.getSortModel();
+          if (prevSorters.length === sortModal.length) {
+            if (prevSorters.length === 0) return prevSorters;
+            if (
+              prevSorters[0].colId === sortModal[0].colId &&
+              prevSorters[0].sort === sortModal[0].sort
+            ) return prevSorters;
+          }
+          fetch({
+            page: current,
+            pageSize: size,
+            sorters: sortModal,
+            queryData: props.queryData,
+          });
+          return sortModal;
+        });
+      }
+    },
+    [current, size],
+  );
   const reset = useCallback(
     (toFetch: boolean = false) => {
       if (props.reset) {
@@ -313,6 +321,9 @@ const DataGrid: React.FC<DataGridProps> = (props, ref) => {
       setPage: props.setPage || setPage,
       setPageSize: props.setPageSize || setPageSize,
       setSorters: props.setSorters || setSorters,
+      page,
+      pageSize,
+      sorters,
       setRowData,
       getDefaultValue: () => ({
         page: props.defaultPage,
@@ -320,7 +331,7 @@ const DataGrid: React.FC<DataGridProps> = (props, ref) => {
         sorters: props.defaultSorters,
       }),
     }),
-    [],
+    [page, pageSize, sorters],
   );
   return (
     <div className={classNames('tea-datagrid', props.className)}>
@@ -375,11 +386,14 @@ export type DataGridRef = {
   gridRef: AgGridReact;
   fetch: (searchProps: {
     queryData: any;
-    page: number;
-    pageSize: number;
-    sorters: Sorter[];
+    page?: number;
+    pageSize?: number;
+    sorters?: Sorter[];
   }) => () => string;
   reset: (toFetch?: string) => void;
+  page: number;
+  pageSize: number;
+  sorters: Sorter[];
   setPage: (page: number | ((prevPage: number) => number)) => void;
   setPageSize: (pageSize: number | ((prevPageSize: number) => number)) => void;
   setSorters: (soters: Sorter[] | ((prevSoters: Sorter[]) => Sorter[])) => void;

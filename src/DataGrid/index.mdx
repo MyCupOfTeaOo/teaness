@@ -7,6 +7,7 @@ menu: 'components'
 import { Playground, Props } from 'docz';
 import 'antd/dist/antd.css';
 
+import { Button } from 'antd';
 import { DataGrid, useDataGrid, BaseGrid } from './';
 
 # DataGrid(数据表格)
@@ -140,14 +141,23 @@ useDataGrid 只是会帮助你提取该 grid 渲染前 是否有过查询的历�
         field: 'gender',
       },
     ];
-    const { DataGrid } = useDataGrid({
+    const { DataGrid, gridRef } = useDataGrid({
       historyId: 'grid',
       defaultPageSize: 30,
       fetchUrl: 'http://192.168.117.102:1328/api/user/personManage/',
     });
     return (
       <div style={{ height: 500 }}>
-        <DataGrid silence columnDefs={columnDefs} />
+        <DataGrid columnDefs={columnDefs} />
+        <Button
+          onClick={() => {
+            gridRef.current.fetch({
+              queryData: {},
+            });
+          }}
+        >
+          go
+        </Button>
       </div>
     );
   }}
