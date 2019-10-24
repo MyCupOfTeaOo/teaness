@@ -1,6 +1,6 @@
 {
   "name": "teaness",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "main": "./es/index.js",
   "module": "./es/index.js",
   "authors": [
@@ -20,6 +20,7 @@
     "build:doc": "docz build",
     "build": "father build",
     "build:all": "father build && docz build",
+    "publish": "node ./scripts/publish.js",
     "lint:ts": "tslint \"src/**/*.ts\" \"src/**/*.tsx\"",
     "lint:fix": "eslint --fix --cache --ext .js,.jsx,.ts,.tsx --format=pretty ./src",
     "lint-staged": "lint-staged",
@@ -53,6 +54,7 @@
     "father": "^2.23.1",
     "gatsby-plugin-sass": "^2.1.20",
     "husky": "^3.0.9",
+    "inquirer": "^7.0.0",
     "lint-staged": "^9.4.2",
     "node-sass": "^4.12.0",
     "prettier-eslint": "^9.0.0",
