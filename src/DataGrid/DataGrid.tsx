@@ -44,13 +44,12 @@ export interface DataGridProps
   defaultSorters?: Sorter[];
   location?: Location;
   historyId?: string;
-  page?: number;
-  setPage?: React.Dispatch<React.SetStateAction<number>>;
-  pageSize?: number;
-  setPageSize?: React.Dispatch<React.SetStateAction<number>>;
-  sorters?: Sorter[];
-  setSorters?: React.Dispatch<React.SetStateAction<Sorter[]>>;
-  reset?: () => void;
+  // page?: number;
+  // setPage?: React.Dispatch<React.SetStateAction<number>>;
+  // pageSize?: number;
+  // setPageSize?: React.Dispatch<React.SetStateAction<number>>;
+  // sorters?: Sorter[];
+  // setSorters?: React.Dispatch<React.SetStateAction<Sorter[]>>;
   /**
    * 第一次不请求
    */
@@ -75,6 +74,8 @@ export const showTotal = (item: number, range: [number, number]) =>
   (range[1] !== 0 ? `${range[0]}-${range[1]} 共 ${item} 条数据` : '暂无数据');
 
 const DataGrid: React.FC<DataGridProps> = (props, ref) => {
+  const [count, setCount] = useState(0);
+
   const gridRef = useRef<AgGridReact>(null);
   const defaultColDef = useMemo(() => {
     return {
@@ -83,95 +84,87 @@ const DataGrid: React.FC<DataGridProps> = (props, ref) => {
     };
   }, [props.defaultColDef]);
   const [rowData, setRowData] = useState<any[] | undefined>(undefined);
-  const [page, setPage] = useState(
-    getLocationGridInit(
-      'page',
-      props.defaultPage || 1,
-      props.historyId,
-      props.location,
-    ),
-  );
 
-  const [pageSize, setPageSize] = useState(
-    getLocationGridInit(
-      'pageSize',
-      props.defaultPageSize || 10,
+  const [search, setSearch] = useState<{
+    page: number;
+    pageSize: number;
+    sorters: Sorter[];
+  }>(() => ({
+    page: getLocationGridInit(
+      'page',
+      props.defaultPage || DataGridRegister.defaultPage,
       props.historyId,
       props.location,
     ),
-  );
+    pageSize: getLocationGridInit(
+      'pageSize',
+      props.defaultPageSize || DataGridRegister.defaultPageSize,
+      props.historyId,
+      props.location,
+    ),
+    sorters: getLocationGridInit(
+      'sorters',
+      props.defaultSorters || DataGridRegister.defaultSorters,
+      props.historyId,
+      props.location,
+    ),
+  }));
 
   const [total, setTotal] = useState(0);
-  const [sorters, setSorters] = useState<Sorter[]>(
-    getLocationGridInit(
-      'sorters',
-      props.defaultSorters || [],
-      props.historyId,
-      props.location,
-    ),
-  );
-  const current = useMemo(() => props.page || page, [props.page, page]);
-  const size = useMemo(() => props.pageSize || pageSize, [
-    props.pageSize,
-    pageSize,
-  ]);
-  const theSorters = useMemo(() => props.sorters || sorters, [
-    props.sorters,
-    sorters,
-  ]);
 
+  // 后续可以参看 select requestMethod 剔除
+  // 只依赖 fetchurl
   const fetch = useCallback(
     (searchProps: {
       queryData: any;
-      page?: number;
-      pageSize?: number;
-      sorters?: Sorter[];
+      page: number;
+      pageSize: number;
+      sorters: Sorter[];
     }) => {
-      const s = searchProps.sorters || theSorters;
-
       if (gridRef.current) {
         if (gridRef.current.api) {
           gridRef.current.api.showLoadingOverlay();
-          gridRef.current.api.setSortModel(s);
+          // 同步grid sort
+          gridRef.current.api.setSortModel(searchProps.sorters);
         }
       }
       let noData = !(Array.isArray(rowData) && rowData.length > 0);
-      const sorterMap = s[0]
+
+      // 业务接口转换
+      const sorterMap = searchProps.sorters[0]
         ? {
-            columnOrder: s[0].sort,
-            columnProp: s[0].colId,
+            columnOrder: searchProps.sorters[0].sort,
+            columnProp: searchProps.sorters[0].colId,
           }
         : {};
-      if (props.location && props.historyId) {
-        const search = {
+
+      if (props.location && props.historyId && DataGridRegister.router) {
+        // 同步到url,记得注册router
+        const routerSearch = {
           ...props.location.query,
-          [props.historyId]: JSON.stringify({
-            pageSize: searchProps.pageSize || size,
-            page: searchProps.page || current,
-            sorters: s,
-            queryData: searchProps.queryData,
-          }),
+          [props.historyId]: JSON.stringify(searchProps),
         };
-        if (DataGridRegister.router) {
-          DataGridRegister.router.replace({
-            pathname: props.location.pathname,
-            state: props.location.state,
-            search: stringify(search),
-          });
-        }
+        DataGridRegister.router.replace({
+          pathname: props.location.pathname,
+          state: props.location.state,
+          search: stringify(routerSearch),
+        });
       }
+      // 创建取消的token
       const {
         token: cancelToken,
         cancel,
       } = DataGridRegister.request.CancelToken.source();
+
       DataGridRegister.request
         .post<ReqResponse>(props.fetchUrl, {
           cancelToken,
+          // 业务数据转换
           data: {
             ...searchProps.queryData,
             ...sorterMap,
-            len: searchProps.pageSize || size,
-            page: searchProps.page || current,
+            len: searchProps.pageSize,
+            page: searchProps.page,
           },
         })
         .then(resp => {
@@ -213,126 +206,94 @@ const DataGrid: React.FC<DataGridProps> = (props, ref) => {
         });
       return () => cancel('取消列表请求');
     },
-    [props.fetchUrl, current, size, theSorters],
+    [props.fetchUrl],
   );
 
   useEffect(() => {
-    if (!props.silence) {
+    if (!props.silence || count > 0) {
       return fetch({
-        page: current,
-        pageSize: size,
-        sorters: theSorters,
+        ...search,
         queryData: props.queryData,
       });
     }
+  }, [count]);
+  const handlePageChange = useCallback((page, pageSize) => {
+    setSearch(item => ({
+      ...item,
+      page,
+      pageSize,
+    }));
+
+    // 查询
+    setCount(prevCount => prevCount + 1);
   }, []);
-  const handlePageChange = useCallback(
-    (curPage, curSize) => {
-      if (props.setPage) props.setPage(curPage);
-      else setPage(curPage);
-      if (props.setPageSize) props.setPageSize(curSize);
-      else setPageSize(curSize);
-      fetch({
-        page: curPage,
-        pageSize: curSize,
-        sorters: theSorters,
-        queryData: props.queryData,
-      });
-    },
-    [theSorters],
-  );
-  const handleSortChange = useCallback(
-    ({ api }: { api: GridApi }) => {
-      if (props.setSorters) {
-        props.setSorters(prevSorters => {
-          const sortModal = api.getSortModel();
-          if (prevSorters.length === sortModal.length) {
-            if (prevSorters.length === 0) return prevSorters;
-            if (
-              prevSorters[0].colId === sortModal[0].colId &&
-              prevSorters[0].sort === sortModal[0].sort
-            ) return prevSorters;
-          }
-          fetch({
-            page: current,
-            pageSize: size,
-            sorters: sortModal,
-            queryData: props.queryData,
-          });
-          return sortModal;
-        });
-      } else {
-        setSorters(prevSorters => {
-          const sortModal = api.getSortModel();
-          if (prevSorters.length === sortModal.length) {
-            if (prevSorters.length === 0) return prevSorters;
-            if (
-              prevSorters[0].colId === sortModal[0].colId &&
-              prevSorters[0].sort === sortModal[0].sort
-            ) return prevSorters;
-          }
-          fetch({
-            page: current,
-            pageSize: size,
-            sorters: sortModal,
-            queryData: props.queryData,
-          });
-          return sortModal;
-        });
+  const handleSortChange = useCallback(({ api }: { api: GridApi }) => {
+    let isChange = false;
+
+    setSearch(item => {
+      const sortModal = api.getSortModel();
+      if (item.sorters.length === sortModal.length) {
+        if (item.sorters.length === 0) return item;
+        if (
+          item.sorters[0].colId === sortModal[0].colId &&
+          item.sorters[0].sort === sortModal[0].sort
+        ) return item;
       }
-    },
-    [current, size],
-  );
-  const reset = useCallback(
-    (toFetch: boolean = false) => {
-      if (props.reset) {
-        props.reset();
-        return;
-      }
-      if (props.setPage) props.setPage(props.defaultPage || DataGridRegister.defaultPage);
-      else setPage(props.defaultPage || DataGridRegister.defaultPage);
-      if (props.setPageSize) {
-        props.setPageSize(
-          props.defaultPageSize || DataGridRegister.defaultPageSize,
-        );
-      } else setPageSize(props.defaultPageSize || DataGridRegister.defaultPageSize);
-      if (props.setSorters) {
-        props.setSorters(
-          props.defaultSorters || DataGridRegister.defaultSorters,
-        );
-      } else setSorters(props.defaultSorters || DataGridRegister.defaultSorters);
-      if (toFetch) {
-        fetch({
-          page: props.defaultPage || DataGridRegister.defaultPage,
-          pageSize: props.defaultPageSize || DataGridRegister.defaultPageSize,
-          sorters: props.defaultSorters || DataGridRegister.defaultSorters,
-          queryData: props.queryData,
-        });
-      }
-    },
-    [props.setPage, props.setPageSize, props.setSorters, props.reset],
-  );
+      isChange = true;
+      return {
+        ...item,
+        sorters: sortModal,
+      };
+    });
+    // 查询
+    if (isChange) setCount(prevCount => prevCount + 1);
+  }, []);
+
   useImperativeHandle(
     ref,
     () => ({
       gridRef,
-      fetch,
-      reset,
-      setPage: props.setPage || setPage,
-      setPageSize: props.setPageSize || setPageSize,
-      setSorters: props.setSorters || setSorters,
-      page,
-      pageSize,
-      sorters,
+      fetch: (data: {
+        queryData: any;
+        page: number;
+        pageSize: number;
+        sorters: Sorter[];
+      }) => {
+        setSearch(item => ({
+          ...item,
+          ...data,
+        }));
+        setCount(prevCount => prevCount + 1);
+      },
+      getSearch: () => {
+        let temp = search;
+        setSearch(prevSearch => {
+          temp = prevSearch;
+          return prevSearch;
+        });
+        return temp;
+      },
+      setSearch,
       setRowData,
       getDefaultValue: () => ({
-        page: props.defaultPage,
-        pageSize: props.defaultPageSize,
-        sorters: props.defaultSorters,
+        page: props.defaultPage || DataGridRegister.defaultPage,
+        pageSize: props.defaultPageSize || DataGridRegister.defaultPageSize,
+        sorters: props.defaultSorters || DataGridRegister.defaultSorters,
       }),
     }),
-    [page, pageSize, sorters],
+    [fetch],
   );
+
+  const reset = useCallback(toFetch => {
+    setSearch(item => ({
+      ...item,
+      page: props.defaultPage || DataGridRegister.defaultPage,
+      pageSize: props.defaultPageSize || DataGridRegister.defaultPageSize,
+      sorters: props.defaultSorters || DataGridRegister.defaultSorters,
+    }));
+    if (toFetch) setCount(prevCount => prevCount + 1);
+  }, []);
+
   return (
     <div className={classNames('tea-datagrid', props.className)}>
       <BaseGrid
@@ -365,8 +326,8 @@ const DataGrid: React.FC<DataGridProps> = (props, ref) => {
           showSizeChanger
           showQuickJumper
           showTotal={showTotal}
-          current={current}
-          pageSize={size}
+          current={search.page}
+          pageSize={search.pageSize}
         />
       </div>
     </div>
@@ -382,21 +343,26 @@ DataGridRef.defaultProps = {
   silence: false,
 };
 
+export type SetState<T> = (state: T | ((prevState: T) => T)) => void;
+
 export type DataGridRef = {
   gridRef: AgGridReact;
   fetch: (searchProps: {
-    queryData: any;
+    queryData?: any;
     page?: number;
     pageSize?: number;
     sorters?: Sorter[];
-  }) => () => string;
-  reset: (toFetch?: string) => void;
-  page: number;
-  pageSize: number;
-  sorters: Sorter[];
-  setPage: (page: number | ((prevPage: number) => number)) => void;
-  setPageSize: (pageSize: number | ((prevPageSize: number) => number)) => void;
-  setSorters: (soters: Sorter[] | ((prevSoters: Sorter[]) => Sorter[])) => void;
+  }) => void;
+  getSearch: () => {
+    page?: number;
+    pageSize?: number;
+    sorters?: Sorter[];
+  };
+  setSearch: SetState<{
+    page?: number;
+    pageSize?: number;
+    sorters?: Sorter[];
+  }>;
   setRowData: (rowData: any[] | ((prevRowData: any[]) => any[])) => void;
   getDefaultValue: () => {
     page: number;

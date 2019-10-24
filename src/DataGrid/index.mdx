@@ -8,7 +8,7 @@ import { Playground, Props } from 'docz';
 import 'antd/dist/antd.css';
 
 import { Button } from 'antd';
-import { DataGrid, useDataGrid, BaseGrid } from './';
+import { DataGrid, BaseGrid } from './';
 
 # DataGrid(数据表格)
 
@@ -81,13 +81,6 @@ interface DataGridProps
   defaultSorters?: Sorter[];
   location?: Location;
   historyId?: string;
-  page?: number;
-  setPage?: React.Dispatch<React.SetStateAction<number>>;
-  pageSize?: number;
-  setPageSize?: React.Dispatch<React.SetStateAction<number>>;
-  sorters?: Sorter[];
-  setSorters?: React.Dispatch<React.SetStateAction<Sorter[]>>;
-  reset?: () => void;
   /**
    * 第一次不请求
    */
@@ -101,85 +94,6 @@ import * as H from 'history';
 type Location<S = any> = H.Location<S> & {
   query: { [key: string]: any };
 };
-```
-
-# useDataGrid
-
-useDataGrid 只是会帮助你提取该 grid 渲染前 是否有过查询的历史值,放入 DataGrid
-
-## 基本用法(Basic usage)
-
-<Playground>
-  {() => {
-    const columnDefs = [
-      {
-        headerName: '姓名',
-        field: 'realName',
-      },
-      {
-        headerName: '电话',
-        field: 'mobile',
-      },
-      {
-        headerName: '邮箱',
-        field: 'email',
-      },
-      {
-        headerName: '角色',
-        field: 'roleValue',
-      },
-      {
-        headerName: '用户id',
-        field: 'userId',
-      },
-      {
-        headerName: '电话',
-        field: 'tel',
-      },
-      {
-        headerName: '性别',
-        field: 'gender',
-      },
-    ];
-    const { DataGrid, gridRef } = useDataGrid({
-      historyId: 'grid',
-      defaultPageSize: 30,
-      fetchUrl: 'http://192.168.117.102:1328/api/user/personManage/',
-    });
-    return (
-      <div style={{ height: 500 }}>
-        <DataGrid columnDefs={columnDefs} />
-        <Button
-          onClick={() => {
-            gridRef.current.fetch({
-              queryData: {},
-            });
-          }}
-        >
-          go
-        </Button>
-      </div>
-    );
-  }}
-</Playground>
-
-## 属性(Properties)
-
-<Props of={useDataGrid} />
-
-useDataGrid 返回的 api
-
-```json
-{
-  "page": 页码,
-  "setPage": 设置页码,
-  "pageSize": 每页显示数量,
-  "setPageSize": 设置每页显示数量,
-  "sorters": "排序",
-  "setSorters": "设置排序",
-  "reset": "重置页码 显示数量 排序",
-  "DataGrid": 表格组件
-}
 ```
 
 # BaseGrid
