@@ -21,9 +21,12 @@ inquirer
     fs.writeFileSync('./package.json', JSON.stringify(package, null, 2), {
       encoding: 'utf8',
     });
+    console.log('clean tgz');
+    execSync('rimraf ./*tgz', { stdio: 'inherit' });
     console.log('发布');
     execSync('npm pack', { stdio: 'inherit' });
     execSync('npm publish', { stdio: 'inherit' });
+
 
     console.log('准备构建文档');
     execSync('npm run build:doc', { stdio: 'inherit' });
