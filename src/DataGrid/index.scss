@@ -61,6 +61,12 @@
   .ag-rtl .ag-cell-focus.ag-cell-range-single-cell.ag-cell-range-handle {
     border: 1px solid rgba(0, 0, 0, 0);
     outline: initial;
+    &.ag-cell-last-left-pinned {
+      border-right: 1px solid rgba($color: $text-color, $alpha: 0.12);
+    }
+    &.ag-cell-first-right-pinned {
+      border-left: 1px solid rgba($color: $text-color, $alpha: 0.12);
+    }
   }
   .ag-icon {
     color: rgba(25, 31, 37, 0.4);
