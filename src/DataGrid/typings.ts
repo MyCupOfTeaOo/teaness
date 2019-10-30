@@ -5,4 +5,4 @@ export type Location<S = any> = H.Location<S> & {
   query: { [key: string]: any };
 };
 
-export type columnDefs = (ColDef | ColGroupDef)[];
+export type ColumnDefs = (ColDef | ColGroupDef)[];

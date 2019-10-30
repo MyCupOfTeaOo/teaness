@@ -1,6 +1,6 @@
 {
   "name": "teaness",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "main": "./es/index.js",
   "module": "./es/index.js",
   "authors": [
@@ -20,7 +20,7 @@
     "build:doc": "docz build",
     "build": "father build",
     "build:all": "father build && docz build",
-    "publish": "node ./scripts/publish.js",
+    "publish": "node ./scripts/publishAll.js",
     "publish:doc": "node ./scripts/publishDoc.js",
     "lint:ts": "tslint \"src/**/*.ts\" \"src/**/*.tsx\"",
     "lint:fix": "eslint --fix --cache --ext .js,.jsx,.ts,.tsx --format=pretty ./src",
