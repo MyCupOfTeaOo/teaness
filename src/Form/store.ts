@@ -86,7 +86,7 @@ export class ComponentStore<U = any, T = {}>
   @action
   onChange = (value: U | Event | SyntheticEvent | undefined) => {
     let realValue: U | undefined;
-    if (value) {
+    if (!isEmpty(value)) {
       if (value instanceof Event) {
         realValue = (value.target as { value?: U }).value;
       } else if ((value as SyntheticEvent).nativeEvent instanceof Event) {
@@ -94,6 +94,8 @@ export class ComponentStore<U = any, T = {}>
       } else {
         realValue = value as U;
       }
+    } else {
+      realValue = value as (U | undefined);
     }
 
     if (!this.isChange) {

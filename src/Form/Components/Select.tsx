@@ -82,5 +82,6 @@ Select.OptGroup = AntSelect.OptGroup;
 Select.defaultProps = {
   options: [],
   placeholder: '请选择',
+  showSearch: true,
 };
 export default Select;
