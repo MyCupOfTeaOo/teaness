@@ -113,6 +113,8 @@ export class ComponentStore<U = any, T = {}>
 
   setRules = (rules: Rules | undefined) => {
     this.rules = rules;
+    if (rules) this.scheme = new Scheme({ [this.key]: rules });
+    else this.scheme = undefined;
     if (this.isChange) {
       this.valid();
     }

@@ -85,6 +85,7 @@ export function useForm<
       return mapValues(formConfigs, (formConfig, key) => {
         if (prevComponents[key as keyof T]) {
           const targetStore = formStore.componentStores[key as keyof T];
+
           if (
             targetStore.props !== formConfig.props ||
             targetStore.component !== formConfig.component
