@@ -7,10 +7,12 @@ import React, {
   SetStateAction,
 } from 'react';
 import { Cascader as AntCascader } from 'antd';
+import classnames from 'classnames';
 import {
   CascaderProps as AntCascaderProps,
   CascaderOptionType,
 } from 'antd/lib/cascader';
+import './styles/cascader.scss';
 
 export type CancellablePromise<T> = Promise<T> & {
   cancel(): void;
@@ -88,6 +90,7 @@ const Cascader: React.FC<CascaderProps> = props => {
     requestMethod,
     errorCallback,
     value: source,
+    className,
     ...otherProps
   } = props;
   const unListions = useMemo<Set<CancellablePromise<CascaderOptionType[]>>>(
@@ -194,6 +197,7 @@ const Cascader: React.FC<CascaderProps> = props => {
 
   return (
     <AntCascader
+      className={classnames('tea-cascader', className)}
       value={value}
       onChange={handle}
       options={options}

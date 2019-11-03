@@ -293,12 +293,12 @@ const DataGrid: React.FC<DataGridProps> = (props, ref) => {
     }));
     if (toFetch) setCount(prevCount => prevCount + 1);
   }, []);
-
+  const { className, ...rest } = props;
   return (
-    <div className={classNames('tea-datagrid', props.className)}>
+    <div className={classNames('tea-datagrid', className)}>
       <BaseGrid
         localeText={locale.zh}
-        {...props}
+        {...rest}
         defaultColDef={defaultColDef}
         ref={gridRef}
         className={props.gridClassName}

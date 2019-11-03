@@ -27,6 +27,7 @@ const Select: React.FC<SelectProps> & {
     options: defaultOptions,
     requestMethod,
     errorCallback,
+    className,
     ...otherProps
   } = props;
   const [options, setOptions] = useState(defaultOptions);
@@ -64,7 +65,7 @@ const Select: React.FC<SelectProps> & {
   }, [requestMethod]);
   return (
     <AntSelect
-      className={classnames('tea-select', props.className)}
+      className={classnames('tea-select', className)}
       {...otherProps}
       onChange={onChange}
     >
