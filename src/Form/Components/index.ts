@@ -4,6 +4,7 @@ import { InputNumber } from './InputNumber';
 import Select from './Select';
 import DateGroup from './Utils/DateGroup';
 import ShowError, { ShowErrorHoc } from './Utils/ShowError';
+import Cascader from './Cascader';
 
 export {
   DatePicker,
@@ -13,4 +14,5 @@ export {
   DateGroup,
   ShowError,
   ShowErrorHoc,
+  Cascader,
 };
