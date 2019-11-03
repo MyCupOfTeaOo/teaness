@@ -24,7 +24,6 @@ const Select: React.FC<SelectProps> & {
 } = props => {
   const {
     onChange,
-    value,
     options: defaultOptions,
     requestMethod,
     errorCallback,
@@ -68,7 +67,6 @@ const Select: React.FC<SelectProps> & {
       className={classnames('tea-select', props.className)}
       {...otherProps}
       onChange={onChange}
-      value={value}
     >
       {children}
     </AntSelect>
@@ -83,5 +81,6 @@ Select.defaultProps = {
   options: [],
   placeholder: '请选择',
   showSearch: true,
+  allowClear: true,
 };
 export default Select;
