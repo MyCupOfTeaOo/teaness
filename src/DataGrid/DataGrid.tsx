@@ -8,7 +8,7 @@ import React, {
   forwardRef,
   useImperativeHandle,
 } from 'react';
-import { Pagination, Button } from 'antd';
+import { Pagination } from 'antd';
 import { AgGridReact } from 'ag-grid-react/lib/agGridReact';
 import classNames from 'classnames';
 import { ColDef, GridApi } from 'ag-grid-community';
@@ -18,11 +18,7 @@ import BaseGrid, { BaseGridProps } from './BaseGrid';
 import Modal from '../Modal';
 import locale from './locale';
 import { Location } from './typings';
-import DataGridRegister, {
-  ReqResponse,
-  Sorter,
-  respCode,
-} from './DataGridRegister';
+import DataGridRegister, { ReqResponse, Sorter } from './DataGridRegister';
 
 export interface DataGridProps
   extends Omit<
@@ -168,7 +164,7 @@ const DataGrid: React.FC<DataGridProps> = (props, ref) => {
           },
         })
         .then(resp => {
-          if (resp.code === respCode.success) {
+          if (resp.code === DataGridRegister.respCode.success) {
             if (resp.data) {
               setTotal(resp.data.totalitem);
               setRowData(resp.data.list || []);
@@ -176,7 +172,7 @@ const DataGrid: React.FC<DataGridProps> = (props, ref) => {
                 noData = false;
               }
             }
-          } else if (resp.code === respCode.cancel) {
+          } else if (resp.code === DataGridRegister.respCode.cancel) {
             return undefined;
           } else if (props.fetchErrorCallback) props.fetchErrorCallback(resp);
           else {
@@ -284,15 +280,6 @@ const DataGrid: React.FC<DataGridProps> = (props, ref) => {
     [fetch],
   );
 
-  const reset = useCallback(toFetch => {
-    setSearch(item => ({
-      ...item,
-      page: props.defaultPage || DataGridRegister.defaultPage,
-      pageSize: props.defaultPageSize || DataGridRegister.defaultPageSize,
-      sorters: props.defaultSorters || DataGridRegister.defaultSorters,
-    }));
-    if (toFetch) setCount(prevCount => prevCount + 1);
-  }, []);
   const { className, ...rest } = props;
   return (
     <div className={classNames('tea-datagrid', className)}>
@@ -308,14 +295,6 @@ const DataGrid: React.FC<DataGridProps> = (props, ref) => {
         onSortChanged={handleSortChange}
       />
       <div className="tea-grid-bottom">
-        <Button
-          icon="sync"
-          size="small"
-          onClick={() => reset(true)}
-          type="dashed"
-        >
-          重置
-        </Button>
         <Pagination
           className="tea-grid-pagination"
           onChange={handlePageChange}

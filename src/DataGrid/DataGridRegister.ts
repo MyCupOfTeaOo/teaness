@@ -5,13 +5,14 @@ export interface Sorter {
   sort: string;
 }
 
-export enum respCode {
-  success = '0',
-  error = '1',
-  exception = '2',
-  cancel = '3',
+enum respCode {
+  success = 200,
+  error = 400,
+  exception = 500,
+  cancel = 0,
 }
 
+type Enum<E> = Record<keyof E, number> & { [k: number]: string };
 export interface RouteData {
   pathname: string;
   query?: any;
@@ -28,12 +29,17 @@ export type Router = {
 
 export interface ReqResponse {
   msg: string;
-  code: string;
+  code: number;
   data?: any;
 }
 
 const DataGridRegister: {
-  respCode: any;
+  respCode: Enum<{
+    success: number;
+    error: number;
+    exception: number;
+    cancel: number;
+  }>;
   request: RequestMethod;
   router?: Router;
   defaultPage: number;
