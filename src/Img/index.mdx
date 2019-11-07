@@ -1,0 +1,27 @@
+---
+name: Img(图片)
+route: /Img
+menu: Display(数据展示)
+---
+
+import { Playground, Props } from 'docz';
+import Img from '.';
+
+# Img(图片)
+
+主要是为了解决图片加载失败 使用备用图片
+
+## 基本用法(Basic usage)
+
+<Playground>
+  <Img
+    src="/img.png"
+    style={{
+      width: 20,
+    }}
+  />
+</Playground>
+
+## 属性(Properties)
+
+<Props of={Img} />

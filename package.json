@@ -1,6 +1,6 @@
 {
   "name": "teaness",
-  "version": "1.0.20",
+  "version": "1.0.26",
   "main": "./es/index.js",
   "module": "./es/index.js",
   "authors": [
@@ -64,8 +64,7 @@
     "tslint": "^5.20.0",
     "tslint-eslint-rules": "^5.4.0",
     "tslint-react": "^4.1.0",
-    "typescript": "^3.6.4",
-    "umi-request": "^1.2.8"
+    "typescript": "^3.6.4"
   },
   "husky": {
     "hooks": {
@@ -94,7 +93,10 @@
     "lodash-es": "^4.17.15",
     "mobx": "^5.14.2",
     "mobx-react": "^6.1.4",
+    "moment": "^2.24.0",
     "react": "^16.10.2",
-    "react-dom": "^16.10.2"
+    "react-dom": "^16.10.2",
+    "umi-request": "^1.2.8",
+    "querystring": "^0.2.0"
   }
 }

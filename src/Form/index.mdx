@@ -5,7 +5,7 @@ menu: Form Component
 ---
 
 import { Playground, Props } from 'docz';
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useContext } from 'react';
 import { Radio, Icon, Button } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import 'antd/dist/antd.css';
@@ -16,6 +16,7 @@ import DateGroup from './Components/Utils/DateGroup';
 import Input from './Components/Input';
 import InputNumber from './Components/InputNumber';
 import Select from './Components/Select';
+import Upload, { UploadContext } from './Components/Upload';
 import DatePicker from './Components/DatePicker';
 import Label, { LabelRow } from '../Label';
 import { Col } from '../Grid';
@@ -81,13 +82,16 @@ export interface FormConfig<U, T, C = any> {
 <Playground>
 {
   () => {
-    const InputHasError = ShowErrorHoc(Input);
-    const InputNumberHasError = ShowErrorHoc(InputNumber);
-    const SelectHasError = ShowErrorHoc(Select);
-    const DatePickerHasError = ShowErrorHoc(DatePicker);
-    const TextAreaHasError = ShowErrorHoc(TextArea);
-    const RadioGroupHasError = ShowErrorHoc(Radio.Group);
-    const formConfigs = useMemo(() => {
+    let Demo = () => {
+      const InputHasError = ShowErrorHoc(Input);
+      const InputNumberHasError = ShowErrorHoc(InputNumber);
+      const SelectHasError = ShowErrorHoc(Select);
+      const DatePickerHasError = ShowErrorHoc(DatePicker);
+      const TextAreaHasError = ShowErrorHoc(TextArea);
+      const RadioGroupHasError = ShowErrorHoc(Radio.Group);
+      const UploadHasError = ShowErrorHoc(Upload);
+      const uploadContext = useContext(UploadContext)
+      const formConfigs = useMemo(() => {
       return {
         name: {
           component: InputHasError,
@@ -135,6 +139,9 @@ export interface FormConfig<U, T, C = any> {
         desc: {
           component: TextAreaHasError,
         },
+        att: {
+          component: UploadHasError,
+        },
       }
     }, [])
     const { formStore, components } = useForm(formConfigs, {
@@ -178,6 +185,7 @@ export interface FormConfig<U, T, C = any> {
       schoolType: SchoolType,
       startDate: StartDate,
       endDate: EndDate,
+      att: Att
     } = components
     const infoColProps = {
       colProps: {
@@ -229,6 +237,9 @@ export interface FormConfig<U, T, C = any> {
             <EndDate />
           </DateGroup>
         </Label>
+        <Label text="附件">
+          <Att />
+        </Label>
         {Desc && (
           <Col span={24}>
             <LabelRow {...infoColProps}>
@@ -253,10 +264,14 @@ export interface FormConfig<U, T, C = any> {
         type="primary"
         onClick={e => {
           e.preventDefault();
-          formStore.submit(({ values, errs }) => {
-            if (errs) console.error(errs);
-            else setInfo(values);
-          });
+          uploadContext.upload().then(uploadRes => {
+            if (uploadRes)
+            formStore.submit(({ values, errs }) => {
+              if (errs) console.error(errs);
+              else setInfo(values);
+            });
+          })
+         
         }}
       >
         提交
@@ -268,7 +283,10 @@ export interface FormConfig<U, T, C = any> {
       >
         重置
       </Button>
-    </form>;
+    </form>
+    }
+    Demo = Upload.create()(Demo)
+    return <Demo />
   }
 }
 

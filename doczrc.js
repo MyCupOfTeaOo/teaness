@@ -4,7 +4,13 @@ export default {
   base: '/teaness/',
   dest: 'docs',
   typescript: true,
-  menu: ['Getting Started', 'components', 'Form Component', 'hooks'],
+  menu: [
+    'Getting Started',
+    'components',
+    'Form Component',
+    'hooks',
+    'Display(数据展示)',
+  ],
   theme: 'docz-theme-ztopia',
   themeConfig: {
     colors: {
