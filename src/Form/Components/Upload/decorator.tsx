@@ -3,13 +3,19 @@ import lodash from 'lodash-es';
 import { message, Progress } from 'antd';
 import Modal from '../../../Modal';
 import { UploadContext } from './context';
-import { UploadRefType, CancellablePromise, UploadFile } from './typings';
+import {
+  UploadRefType,
+  CancellablePromise,
+  UploadFile,
+  onUpload,
+} from './typings';
 import Registry from './Registry';
 import './styles.scss';
 import Img from '../../../Img';
 
 export interface OptionsType {
   errorBack?: (err: any) => void;
+  upload?: onUpload;
 }
 
 const strokeColor = {
@@ -42,9 +48,10 @@ export const bind = (options: OptionsType = {}) => {
       }, []);
 
       const upload = useCallback(() => {
+        const toUpload = options.upload || Registry.upload;
         const registryArray = Array.from(registry);
         if (registryArray.length > 0) {
-          if (!Registry.upload) {
+          if (!toUpload) {
             message.error('未找到上传方法');
             const p = Promise.resolve(false);
             (p as CancellablePromise<boolean>).cancel = () => {};
@@ -54,7 +61,7 @@ export const bind = (options: OptionsType = {}) => {
             if (item.fileList) {
               return item.fileList.map(file => {
                 // 找到需要上传的 后面那个判断只是为了类型推导
-                if (!file.status && file.percent === 0 && Registry.upload) {
+                if (!file.status && file.percent === 0 && toUpload) {
                   setVisible(true);
                   setLoadings(prevLoadings => {
                     return {
@@ -65,7 +72,7 @@ export const bind = (options: OptionsType = {}) => {
                       },
                     };
                   });
-                  const resp = Registry.upload(file, percent => {
+                  const resp = toUpload(file, percent => {
                     setLoadings(prevLoadings => {
                       return {
                         ...prevLoadings,

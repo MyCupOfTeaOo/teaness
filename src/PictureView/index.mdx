@@ -1,0 +1,30 @@
+---
+name: PictureView(图片)
+route: /PictureView
+menu: Display(展示)
+---
+
+import { Playground, Props } from 'docz';
+import { Button } from 'antd';
+import 'antd/dist/antd.css';
+import PictureView from '.';
+
+# PictureView(图片)
+
+展示图片
+
+## 基本用法(Basic usage)
+
+<Playground>
+  <Button
+    onClick={() => {
+      PictureView({ src: '/img.jpg' });
+    }}
+  >
+    打开图片
+  </Button>
+</Playground>
+
+## 属性(Properties)
+
+<Props of={PictureView} />

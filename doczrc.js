@@ -6,10 +6,10 @@ export default {
   typescript: true,
   menu: [
     'Getting Started',
+    'Display(展示)',
     'components',
     'Form Component',
     'hooks',
-    'Display(数据展示)',
   ],
   theme: 'docz-theme-ztopia',
   themeConfig: {

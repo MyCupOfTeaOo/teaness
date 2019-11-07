@@ -51,6 +51,7 @@ BaseGridRef.defaultProps = {
   loadingOverlayComponentFramework: Dots,
   noRowsOverlayComponentFramework: NoData,
   scrollbarWidth: 8,
+  reactNext: true,
 };
 
 export default BaseGridRef;

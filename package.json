@@ -1,6 +1,6 @@
 {
   "name": "teaness",
-  "version": "1.0.26",
+  "version": "1.0.27",
   "main": "./es/index.js",
   "module": "./es/index.js",
   "authors": [
@@ -94,9 +94,10 @@
     "mobx": "^5.14.2",
     "mobx-react": "^6.1.4",
     "moment": "^2.24.0",
+    "querystring": "^0.2.0",
     "react": "^16.10.2",
     "react-dom": "^16.10.2",
-    "umi-request": "^1.2.8",
-    "querystring": "^0.2.0"
+    "react-draggable": "^4.1.0",
+    "umi-request": "^1.2.8"
   }
 }
