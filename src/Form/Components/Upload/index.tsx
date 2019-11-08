@@ -48,8 +48,12 @@ const Upload: React.FC<UploadProps> & { create: typeof bind } = props => {
       setFileList(prevFileList => {
         // 可能是删除的
         if (!target && prevFileList) {
-          if (onChange) onChange(undefined);
-          return [];
+          if (onChange && value) {
+            const fl = value.split(',');
+            const r = fl.filter(item => item === info.file.uid).join(',');
+            onChange(lodash.isEmpty(r) ? undefined : r);
+          }
+          return prevFileList.filter(item => item.uid !== info.file.uid);
         }
         // 这种情况应该不可能
         if (!target) return prevFileList;
