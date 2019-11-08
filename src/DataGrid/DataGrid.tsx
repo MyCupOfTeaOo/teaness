@@ -120,6 +120,7 @@ const DataGrid: React.FC<DataGridProps> = (props, ref) => {
       if (gridRef.current) {
         if (gridRef.current.api) {
           gridRef.current.api.showLoadingOverlay();
+          gridRef.current.gridOptions.suppressNoRowsOverlay = true;
           // 同步grid sort
           gridRef.current.api.setSortModel(searchProps.sorters);
         }
@@ -196,6 +197,7 @@ const DataGrid: React.FC<DataGridProps> = (props, ref) => {
           if (gridRef.current) {
             if (gridRef.current.api) {
               gridRef.current.api.hideOverlay();
+              gridRef.current.gridOptions.suppressNoRowsOverlay = false;
               if (noData) gridRef.current.api.showNoRowsOverlay();
             }
           }
