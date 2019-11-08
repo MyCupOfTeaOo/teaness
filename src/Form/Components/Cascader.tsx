@@ -31,6 +31,7 @@ export interface CascaderProps
     value: string | undefined,
     selectedOptions?: CascaderOptionType[],
   ) => void;
+  separator?: string;
 }
 
 const depthLoad = (
@@ -91,6 +92,7 @@ const Cascader: React.FC<CascaderProps> = props => {
     errorCallback,
     value: source,
     className,
+    separator,
     ...otherProps
   } = props;
   const unListions = useMemo<Set<CancellablePromise<CascaderOptionType[]>>>(
@@ -131,16 +133,18 @@ const Cascader: React.FC<CascaderProps> = props => {
   const value = useMemo<string[] | undefined>(
     () =>
       (props.value
-        ? props.value.split('-').reduce<string[]>((prevValues, curValue) => {
-            if (prevValues.length > 0) {
-              prevValues.push(
-                `${prevValues[prevValues.length - 1]}-${curValue}`,
-              );
-            } else {
-              prevValues.push(curValue);
-            }
-            return prevValues;
-          }, [])
+        ? props.value
+            .split(separator || '-')
+            .reduce<string[]>((prevValues, curValue) => {
+              if (prevValues.length > 0) {
+                prevValues.push(
+                  `${prevValues[prevValues.length - 1]}-${curValue}`,
+                );
+              } else {
+                prevValues.push(curValue);
+              }
+              return prevValues;
+            }, [])
         : undefined),
     [props.value],
   );
@@ -205,6 +209,10 @@ const Cascader: React.FC<CascaderProps> = props => {
       {...otherProps}
     />
   );
+};
+
+Cascader.defaultProps = {
+  separator: '-',
 };
 
 export default Cascader;

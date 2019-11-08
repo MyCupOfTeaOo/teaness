@@ -65,3 +65,15 @@ $screen-sm-max: ($screen-md-min - 1px);
 $screen-md-max: ($screen-lg-min - 1px);
 $screen-lg-max: ($screen-xl-min - 1px);
 $screen-xl-max: ($screen-xxl-min - 1px);
+
+.formErrorLayout {
+  .ant-input {
+    border-color: $red-9;
+  }
+}
+
+.formErrorLayout {
+  .ant-input {
+    border-color: $red-9 !important;
+  }
+}

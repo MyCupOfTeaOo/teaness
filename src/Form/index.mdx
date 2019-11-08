@@ -6,15 +6,13 @@ menu: Form Component
 
 import { Playground, Props } from 'docz';
 import { useMemo, useState, useContext } from 'react';
-import { Radio, Icon, Button } from 'antd';
+import { Radio, Icon, Button, Input, InputNumber } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import 'antd/dist/antd.css';
 import Form from './';
 import { useForm } from './hooks';
 import { ShowErrorHoc } from './Components/Utils/ShowError';
 import DateGroup from './Components/Utils/DateGroup';
-import Input from './Components/Input';
-import InputNumber from './Components/InputNumber';
 import Select from './Components/Select';
 import Upload, { UploadContext } from './Components/Upload';
 import DatePicker from './Components/DatePicker';
@@ -22,6 +20,12 @@ import Label, { LabelRow } from '../Label';
 import { Col } from '../Grid';
 
 # Form(表单)
+
+---
+
+> 注 ant design 的 InputNumber 组件性能很差 用多了表单会卡
+
+---
 
 ## hooks
 
@@ -84,12 +88,12 @@ export interface FormConfig<U, T, C = any> {
   () => {
     let Demo = () => {
       const InputHasError = ShowErrorHoc(Input);
-      const InputNumberHasError = ShowErrorHoc(InputNumber);
       const SelectHasError = ShowErrorHoc(Select);
       const DatePickerHasError = ShowErrorHoc(DatePicker);
       const TextAreaHasError = ShowErrorHoc(TextArea);
       const RadioGroupHasError = ShowErrorHoc(Radio.Group);
       const UploadHasError = ShowErrorHoc(Upload);
+      const InputNumberHasError = ShowErrorHoc(InputNumber)
       const uploadContext = useContext(UploadContext)
       const formConfigs = useMemo(() => {
       return {
@@ -301,7 +305,6 @@ export interface FormConfig<U, T, C = any> {
 import { FormConfigs } from 'teaness/Form/typings';
 
 const InputHasError = ShowErrorHoc(Input);
-const InputNumberHasError = ShowErrorHoc(InputNumber);
 const SelectHasError = ShowErrorHoc(Select);
 const DatePickerHasError = ShowErrorHoc(DatePicker);
 const TextAreaHasError = ShowErrorHoc(TextArea);
@@ -319,7 +322,6 @@ type FormType = Partial<{
 
 interface FormComponentType {
   name: typeof Input;
-  age: typeof InputNumber;
   gender: typeof Radio.Group;
   schoolType: typeof Select;
   startDate: typeof DatePicker;
@@ -586,7 +588,6 @@ interface FormProps<T> {
 <Playground>
   {() => {
     const InputHasError = ShowErrorHoc(Input);
-    const InputNumberHasError = ShowErrorHoc(InputNumber);
     const SelectHasError = ShowErrorHoc(Select);
     const DatePickerHasError = ShowErrorHoc(DatePicker);
     const TextAreaHasError = ShowErrorHoc(TextArea);
