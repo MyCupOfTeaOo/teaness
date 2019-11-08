@@ -20,8 +20,12 @@ import Upload, { UploadContext, Registry } from '.';
 继承了 antd upload 的所有属性
 
 <Playground>
-  <Upload />
+  限制大小
+  <Upload maxSize={1} />
+  展示样式
   <Upload listType="picture" />
+  友好的文件提示
+  <Upload accept="image/*" />
 </Playground>
 
 <Playground>
@@ -49,16 +53,41 @@ import Upload, { UploadContext, Registry } from '.';
 
 </Playground>
 
-## 全局配置
-
-可以通过 Upload 目录的 Registry 修改
-
 ## 属性(Properties)
 
 ### Upload
 
 <Props of={Upload} />
 
+```ts
+interface UploadProps extends AntUploadProps {
+  /**
+   * 选择图片后触发
+   */
+  onSelect?: (info: UploadChangeParam) => void;
+  /**
+   * 获取信息失败后的回调
+   */
+  getInfoErrorback?: (uid: string, err: any) => void;
+  /**
+   * 获取信息的方法 一般会先从上下文获取,但是这个优先级更高
+   */
+  getFileInfo?: GetFileInfoType;
+  /**
+   * 加载信息时候展示的样式
+   */
+  loading?: React.ReactNode;
+  /**
+   * 文件最大size 单位KB
+   */
+  maxSize?: number;
+}
+```
+
 ### create
 
 <Props of={Upload.create} />
+
+## 全局配置
+
+可以通过 Upload 目录的 Registry 修改

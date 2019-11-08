@@ -5,7 +5,7 @@ import React, {
   useEffect,
   useMemo,
 } from 'react';
-import { Upload as AntUpload, Button } from 'antd';
+import { Upload as AntUpload, Button, message } from 'antd';
 import lodash from 'lodash-es';
 import { Circle } from '../../../Spin';
 import { UploadContext } from './context';
@@ -27,6 +27,7 @@ const Upload: React.FC<UploadProps> & { create: typeof bind } = props => {
     getFileInfo: g,
     children,
     loading,
+    maxSize,
     ...rest
   } = props;
   const context = useContext(UploadContext);
@@ -46,13 +47,29 @@ const Upload: React.FC<UploadProps> & { create: typeof bind } = props => {
       const target = info.fileList.find(item => item.uid === info.file.uid);
       setFileList(prevFileList => {
         // 可能是删除的
-        if (!target && prevFileList) return prevFileList.filter(item => item.uid !== info.file.uid);
+        if (!target && prevFileList) {
+          if (onChange) onChange(undefined);
+          return [];
+        }
         // 这种情况应该不可能
         if (!target) return prevFileList;
-        if (prevFileList) {
-          if (target.status === 'removed') {
-            return prevFileList.filter(item => item.uid !== target.uid);
+        // 删除
+        if (target.status === 'removed' && prevFileList) {
+          if (onChange && value) {
+            const fl = value.split(',');
+            const r = fl.filter(item => item === target.uid).join(',');
+            onChange(lodash.isEmpty(r) ? undefined : r);
           }
+          return prevFileList.filter(item => item.uid !== target.uid);
+        }
+
+        if (maxSize) {
+          if (target.size / 1024 > maxSize) {
+            message.error(`文件最大只能上传${maxSize}KB`);
+            return prevFileList;
+          }
+        }
+        if (prevFileList) {
           return prevFileList.concat([target]);
         } else {
           return [target];
@@ -67,13 +84,18 @@ const Upload: React.FC<UploadProps> & { create: typeof bind } = props => {
     let unmount = false;
     if (value && getFileInfo) {
       const uids = value.split(',');
-      const all = uids.map(uid => {
-        setLoadings(prev => ({
-          ...prev,
-          [uid]: true,
-        }));
-        return getFileInfo(uid);
-      });
+      const all = uids
+        .filter(item => {
+          if (!fileList) return true;
+          return !fileList.some(file => file.uid === item);
+        })
+        .map(uid => {
+          setLoadings(prev => ({
+            ...prev,
+            [uid]: true,
+          }));
+          return getFileInfo(uid);
+        });
       // 清空
       setFileList(undefined);
       all.forEach((resp, index) => {

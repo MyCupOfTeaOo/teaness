@@ -29,7 +29,8 @@ export type onUpload = (
 
 export interface UploadProps extends Omit<AntUploadProps, 'onChange'> {
   value?: string;
-  onChange?: (value: string) => void;
+  onChange?: (value: string | undefined) => void;
+  children?: React.ReactNode;
   /**
    * 选择图片后触发
    */
@@ -46,7 +47,10 @@ export interface UploadProps extends Omit<AntUploadProps, 'onChange'> {
    * 加载信息时候展示的样式
    */
   loading?: React.ReactNode;
-  children?: React.ReactNode;
+  /**
+   * 文件最大size 单位KB
+   */
+  maxSize?: number;
 }
 
 export interface UploadRefType {
