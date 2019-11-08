@@ -51,6 +51,10 @@ export interface UploadProps extends Omit<AntUploadProps, 'onChange'> {
    * 文件最大size 单位KB
    */
   maxSize?: number;
+  /**
+   * 文件最大数量 单位个
+   */
+  max?: number;
 }
 
 export interface UploadRefType {

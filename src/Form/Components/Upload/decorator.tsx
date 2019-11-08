@@ -198,7 +198,7 @@ export const bind = (options: OptionsType = {}) => {
           >
             <ul className="tea-upload-modal-body">
               {Object.keys(loadings).map(key => (
-                <li>
+                <li key={key}>
                   <Img
                     className="tea-upload-modal-img"
                     src={loadings[key].thumbUrl || loadings[key].url}

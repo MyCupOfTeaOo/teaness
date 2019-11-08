@@ -106,6 +106,7 @@ export function configToComponent<T, U extends T[keyof T]>(
       return (
         <formConfig.component
           {...props}
+          disabled={compoentStore.formStore.disabled}
           onChange={onChange}
           value={compoentStore.value}
           errors={compoentStore.errors}

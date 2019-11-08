@@ -276,6 +276,9 @@ export interface FormConfig<U, T, C = any> {
       >
         提交
       </Button>
+      <Button onClick={() => formStore.setDisabled(!formStore.disabled)}>
+        disabled
+      </Button>
       <Button
         onClick={() => {
           formStore.reset();

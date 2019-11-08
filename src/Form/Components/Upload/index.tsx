@@ -28,6 +28,7 @@ const Upload: React.FC<UploadProps> & { create: typeof bind } = props => {
     children,
     loading,
     maxSize,
+    max,
     ...rest
   } = props;
   const context = useContext(UploadContext);
@@ -73,7 +74,21 @@ const Upload: React.FC<UploadProps> & { create: typeof bind } = props => {
             return prevFileList;
           }
         }
+        // 增加
         if (prevFileList) {
+          if (max && prevFileList.length === max) {
+            // 多文件时可能会超过max
+
+            // 需要判断这一个是不是value的
+            const first = prevFileList[0];
+            if (value && onChange) {
+              const fl = value.split(',');
+              const r = fl.filter(item => item === first.uid).join(',');
+              onChange(lodash.isEmpty(r) ? undefined : r);
+            }
+
+            return prevFileList.slice(1).concat([target]);
+          }
           return prevFileList.concat([target]);
         } else {
           return [target];
@@ -88,18 +103,33 @@ const Upload: React.FC<UploadProps> & { create: typeof bind } = props => {
     let unmount = false;
     if (value && getFileInfo) {
       const uids = value.split(',');
-      const all = uids
-        .filter(item => {
-          if (!fileList) return true;
-          return !fileList.some(file => file.uid === item);
-        })
-        .map(uid => {
-          setLoadings(prev => ({
-            ...prev,
-            [uid]: true,
-          }));
-          return getFileInfo(uid);
-        });
+      const all = uids.map(uid => {
+        if (fileList) {
+          const target = fileList.find(file => file.uid === uid);
+          if (target) {
+            const t = Promise.resolve({
+              size: target.size,
+              name: target.name,
+              type: target.type,
+              url: target.url,
+            }) as Promise<{
+              size: number;
+              name: string;
+              type: string;
+              url: string;
+            }> & {
+              cancel: () => void;
+            };
+            t.cancel = () => {};
+            return t;
+          }
+        }
+        setLoadings(prev => ({
+          ...prev,
+          [uid]: true,
+        }));
+        return getFileInfo(uid);
+      });
       // 清空
       setFileList(undefined);
       all.forEach((resp, index) => {
@@ -201,6 +231,13 @@ const Upload: React.FC<UploadProps> & { create: typeof bind } = props => {
     }
   }, [context, fileList, setFileList, value]);
   const beforeUpload = useCallback(() => false, []);
+  const child = useMemo(() => {
+    if (isLoading) return loading;
+    if (!max) return children;
+    if (!fileList) return children;
+    if (fileList.length < max) return children;
+    return undefined;
+  }, [children, fileList, isLoading, loading]);
   return (
     <AntUpload
       onPreview={Registry.onPreview}
@@ -210,7 +247,7 @@ const Upload: React.FC<UploadProps> & { create: typeof bind } = props => {
       onChange={handle}
       {...rest}
     >
-      {isLoading ? loading : children}
+      {child}
     </AntUpload>
   );
 };

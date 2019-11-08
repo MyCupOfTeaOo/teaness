@@ -176,6 +176,14 @@ export class FormStore<T> implements FormStoreInstance<T> {
   componentStores: ComponentStoresType<T>;
 
   @observable
+  disabled = false;
+
+  @action
+  setDisabled = (disabled: boolean) => {
+    this.disabled = disabled;
+  };
+
+  @observable
   isChange = false;
 
   constructor(props: FormStoreProps<T>) {

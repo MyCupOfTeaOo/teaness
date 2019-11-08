@@ -95,6 +95,12 @@ export interface FormStoreProps<T> {
 
 export interface FormStoreInstance<T extends {}> {
   /**
+   * 全局disabled
+   */
+  disabled: boolean;
+
+  setDisabled: (disabled: boolean) => void;
+  /**
    * 所有的component store
    */
   componentStores: ComponentStoresType<T>;
