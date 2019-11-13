@@ -4,11 +4,11 @@
   "main": "./es/index.js",
   "module": "./es/index.js",
   "authors": [
-    "tea <tz310200@gmail.com> (https://github.com/tz310200)"
+    "tea <tz310200@gmail.com> (https://github.com/MyCupOfTeaOo)"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/tz310200/teaness"
+    "url": "https://github.com/MyCupOfTeaOo/teaness"
   },
   "keywords": [
     "react",

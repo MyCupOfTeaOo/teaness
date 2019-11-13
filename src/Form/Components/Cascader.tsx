@@ -138,7 +138,8 @@ const Cascader: React.FC<CascaderProps> = props => {
             .reduce<string[]>((prevValues, curValue) => {
               if (prevValues.length > 0) {
                 prevValues.push(
-                  `${prevValues[prevValues.length - 1]}-${curValue}`,
+                  `${prevValues[prevValues.length - 1]}${separator ||
+                    '-'}${curValue}`,
                 );
               } else {
                 prevValues.push(curValue);
