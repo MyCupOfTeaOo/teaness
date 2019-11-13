@@ -9,4 +9,4 @@
 
 ## 文档
 
-https://tz310200.github.io/teaness/
+https://MyCupOfTeaOo.github.io/teaness/
