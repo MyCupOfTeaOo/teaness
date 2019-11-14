@@ -233,11 +233,35 @@ const Upload: React.FC<UploadProps> & { create: typeof bind } = props => {
   const beforeUpload = useCallback(() => false, []);
   const child = useMemo(() => {
     if (isLoading) return loading;
-    if (!max) return children;
-    if (!fileList) return children;
-    if (fileList.length < max) return children;
+    if (!max) {
+      return (
+        children || (
+          <Button icon="upload" disabled={props.disabled}>
+            上传
+          </Button>
+        )
+      );
+    }
+    if (!fileList) {
+      return (
+        children || (
+          <Button icon="upload" disabled={props.disabled}>
+            上传
+          </Button>
+        )
+      );
+    }
+    if (fileList.length < max) {
+      return (
+        children || (
+          <Button icon="upload" disabled={props.disabled}>
+            上传
+          </Button>
+        )
+      );
+    }
     return undefined;
-  }, [children, fileList, isLoading, loading]);
+  }, [children, fileList, isLoading, loading, props.disabled]);
   return (
     <AntUpload
       onPreview={Registry.onPreview}
@@ -259,7 +283,6 @@ Upload.defaultProps = {
       文件信息加载中...
     </div>
   ),
-  children: <Button icon="upload">上传</Button>,
 };
 
 Upload.create = bind;
