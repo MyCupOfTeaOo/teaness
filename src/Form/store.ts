@@ -95,7 +95,7 @@ export class ComponentStore<U = any, T = {}>
         realValue = value as U;
       }
     } else {
-      realValue = value as (U | undefined);
+      realValue = value as U | undefined;
     }
 
     if (!this.isChange) {
@@ -132,7 +132,7 @@ export class ComponentStore<U = any, T = {}>
 
   valid = flow<Promise<ErrorType>, any[]>(function*(
     this: ComponentStore<U, T>,
-  ) {
+  ): any {
     if (!this.isChange) {
       this.isChange = true;
       this.formStore.setChangeState(true);

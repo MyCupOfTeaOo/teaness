@@ -8,7 +8,7 @@
 }
 
 .tea-grid-pagination {
-  border-top: 1px solid rgba($color: $text-color, $alpha: 0.12);
+  border-top: 1px solid $border-color-split;
   padding: 8px;
   text-align: right;
 }
@@ -57,7 +57,7 @@
     border: 1px solid rgba(0, 0, 0, 0);
     outline: initial;
     &.ag-cell-last-left-pinned {
-      border-right: 1px solid rgba($color: $text-color, $alpha: 0.12);
+      border-right: 1px solid $border-color-split;
     }
     &.ag-cell-first-right-pinned {
       border-left: 1px solid rgba($color: $text-color, $alpha: 0.12);

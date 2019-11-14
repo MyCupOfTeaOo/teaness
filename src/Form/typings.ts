@@ -1,5 +1,5 @@
 import Scheme, { RuleItem } from 'async-validator';
-import { CancellablePromise, FlowReturnType } from 'mobx/lib/api/flow';
+import { CancellablePromise } from 'mobx/lib/api/flow';
 
 export type ValidFormatterType<U> = any;
 export interface ErrorMessage {
@@ -67,7 +67,7 @@ export interface ComponentStoreInstance<U = any, T = {}> {
       | undefined,
   ) => void;
   setComponent: (component: ComponentType<U>) => void;
-  valid: () => CancellablePromise<FlowReturnType<any>>;
+  valid: () => CancellablePromise<any>;
   reset: () => void;
 }
 export interface ComponentStoreProps<U = any, T = {}> {
