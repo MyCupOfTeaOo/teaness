@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import { Select as AntSelect } from 'antd';
 import {
   SelectProps as AntSelectProps,
@@ -7,6 +7,7 @@ import {
 } from 'antd/lib/select';
 import classnames from 'classnames';
 import './styles/select.scss';
+import { useEffectState } from '../../hooks/index';
 
 export type CancellablePromise<T> = Promise<T> & {
   cancel(): void;
@@ -15,6 +16,9 @@ export type CancellablePromise<T> = Promise<T> & {
 export interface SelectProps extends AntSelectProps {
   requestMethod?: () => CancellablePromise<{ label: string; value: any }[]>;
   errorCallback?: (error: any) => void;
+  /**
+   * options 不能与 requestMethod 同时使用
+   */
   options?: { label: string; value: any }[];
 }
 
@@ -30,7 +34,9 @@ const Select: React.FC<SelectProps> & {
     className,
     ...otherProps
   } = props;
-  const [options, setOptions] = useState(defaultOptions);
+  const [options, setOptions] = useEffectState(defaultOptions, [
+    defaultOptions,
+  ]);
   const children = useMemo(
     () =>
       props.children ||
