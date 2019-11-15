@@ -142,16 +142,20 @@ const Upload: React.FC<UploadProps> & { create: typeof bind } = props => {
             if (unmount) return;
             setFileList(prevFileList => {
               if (Array.isArray(prevFileList)) {
-                return prevFileList.concat([
-                  {
-                    uid,
-                    size: item.size,
-                    name: item.name,
-                    url: item.url,
-                    type: item.type,
-                    status: 'done',
-                  },
-                ]);
+                if (prevFileList.every(prevFile => prevFile.uid !== uid)) {
+                  return prevFileList.concat([
+                    {
+                      uid,
+                      size: item.size,
+                      name: item.name,
+                      url: item.url,
+                      type: item.type,
+                      status: 'done',
+                    },
+                  ]);
+                } else {
+                  return prevFileList;
+                }
               } else {
                 return [
                   {
