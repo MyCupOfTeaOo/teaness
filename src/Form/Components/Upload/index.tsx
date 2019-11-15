@@ -47,11 +47,11 @@ const Upload: React.FC<UploadProps> & { create: typeof bind } = props => {
     (info: UploadChangeParam) => {
       const target = info.fileList.find(item => item.uid === info.file.uid);
       setFileList(prevFileList => {
-        // 已上传的可能会这样
+        // 已上传删除的可能会这样
         if (!target) {
-          if (onChange && value) {
+          if (onChange && value && info.file.status === 'removed') {
             const fl = value.split(',');
-            const r = fl.filter(item => item === info.file.uid).join(',');
+            const r = fl.filter(item => item !== info.file.uid).join(',');
             onChange(lodash.isEmpty(r) ? undefined : r);
           }
           if (prevFileList) return prevFileList.filter(item => item.uid !== info.file.uid);
@@ -62,7 +62,7 @@ const Upload: React.FC<UploadProps> & { create: typeof bind } = props => {
         if (target.status === 'removed') {
           if (onChange && value) {
             const fl = value.split(',');
-            const r = fl.filter(item => item === info.file.uid).join(',');
+            const r = fl.filter(item => item !== info.file.uid).join(',');
             onChange(lodash.isEmpty(r) ? undefined : r);
           }
           if (prevFileList) return prevFileList.filter(item => item.uid !== target.uid);
@@ -84,7 +84,7 @@ const Upload: React.FC<UploadProps> & { create: typeof bind } = props => {
             const first = prevFileList[0];
             if (value && onChange) {
               const fl = value.split(',');
-              const r = fl.filter(item => item === first.uid).join(',');
+              const r = fl.filter(item => item !== first.uid).join(',');
               onChange(lodash.isEmpty(r) ? undefined : r);
             }
 
@@ -102,12 +102,14 @@ const Upload: React.FC<UploadProps> & { create: typeof bind } = props => {
 
   useEffect(() => {
     let unmount = false;
+    const oldFileList: UploadFile[] = [];
     if (value && getFileInfo) {
       const uids = value.split(',');
       const all = uids.map(uid => {
         if (fileList) {
           const target = fileList.find(file => file.uid === uid);
           if (target) {
+            oldFileList.push(target);
             const t = Promise.resolve({
               size: target.size,
               name: target.name,
@@ -132,7 +134,7 @@ const Upload: React.FC<UploadProps> & { create: typeof bind } = props => {
         return getFileInfo(uid);
       });
       // 清空
-      setFileList(undefined);
+      setFileList(oldFileList);
       all.forEach((resp, index) => {
         const uid = uids[index];
         resp
