@@ -47,25 +47,26 @@ const Upload: React.FC<UploadProps> & { create: typeof bind } = props => {
     (info: UploadChangeParam) => {
       const target = info.fileList.find(item => item.uid === info.file.uid);
       setFileList(prevFileList => {
-        // 可能是删除的
-        if (!target && prevFileList) {
+        // 已上传的可能会这样
+        if (!target) {
           if (onChange && value) {
             const fl = value.split(',');
             const r = fl.filter(item => item === info.file.uid).join(',');
             onChange(lodash.isEmpty(r) ? undefined : r);
           }
-          return prevFileList.filter(item => item.uid !== info.file.uid);
+          if (prevFileList) return prevFileList.filter(item => item.uid !== info.file.uid);
+          else return undefined;
         }
-        // 这种情况应该不可能
-        if (!target) return prevFileList;
+
         // 删除
-        if (target.status === 'removed' && prevFileList) {
+        if (target.status === 'removed') {
           if (onChange && value) {
             const fl = value.split(',');
-            const r = fl.filter(item => item === target.uid).join(',');
+            const r = fl.filter(item => item === info.file.uid).join(',');
             onChange(lodash.isEmpty(r) ? undefined : r);
           }
-          return prevFileList.filter(item => item.uid !== target.uid);
+          if (prevFileList) return prevFileList.filter(item => item.uid !== target.uid);
+          else return undefined;
         }
 
         if (maxSize) {
@@ -96,7 +97,7 @@ const Upload: React.FC<UploadProps> & { create: typeof bind } = props => {
       });
       if (onSelect) onSelect(info);
     },
-    [onChange],
+    [onChange, value],
   );
 
   useEffect(() => {
