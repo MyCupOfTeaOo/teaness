@@ -93,6 +93,7 @@ export function useForm<
             targetStore.setComponent(formConfig.component);
             targetStore.setProps(formConfig.props);
             return configToComponent(
+              key,
               formConfig,
               formStore.componentStores[key as keyof T],
             );
@@ -101,6 +102,7 @@ export function useForm<
           }
         }
         return configToComponent(
+          key,
           formConfig,
           formStore.componentStores[key as keyof T],
         );

@@ -91,6 +91,7 @@ export function runCrossValid<T>(
 }
 
 export function configToComponent<T, U extends T[keyof T]>(
+  id: string,
   formConfig: FormConfig<U, T>,
   compoentStore: ComponentStoreInstance<U, T>,
 ) {
@@ -106,6 +107,7 @@ export function configToComponent<T, U extends T[keyof T]>(
       return (
         <formConfig.component
           disabled={compoentStore.formStore.disabled}
+          id={id}
           {...props}
           onChange={onChange}
           value={compoentStore.value}
@@ -158,6 +160,7 @@ export function parseFormConfigs<T = {}>(
 
   const components = mapValues(formConfigs, (formConfig, key) => {
     return configToComponent(
+      key,
       formConfig,
       formStore.componentStores[key as keyof T],
     );
