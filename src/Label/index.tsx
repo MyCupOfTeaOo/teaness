@@ -10,16 +10,9 @@ import LabelRow from './LabelRow';
 const Label: React.FC<LabelProps> = props => {
   const labelRowContext = useContext(LabelRowContext);
   const id = useMemo(() => {
-    if (
-      props.children &&
-      !Array.isArray(props.children) &&
-      (props.children as any).props &&
-      (props.children as any).props.id
-    ) {
-      return (props.children as any).props.id;
-    }
+    if (props.id) return props.id;
     return uniqueId('label');
-  }, []);
+  }, [props.id]);
   const colProps = props.colProps || labelRowContext.colProps;
   const float = props.float || labelRowContext.labelFloat;
   const text = useMemo(() => {

@@ -309,7 +309,7 @@ const SelectHasError = ShowErrorHoc(Select);
 const DatePickerHasError = ShowErrorHoc(DatePicker);
 const TextAreaHasError = ShowErrorHoc(TextArea);
 const RadioGroupHasError = ShowErrorHoc(Radio.Group);
-
+const InputNumberHasError = ShowErrorHoc(InputNumber)
 type FormType = Partial<{
   name: string;
   age: number;
@@ -592,6 +592,7 @@ interface FormProps<T> {
     const DatePickerHasError = ShowErrorHoc(DatePicker);
     const TextAreaHasError = ShowErrorHoc(TextArea);
     const RadioGroupHasError = ShowErrorHoc(Radio.Group);
+    const InputNumberHasError = ShowErrorHoc(InputNumber)
     const formConfigs = useMemo(() => {
       return {
         name: {
