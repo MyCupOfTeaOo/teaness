@@ -1,0 +1,91 @@
+---
+name: Transfer(穿梭窗)
+route: /Transfer
+menu: 'components'
+---
+
+import { Playground, Props } from 'docz';
+import 'antd/dist/antd.css';
+import { useState } from 'react';
+import { ClearTransfer } from '.';
+
+
+> 该穿梭窗分为 清除,选择(多种)
+- 可单独使用
+- 可组合使用
+- 也会提供组合后的组件
+
+# TransferClear
+
+## 属性(Properties)
+
+<Props of={ClearTransfer} />
+
+## 基本用法(Basic usage)
+
+<Playground>
+  {() => {
+    const [selectList, setSelectList] = useState(() => [
+      {
+        label: '刘贝贝',
+        value: 'lbb',
+      },
+      {
+        label: '邹文笛',
+        value: 'zwd',
+      },
+      {
+        label: '邹文笛邹文笛邹文笛邹文笛邹文笛邹文笛邹文笛',
+        value: 'zwdzwdzwdzwdzwdzwdzwdzwdzwdzwdzwdzwd',
+      },
+      {
+        label: 'mao-0',
+        value: 'mao-0',
+      },
+      {
+        label: 'mao-1',
+        value: 'mao-1',
+      },
+      {
+        label: 'mao-2',
+        value: 'mao-2',
+      },
+      {
+        label: 'mao-3',
+        value: 'mao-3',
+      },
+      {
+        label: 'mao-4',
+        value: 'mao-4',
+      },
+      {
+        label: 'mao-5',
+        value: 'mao-5',
+      },
+      {
+        label: 'mao-6',
+        value: 'mao-6',
+      },
+      {
+        label: 'mao-7',
+        value: 'mao-7',
+      },
+    ]);
+    return (
+      <div>
+        <h2>有title</h2>
+        <ClearTransfer
+          title={`已选: ${selectList.length}`}
+          selectList={selectList}
+          setSelectList={setSelectList}
+        />
+        <h2>不显示title</h2>
+        <ClearTransfer
+          title={null}
+          selectList={selectList}
+          setSelectList={setSelectList}
+        />
+      </div>
+    );
+  }}
+</Playground>

@@ -1,0 +1,54 @@
+@import '../global.scss';
+
+.tea-transfer {
+  width: 300px;
+  height: 456px;
+  display: inline-flex;
+  flex-direction: column;
+  .tea-transfer-title {
+    font-size: 16px;
+    font-weight: 500;
+    color: rgba(102, 102, 102, 1);
+    margin-bottom: 20px;
+  }
+  .tea-transfer-list {
+    flex: 1 1 auto;
+    padding: 20px;
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0px 0px 10px 0px rgba(204, 204, 204, 0.7);
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+  .tea-transfer-item {
+    opacity: 1;
+    height: 45.5px;
+    border-width: 1px;
+    padding: 11px 20px;
+    font-size: 14px;
+    font-weight: 400;
+    color: rgba(153, 153, 153, 1);
+    border-bottom: 1px solid rgba(244, 244, 244, 1);
+    margin: 0 -20px;
+    position: relative;
+  }
+}
+
+.tea-transfer-clear {
+  .tea-transfer-item {
+    & > span {
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+      display: inline-block;
+      width: calc(100% - 40px);
+    }
+    & > img {
+      cursor: pointer;
+      position: absolute;
+      right: 20px;
+    }
+  }
+}

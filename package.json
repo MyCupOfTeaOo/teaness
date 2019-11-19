@@ -96,6 +96,7 @@
     "mobx-react": "^6.1.4",
     "moment": "^2.24.0",
     "querystring": "^0.2.0",
+    "rc-queue-anim": "^1.8.2",
     "react": "^16.10.2",
     "react-dom": "^16.10.2",
     "react-draggable": "^4.1.0",
