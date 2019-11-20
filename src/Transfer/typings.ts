@@ -12,6 +12,7 @@ export interface BaseTransferProps<T> {
   style?: React.CSSProperties;
   itemStyle?: React.CSSProperties;
   itemClassName?: string;
+  renderItem?: (item: Item<T>) => React.ReactNode;
   disabled?: boolean;
   /**
    * 左上角标题
@@ -22,7 +23,6 @@ export interface BaseTransferProps<T> {
    */
   selectList: Item<T>[];
   setSelectList: Dispatch<SetStateAction<Item<T>[]>>;
-  renderItem: (item: Item<T>) => React.ReactNode;
 }
 
 export interface ClearTransferProps<T> extends BaseTransferProps<T> {}
@@ -57,7 +57,7 @@ export interface MultiLevelTransferProps<T>
   options: MultiLevelItem<T>[];
   selectList: MultiLevelItem<T>[];
   setSelectList: Dispatch<SetStateAction<MultiLevelItem<T>[]>>;
-  renderItem: (
+  renderItem?: (
     multiLevelItem: MultiLevelItem<T>,
     /**
      * 设置导航的方法

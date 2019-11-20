@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect, useMemo } from 'react';
 import classnames from 'classnames';
 import { Icon, Checkbox } from 'antd';
 import { CheckboxValueType } from 'antd/lib/checkbox/Group';
@@ -97,12 +97,16 @@ function MultiLevelTransfer<T extends string | number>(
       }
     });
   }, []);
-  const checkAll = curOptions.every(option => {
-    return (
-      selectList.findIndex(value => value.value === option.value) > -1 ||
-      option.disabled
-    );
-  });
+  const checkAll = useMemo(
+    () =>
+      curOptions.every(option => {
+        return (
+          selectList.findIndex(value => value.value === option.value) > -1 ||
+          option.disabled
+        );
+      }),
+    [curOptions, selectList],
+  );
   const onCheckAll = useCallback(() => {
     if (checkAll) {
       setSelectList(prevSelectList => {
@@ -161,6 +165,11 @@ function MultiLevelTransfer<T extends string | number>(
     },
     [curOptions],
   );
+
+  useEffect(() => {
+    setCurOptions(options);
+    setNodes([]);
+  }, [options]);
   return (
     <div
       className={classnames(
