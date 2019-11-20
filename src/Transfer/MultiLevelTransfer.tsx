@@ -83,20 +83,23 @@ function MultiLevelTransfer<T extends string | number>(
   } = props;
   const [nodes, setNodes] = useState<MultiLevelItem<T>[]>([]);
   const [curOptions, setCurOptions] = useState<MultiLevelItem<T>[]>(options);
-  const onClickNode = useCallback((node?: MultiLevelItem<T>) => {
-    setNodes(prevNodes => {
-      if (node) {
-        setCurOptions(node.children || []);
-        return prevNodes.slice(
-          0,
-          prevNodes.findIndex(prevNode => prevNode.value === node.value) + 1,
-        );
-      } else {
-        setCurOptions(options);
-        return [];
-      }
-    });
-  }, []);
+  const onClickNode = useCallback(
+    (node?: MultiLevelItem<T>) => {
+      setNodes(prevNodes => {
+        if (node) {
+          setCurOptions(node.children || []);
+          return prevNodes.slice(
+            0,
+            prevNodes.findIndex(prevNode => prevNode.value === node.value) + 1,
+          );
+        } else {
+          setCurOptions(options);
+          return [];
+        }
+      });
+    },
+    [options],
+  );
   const checkAll = useMemo(
     () =>
       curOptions.every(option => {

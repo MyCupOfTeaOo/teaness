@@ -16,7 +16,7 @@ inquirer
 
     console.log('提交到版本库');
     execSync('git add -A', { stdio: 'inherit' });
-    execSync(`git commit -m'${answer.commit}'`, { stdio: 'inherit' });
+    execSync(`git commit -m"${answer.commit}"`, { stdio: 'inherit' });
     execSync('git push', { stdio: 'inherit' });
 
     console.log('finish');
