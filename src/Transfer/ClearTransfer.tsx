@@ -19,6 +19,7 @@ function ClearTransfer<T extends string | number>(
     itemStyle,
     itemClassName,
     renderItem,
+    disabled,
   } = props;
   return (
     <div
@@ -32,7 +33,7 @@ function ClearTransfer<T extends string | number>(
             key={item.value}
             style={itemStyle}
             className={classnames(itemClassName, 'tea-transfer-item', {
-              'tea-transfer-item-disabled': item.disabled,
+              'tea-transfer-item-disabled': disabled || item.disabled,
             })}
           >
             {renderItem ? (
@@ -40,7 +41,7 @@ function ClearTransfer<T extends string | number>(
             ) : (
               <React.Fragment>
                 <span title={item.label}>{item.label}</span>
-                {!item.disabled && (
+                {!(disabled || item.disabled) && (
                   <img
                     alt=""
                     src={closeGhostBase64}

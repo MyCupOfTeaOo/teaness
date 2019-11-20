@@ -21,6 +21,7 @@ function CheckBoxTransfer<T extends number | string>(
     itemStyle,
     itemClassName,
     renderItem,
+    disabled,
   } = props;
   const [search, setSearch] = useState('');
   const showList = useMemo(
@@ -125,7 +126,11 @@ function CheckBoxTransfer<T extends number | string>(
         {hiddenCheckAll ? (
           undefined
         ) : (
-          <Checkbox checked={checkAll} onChange={onCheckAll}>
+          <Checkbox
+            checked={checkAll}
+            onChange={onCheckAll}
+            disabled={disabled}
+          >
             全选
           </Checkbox>
         )}
@@ -139,13 +144,16 @@ function CheckBoxTransfer<T extends number | string>(
               key={item.value}
               style={itemStyle}
               className={classnames(itemClassName, 'tea-transfer-item', {
-                'tea-transfer-item-disabled': item.disabled,
+                'tea-transfer-item-disabled': disabled || item.disabled,
               })}
             >
               {renderItem ? (
                 renderItem(item)
               ) : (
-                <Checkbox disabled={item.disabled} value={item.value}>
+                <Checkbox
+                  disabled={disabled || item.disabled}
+                  value={item.value}
+                >
                   <span title={item.label}>{item.label}</span>
                 </Checkbox>
               )}

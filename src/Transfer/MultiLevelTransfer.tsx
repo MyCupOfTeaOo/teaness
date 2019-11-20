@@ -79,6 +79,7 @@ function MultiLevelTransfer<T extends string | number>(
     itemStyle,
     itemClassName,
     renderItem,
+    disabled,
   } = props;
   const [nodes, setNodes] = useState<MultiLevelItem<T>[]>([]);
   const [curOptions, setCurOptions] = useState<MultiLevelItem<T>[]>(options);
@@ -176,7 +177,11 @@ function MultiLevelTransfer<T extends string | number>(
         {hiddenCheckAll ? (
           undefined
         ) : (
-          <Checkbox checked={checkAll} onChange={onCheckAll}>
+          <Checkbox
+            checked={checkAll}
+            onChange={onCheckAll}
+            disabled={disabled}
+          >
             全选
           </Checkbox>
         )}
@@ -189,14 +194,17 @@ function MultiLevelTransfer<T extends string | number>(
               key={item.value}
               style={itemStyle}
               className={classnames(itemClassName, 'tea-transfer-item', {
-                'tea-transfer-item-disabled': item.disabled,
+                'tea-transfer-item-disabled': disabled || item.disabled,
               })}
             >
               {renderItem ? (
                 renderItem(item, setNodes)
               ) : (
                 <React.Fragment>
-                  <Checkbox disabled={item.disabled} value={item.value}>
+                  <Checkbox
+                    disabled={disabled || item.disabled}
+                    value={item.value}
+                  >
                     <span title={item.label}>{item.label}</span>
                   </Checkbox>
                   {item.children && (

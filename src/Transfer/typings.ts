@@ -12,6 +12,7 @@ export interface BaseTransferProps<T> {
   style?: React.CSSProperties;
   itemStyle?: React.CSSProperties;
   itemClassName?: string;
+  disabled?: boolean;
   /**
    * 左上角标题
    */

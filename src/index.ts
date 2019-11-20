@@ -13,6 +13,7 @@ export * from './DataGrid';
 export * from './Form/Components';
 export * from './Spin';
 export * from './hooks';
+export * from './Transfer';
 export {
   PictureView,
   PictureModal,
