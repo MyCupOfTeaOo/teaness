@@ -67,7 +67,18 @@ $screen-lg-max: ($screen-xl-min - 1px);
 $screen-xl-max: ($screen-xxl-min - 1px);
 
 $component-background: #fff;
-$border-color-split: rgba($color: $text-color, $alpha: 0.12);
+$component-box-shadow: 0px 2px 8px 1px rgba(
+  $color: $text-color,
+  $alpha: 0.12,
+);
+$border-color-split: rgba(
+  $color: $text-color,
+  $alpha: 0.08,
+);
+$disabled-back-color: rgba(
+  $color: $text-color,
+  $alpha: 0.08,
+);
 
 .formErrorLayout {
   .ant-input {

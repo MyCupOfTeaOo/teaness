@@ -6,16 +6,217 @@ menu: 'components'
 
 import { Playground, Props } from 'docz';
 import 'antd/dist/antd.css';
-import { useState } from 'react';
-import { ClearTransfer } from '.';
-
+import { useState, useMemo } from 'react';
+import { ClearTransfer, CheckBoxTransfer, MultiLevelTransfer } from '.';
 
 > 该穿梭窗分为 清除,选择(多种)
+
 - 可单独使用
 - 可组合使用
 - 也会提供组合后的组件
 
-# TransferClear
+# CheckBoxTransfer(多选穿梭窗)
+
+## 属性(Properties)
+
+<Props of={CheckBoxTransfer} />
+
+## 基本用法(Basic usage)
+
+<Playground>
+  {() => {
+    const options = useMemo(
+      () => [
+        {
+          label: '刘贝贝',
+          value: 'lbb',
+        },
+        {
+          label: '邹文笛',
+          value: 'zwd',
+          disabled: true,
+        },
+        {
+          label: '邹文笛邹文笛邹文笛邹文笛邹文笛邹文笛邹文笛',
+          value: 'zwdzwdzwdzwdzwdzwdzwdzwdzwdzwdzwdzwd',
+        },
+        {
+          label: 'mao-0',
+          value: 'mao-0',
+        },
+        {
+          label: 'mao-1',
+          value: 'mao-1',
+        },
+        {
+          label: 'mao-2',
+          value: 'mao-2',
+        },
+        {
+          label: 'mao-3',
+          value: 'mao-3',
+        },
+        {
+          label: 'mao-4',
+          value: 'mao-4',
+        },
+        {
+          label: 'mao-5',
+          value: 'mao-5',
+        },
+        {
+          label: 'mao-6',
+          value: 'mao-6',
+        },
+        {
+          label: 'mao-7',
+          value: 'mao-7',
+        },
+      ],
+      [],
+    );
+    const [selectList, setSelectList] = useState(() => []);
+    return (
+      <div>
+        <h2>有title</h2>
+        <CheckBoxTransfer
+          title="筛选"
+          options={options}
+          selectList={selectList}
+          setSelectList={setSelectList}
+        />
+        <h2>不显示title</h2>
+        <CheckBoxTransfer
+          title={null}
+          options={options}
+          selectList={selectList}
+          setSelectList={setSelectList}
+        />
+      </div>
+    );
+  }}
+</Playground>
+
+# MultiLevelTransfer(多级穿梭窗)
+
+## 属性(Properties)
+
+<Props of={MultiLevelTransfer} />
+
+## 基本用法(Basic usage)
+
+<Playground>
+  {() => {
+    const options = useMemo(
+      () => [
+        {
+          label: '刘贝贝',
+          value: 'lbb',
+        },
+        {
+          label: '邹文笛',
+          value: 'zwd',
+          disabled: true,
+          children: [
+            {
+              label: '邹文笛2',
+              value: 'zwd2',
+            },
+          ],
+        },
+        {
+          label: '邹文笛邹文笛邹文笛邹文笛邹文笛邹文笛邹文笛',
+          value: 'zwdzwdzwdzwdzwdzwdzwdzwdzwdzwdzwdzwd',
+          children: [
+            {
+              label: '邹文笛邹文笛邹文笛邹文笛邹文笛邹文笛邹文笛2',
+              value: 'zwdzwdzwdzwdzwdzwdzwdzwdzwdzwdzwdzwd2',
+              children: [
+                {
+                  label: '邹文笛邹文笛邹文笛邹文笛邹文笛邹文笛邹文笛3',
+                  value: 'zwdzwdzwdzwdzwdzwdzwdzwdzwdzwdzwdzwd3',
+                  children: [
+                    {
+                      label: '邹文笛邹文笛邹文笛邹文笛邹文笛邹文笛邹文笛4',
+                      value: 'zwdzwdzwdzwdzwdzwdzwdzwdzwdzwdzwdzwd4',
+                      children: [
+                        {
+                          label: '邹文笛邹文笛邹文笛邹文笛邹文笛邹文笛邹文笛5',
+                          value: 'zwdzwdzwdzwdzwdzwdzwdzwdzwdzwdzwdzwd5',
+                          children: [
+                            {
+                              label:
+                                '邹文笛邹文笛邹文笛邹文笛邹文笛邹文笛邹文笛6',
+                              value: 'zwdzwdzwdzwdzwdzwdzwdzwdzwdzwdzwdzwd6',
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+        {
+          label: 'mao-0',
+          value: 'mao-0',
+        },
+        {
+          label: 'mao-1',
+          value: 'mao-1',
+        },
+        {
+          label: 'mao-2',
+          value: 'mao-2',
+        },
+        {
+          label: 'mao-3',
+          value: 'mao-3',
+        },
+        {
+          label: 'mao-4',
+          value: 'mao-4',
+        },
+        {
+          label: 'mao-5',
+          value: 'mao-5',
+        },
+        {
+          label: 'mao-6',
+          value: 'mao-6',
+        },
+        {
+          label: 'mao-7',
+          value: 'mao-7',
+        },
+      ],
+      [],
+    );
+    const [selectList, setSelectList] = useState(() => []);
+    return (
+      <div>
+        <h2>有title</h2>
+        <MultiLevelTransfer
+          title="筛选"
+          options={options}
+          selectList={selectList}
+          setSelectList={setSelectList}
+        />
+        <h2>不显示title</h2>
+        <MultiLevelTransfer
+          title={null}
+          options={options}
+          selectList={selectList}
+          setSelectList={setSelectList}
+        />
+      </div>
+    );
+  }}
+</Playground>
+
+# ClearTransfer(清除穿梭窗)
 
 ## 属性(Properties)
 
@@ -33,6 +234,7 @@ import { ClearTransfer } from '.';
       {
         label: '邹文笛',
         value: 'zwd',
+        disabled: true,
       },
       {
         label: '邹文笛邹文笛邹文笛邹文笛邹文笛邹文笛邹文笛',
@@ -82,6 +284,122 @@ import { ClearTransfer } from '.';
         <h2>不显示title</h2>
         <ClearTransfer
           title={null}
+          selectList={selectList}
+          setSelectList={setSelectList}
+        />
+      </div>
+    );
+  }}
+</Playground>
+
+# 联动使用
+
+<Playground>
+  {() => {
+    const options = useMemo(
+      () => [
+        {
+          label: '刘贝贝',
+          value: 'lbb',
+        },
+        {
+          label: '邹文笛',
+          value: 'zwd',
+          disabled: true,
+          children: [
+            {
+              label: '邹文笛2',
+              value: 'zwd2',
+            },
+          ],
+        },
+        {
+          label: '邹文笛邹文笛邹文笛邹文笛邹文笛邹文笛邹文笛',
+          value: 'zwdzwdzwdzwdzwdzwdzwdzwdzwdzwdzwdzwd',
+          children: [
+            {
+              label: '邹文笛邹文笛邹文笛邹文笛邹文笛邹文笛邹文笛2',
+              value: 'zwdzwdzwdzwdzwdzwdzwdzwdzwdzwdzwdzwd2',
+              children: [
+                {
+                  label: '邹文笛邹文笛邹文笛邹文笛邹文笛邹文笛邹文笛3',
+                  value: 'zwdzwdzwdzwdzwdzwdzwdzwdzwdzwdzwdzwd3',
+                  children: [
+                    {
+                      label: '邹文笛邹文笛邹文笛邹文笛邹文笛邹文笛邹文笛4',
+                      value: 'zwdzwdzwdzwdzwdzwdzwdzwdzwdzwdzwdzwd4',
+                      children: [
+                        {
+                          label: '邹文笛邹文笛邹文笛邹文笛邹文笛邹文笛邹文笛5',
+                          value: 'zwdzwdzwdzwdzwdzwdzwdzwdzwdzwdzwdzwd5',
+                          children: [
+                            {
+                              label:
+                                '邹文笛邹文笛邹文笛邹文笛邹文笛邹文笛邹文笛6',
+                              value: 'zwdzwdzwdzwdzwdzwdzwdzwdzwdzwdzwdzwd6',
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+        {
+          label: 'mao-0',
+          value: 'mao-0',
+        },
+        {
+          label: 'mao-1',
+          value: 'mao-1',
+        },
+        {
+          label: 'mao-2',
+          value: 'mao-2',
+        },
+        {
+          label: 'mao-3',
+          value: 'mao-3',
+        },
+        {
+          label: 'mao-4',
+          value: 'mao-4',
+        },
+        {
+          label: 'mao-5',
+          value: 'mao-5',
+        },
+        {
+          label: 'mao-6',
+          value: 'mao-6',
+        },
+        {
+          label: 'mao-7',
+          value: 'mao-7',
+        },
+      ],
+      [],
+    );
+    const [selectList, setSelectList] = useState(() => []);
+    return (
+      <div>
+        <MultiLevelTransfer
+          title="多级选择"
+          options={options}
+          selectList={selectList}
+          setSelectList={setSelectList}
+        />
+        <ClearTransfer
+          title={`已选: ${selectList.length}`}
+          selectList={selectList}
+          setSelectList={setSelectList}
+        />
+        <CheckBoxTransfer
+          title="单级多选"
+          options={options}
           selectList={selectList}
           setSelectList={setSelectList}
         />

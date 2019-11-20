@@ -8,14 +8,14 @@
   .tea-transfer-title {
     font-size: 16px;
     font-weight: 500;
-    color: rgba(102, 102, 102, 1);
+    color: rgba($color: $text-color, $alpha: 0.56);
     margin-bottom: 20px;
   }
   .tea-transfer-list {
     flex: 1 1 auto;
-    padding: 20px;
-    background: rgba(255, 255, 255, 1);
-    box-shadow: 0px 0px 10px 0px rgba(204, 204, 204, 0.7);
+    padding: 20px 20px 0;
+    background: $component-background;
+    box-shadow: $component-box-shadow;
     border-radius: 4px;
     display: flex;
     flex-direction: column;
@@ -30,9 +30,13 @@
     font-size: 14px;
     font-weight: 400;
     color: rgba(153, 153, 153, 1);
-    border-bottom: 1px solid rgba(244, 244, 244, 1);
+    border-bottom: 1px solid $border-color-split;
     margin: 0 -20px;
     position: relative;
+    &.tea-transfer-item-disabled {
+      cursor: not-allowed;
+      background-color: $disabled-back-color;
+    }
   }
 }
 
@@ -49,6 +53,77 @@
       cursor: pointer;
       position: absolute;
       right: 20px;
+    }
+  }
+}
+
+.tea-transfer-checkbox {
+  .tea-transfer-input {
+    margin-bottom: 14px;
+  }
+  .tea-transfer-item {
+    .ant-checkbox-wrapper {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      .ant-checkbox {
+        top: auto;
+        & + span {
+          text-overflow: ellipsis;
+          overflow: hidden;
+          white-space: nowrap;
+          display: inline-block;
+        }
+      }
+    }
+  }
+}
+
+.tea-transfer-mutilevel {
+  .tea-transfer-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 38px;
+    .ant-checkbox-wrapper {
+      width: calc(100% - 48px);
+    }
+    .tea-transfer-leaf-icon {
+      display: flex;
+      flex-shrink: 0;
+      align-items: center;
+      justify-content: space-between;
+      img {
+        margin-right: 6px;
+      }
+    }
+  }
+}
+
+.tea-transfer-navbar {
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  .tea-transfer-nav {
+    display: flex;
+    align-items: center;
+    a {
+      display: inline-block;
+      max-width: 75px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    img {
+      margin: 0 8px;
+    }
+  }
+  .tea-transfer-nav-cur {
+    a {
+      cursor: auto;
+      color: #999;
     }
   }
 }
