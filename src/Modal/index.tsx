@@ -9,7 +9,7 @@ interface OpenBase {
   onOk?: (...args: any[]) => void | Promise<any>;
 }
 
-function open<T extends OpenBase>(
+export function open<T extends OpenBase>(
   ModalComponent: React.ComponentType<T>,
   params: T,
 ) {
@@ -54,7 +54,7 @@ function open<T extends OpenBase>(
 }
 
 class Modal extends AModal {
-  static open = open;
+  static open = (props: ModalProps) => open(Modal, props);
 
   constructor(props: ModalProps, context: {}) {
     super(props, context);
