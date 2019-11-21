@@ -19,7 +19,7 @@ export default function PictureView(params: PictureModalProps) {
     );
   }
   function destory() {
-    if (!isCancel) {
+    if (isCancel) {
       const unmountResult = ReactDOM.unmountComponentAtNode(div);
       if (unmountResult && div.parentNode) {
         div.parentNode.removeChild(div);
