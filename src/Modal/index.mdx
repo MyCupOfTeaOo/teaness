@@ -5,14 +5,22 @@ menu: 'components'
 ---
 
 import { Playground, Props } from 'docz';
+import {Button} from 'antd';
+import 'antd/dist/antd.css';
 import Modal from './';
 
 # Modal(模态窗)
 
-## 属性(Properties)
-
-<Props of={Modal} />
-
 ## 基本用法(Basic usage)
 
 参考[antd modal](https://ant.design/components/modal-cn/)(注:只是浮动位置默认改成了居中)
+
+<Playground>
+  <Button onClick={() => Modal.info({title:"这是info",onOk: () => new Promise((resolve) => setTimeout(() => resolve(),2000))})}>info</Button>
+  区别与antd的组件 open,但是open 不支持 onCancel return promise 显示loading那种方法
+  <Button onClick={() => Modal.open({title:"这是info"})}>info</Button>
+</Playground>
+
+## 属性(Properties)
+
+<Props of={Modal} />
