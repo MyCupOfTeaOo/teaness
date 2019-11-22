@@ -22,6 +22,7 @@
     "build:all": "father build && docz build",
     "publish:all": "node ./scripts/publishAll.js",
     "publish:doc": "node ./scripts/publishDoc.js",
+    "doc:push": "node ./scripts/pushDoc.local.js",
     "lint:ts": "tslint \"src/**/*.ts\" \"src/**/*.tsx\"",
     "lint:fix": "eslint --fix --cache --ext .js,.jsx,.ts,.tsx --format=pretty ./src",
     "lint-staged": "lint-staged",
