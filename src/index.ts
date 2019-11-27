@@ -6,6 +6,7 @@ import Label, { LabelRow } from './Label';
 import Form from './Form';
 import Img from './Img';
 import PictureView, { PictureModal } from './PictureView/index';
+import FooterToolbar from './FooterToolbar';
 
 export { useForm } from './Form';
 export { Row, Col } from './Grid';
@@ -15,6 +16,7 @@ export * from './Spin';
 export * from './hooks';
 export * from './Transfer';
 export {
+  FooterToolbar,
   PictureView,
   PictureModal,
   FoldCard,
