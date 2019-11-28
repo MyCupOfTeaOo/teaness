@@ -246,10 +246,17 @@ export class FormStore<T> implements FormStoreInstance<T> {
     if (this.componentStores[key]) return this.componentStores[key].value as U | undefined;
   };
 
-  getValues = <U extends T = T>(keys: (keyof T)[]) => {
+  getValues = <U extends T = T>(keys?: (keyof T)[]) => {
     const values: Partial<T> = {};
-    for (const key of keys) {
-      if (this.componentStores[key]) values[key] = this.componentStores[key].value;
+
+    if (!Array.isArray(keys)) {
+      for (const key in this.componentStores) {
+        if (this.componentStores[key]) values[key] = this.componentStores[key].value;
+      }
+    } else {
+      for (const key of keys) {
+        if (this.componentStores[key]) values[key] = this.componentStores[key].value;
+      }
     }
     return values as Partial<U>;
   };
