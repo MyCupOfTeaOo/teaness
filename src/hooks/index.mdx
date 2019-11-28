@@ -5,12 +5,11 @@ menu: hooks
 ---
 
 import { Playground, Props } from 'docz';
-import { useEffectState } from './';
 
 # hooks
 
 ## useEffectState
 
-| Property | Type                     | Required | Default | return | Description                         |
-| -------- | ------------------------ | -------- | ------- | ------ | ----------------------------------- |
-| props    | (T \| () => T,deps?: []) | true     |         | T      | 可以 hook 依赖重复初始化的 useState |
+| Property | Type                        | Required | Default | return | Description                         |
+| -------- | --------------------------- | -------- | ------- | ------ | ----------------------------------- |
+| props    | (T \| () => T,deps?: any[]) | true     |         | T      | 可以 hook 依赖重复初始化的 useState |

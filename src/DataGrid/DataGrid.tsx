@@ -71,7 +71,8 @@ export const showTotal = (item: number, range: [number, number]) =>
 
 const DataGrid: React.FC<DataGridProps> = (props, ref) => {
   const [count, setCount] = useState(0);
-
+  // 解决 loading 与 nodata 同时显示bug
+  const loadCount = useRef(0);
   const gridRef = useRef<AgGridReact>(null);
   const defaultColDef = useMemo(() => {
     return {
@@ -152,7 +153,7 @@ const DataGrid: React.FC<DataGridProps> = (props, ref) => {
         token: cancelToken,
         cancel,
       } = DataGridRegister.request.CancelToken.source();
-
+      loadCount.current += 1;
       DataGridRegister.request
         .post<ReqResponse>(props.fetchUrl, {
           cancelToken,
@@ -194,7 +195,8 @@ const DataGrid: React.FC<DataGridProps> = (props, ref) => {
           }
         })
         .finally(() => {
-          if (gridRef.current) {
+          loadCount.current -= 1;
+          if (gridRef.current && !loadCount.current) {
             if (gridRef.current.api) {
               gridRef.current.api.hideOverlay();
               gridRef.current.gridOptions.suppressNoRowsOverlay = false;
