@@ -7,8 +7,6 @@ export interface Sorter {
 
 enum respCode {
   success = 200,
-  error = 400,
-  exception = 500,
   cancel = 0,
 }
 
@@ -36,8 +34,6 @@ export interface ReqResponse {
 const DataGridRegister: {
   respCode: Enum<{
     success: number;
-    error: number;
-    exception: number;
     cancel: number;
   }>;
   request: RequestMethod;
