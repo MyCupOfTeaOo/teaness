@@ -7,6 +7,7 @@ import React, {
 } from 'react';
 import { Upload as AntUpload, Button, message } from 'antd';
 import lodash from 'lodash-es';
+import { UploadListType } from 'antd/lib/upload/interface';
 import { Circle } from '../../../Spin';
 import { UploadContext } from './context';
 import {
@@ -17,6 +18,21 @@ import {
 } from './typings';
 import Registry from './Registry';
 import { bind } from './decorator';
+
+export function handlePreview(
+  file: UploadFile,
+  listType?: UploadListType,
+): void {
+  switch (listType) {
+    case 'picture':
+    case 'picture-card':
+      if (Registry.onPreview) Registry.onPreview(file);
+      break;
+    default:
+      if (Registry.onDownLoad) Registry.onDownLoad(file);
+      else if (file.url) window.open(file.url);
+  }
+}
 
 const Upload: React.FC<UploadProps> & { create: typeof bind } = props => {
   const {
@@ -269,9 +285,12 @@ const Upload: React.FC<UploadProps> & { create: typeof bind } = props => {
     }
     return undefined;
   }, [children, fileList, isLoading, loading, props.disabled]);
+  const onPreview = useCallback(file => handlePreview(file, props.listType), [
+    props.listType,
+  ]);
   return (
     <AntUpload
-      onPreview={Registry.onPreview}
+      onPreview={onPreview}
       onDownload={Registry.onDownLoad}
       beforeUpload={beforeUpload}
       fileList={fileList}
