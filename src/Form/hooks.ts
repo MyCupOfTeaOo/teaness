@@ -1,6 +1,7 @@
 import { useMemo, useState, useEffect } from 'react';
 import { mapValues } from 'lodash-es';
 import { IReactionDisposer } from 'mobx';
+import { useEffectExcludeFirst } from 'src/hooks';
 import { FormConfigs, HookOptions } from './typings';
 import {
   parseFormConfigs,
@@ -48,7 +49,7 @@ export function useForm<
     };
   }, []);
   const [components, setComponents] = useState(initComponents);
-  useEffect(() => {
+  useEffectExcludeFirst(() => {
     for (const key in formStore.componentStores) {
       if (
         Object.prototype.hasOwnProperty.call(formStore.componentStores, key)
