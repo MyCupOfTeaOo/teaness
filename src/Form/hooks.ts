@@ -1,7 +1,7 @@
 import { useMemo, useState, useEffect } from 'react';
 import { mapValues } from 'lodash-es';
 import { IReactionDisposer } from 'mobx';
-import { useEffectExcludeFirst } from 'src/hooks';
+import { useEffectExcludeFirst } from '../hooks';
 import { FormConfigs, HookOptions } from './typings';
 import {
   parseFormConfigs,
