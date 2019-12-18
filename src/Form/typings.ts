@@ -126,7 +126,7 @@ export interface FormStoreInstance<T extends {}> {
    * @param keys 获取的值
    */
   getValues<U extends T = T>(keys?: (keyof T)[]): Partial<U>;
-  setValue(key: keyof T, value: T[keyof T]): void;
+  setValue(key: keyof T, value?: T[keyof T]): void;
   setValues(props: Partial<T>): void;
   /**
    * 跟上面 setValues 区别在于 此接口是把所有值更新成props,setValues({})不会更新任何值,setAllValues({})会把所有值更新成undefined

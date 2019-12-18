@@ -261,7 +261,7 @@ export class FormStore<T> implements FormStoreInstance<T> {
     return values as Partial<U>;
   };
 
-  setValue = (key: keyof T, value: T[keyof T]) => {
+  setValue = (key: keyof T, value?: T[keyof T]) => {
     if (this.componentStores[key]) this.componentStores[key].onChange(value);
   };
 
