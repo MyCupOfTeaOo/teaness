@@ -151,10 +151,14 @@ export interface FormStoreInstance<T extends {}> {
   ): Promise<Partial<U>>;
 }
 
-export interface AutoValid<T> {
-  primaryKey: keyof T;
+export interface AutoValid<T, P extends keyof T = keyof T> {
+  primaryKey: P;
   listenKey: (keyof T)[];
-  effect: (arg: T, formStore: FormStoreInstance<T>) => string | undefined;
+  effect: (
+    arg: T,
+    formStore: FormStoreInstance<T>,
+    value?: T[P],
+  ) => string | undefined;
 }
 
 export interface AutoHandle<T> {
