@@ -32,6 +32,7 @@ const Select: React.FC<SelectProps> & {
     requestMethod,
     errorCallback,
     className,
+    value,
     ...otherProps
   } = props;
   const [options, setOptions] = useEffectState(defaultOptions, [
@@ -73,6 +74,7 @@ const Select: React.FC<SelectProps> & {
     <AntSelect
       className={classnames('tea-select', className)}
       {...otherProps}
+      value={value ?? undefined}
       onChange={onChange}
     >
       {children}
@@ -89,5 +91,9 @@ Select.defaultProps = {
   placeholder: '请选择',
   showSearch: true,
   allowClear: true,
+  filterOption: (input, option) =>
+    (option.props.children as string)
+      .toLowerCase()
+      .indexOf(input.toLowerCase()) >= 0,
 };
 export default Select;

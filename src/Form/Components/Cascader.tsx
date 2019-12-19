@@ -203,7 +203,7 @@ const Cascader: React.FC<CascaderProps> = props => {
   return (
     <AntCascader
       className={classnames('tea-cascader', className)}
-      value={value}
+      value={value ?? undefined}
       onChange={handle}
       options={options}
       loadData={loadData}

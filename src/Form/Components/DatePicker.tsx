@@ -45,7 +45,7 @@ const DatePicker: React.FC<DatePickerProps> & {
   }, [format]);
   return (
     <AntDatePicker
-      value={parseValue}
+      value={parseValue ?? undefined}
       format={format || undefined}
       onChange={onChange && handle}
       showTime={showTime}

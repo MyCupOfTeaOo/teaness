@@ -5,8 +5,10 @@ import ShowError, { ShowErrorHoc } from './Utils/ShowError';
 import Cascader from './Cascader';
 import Upload, { UploadContext } from './Upload';
 import Empty from './Empty';
+import Checkbox from './Checkbox';
 
 export {
+  Checkbox,
   Upload,
   UploadContext,
   DatePicker,
