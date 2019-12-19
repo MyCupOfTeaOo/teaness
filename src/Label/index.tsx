@@ -27,7 +27,6 @@ const Label: React.FC<LabelProps> = props => {
     } else {
       sizeClass[`label-${float}`] = float;
     }
-
     return props.text ? (
       <Col
         style={{
@@ -48,7 +47,7 @@ const Label: React.FC<LabelProps> = props => {
             sizeClass,
           )}
         >
-          {props.text} :
+          {props.renderText ?? props.text} :
         </label>
       </Col>
     ) : (

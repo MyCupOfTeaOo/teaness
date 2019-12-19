@@ -61,7 +61,9 @@ export default {
       require.resolve('@babel/plugin-proposal-decorators'),
       { legacy: true },
     ]);
-
+    babelrc.plugins.unshift(
+      require.resolve('@babel/plugin-proposal-nullish-coalescing-operator'),
+    );
     return babelrc;
   },
 };

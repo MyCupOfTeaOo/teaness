@@ -82,6 +82,7 @@
     "@typescript-eslint/explicit-member-accessibility": 0,
     "@typescript-eslint/interface-name-prefix": 0,
     "@typescript-eslint/no-angle-bracket-type-assertion": 0,
+    "@typescript-eslint/no-empty-function": 0,
     "import/no-cycle": 0,
     "react-hooks/rules-of-hooks": "warn",
     "react/no-array-index-key": "warn",
