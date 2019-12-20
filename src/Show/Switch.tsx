@@ -40,7 +40,7 @@ const Switch: React.FC<SwitchProps> & {
   const children = React.Children.map(
     props.children as any,
     (child: React.ReactElement<CaseProps>) => {
-      if (!child?.props || lodash.isEmpty(child?.props.expect)) {
+      if (!child?.props) {
         return child;
       }
       const { expect } = child.props;
