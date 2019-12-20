@@ -1,5 +1,5 @@
 import React from 'react';
-import lodash from 'lodash';
+import lodash from 'lodash-es';
 
 export type Value =
   | string
@@ -7,21 +7,13 @@ export type Value =
   | number
   | undefined
   | null
-  | Function
   | React.ReactNode;
 
 export interface CaseProps {
   /**
    * 预期值
    */
-  expect:
-    | string
-    | boolean
-    | number
-    | undefined
-    | null
-    | RegExp
-    | ((actual?: Value) => boolean);
+  expect: Value | Value[] | RegExp | ((actual?: Value) => boolean);
 }
 
 export const Case: React.FC<CaseProps> = props => {
@@ -48,7 +40,7 @@ const Switch: React.FC<SwitchProps> & {
   const children = React.Children.map(
     props.children as any,
     (child: React.ReactElement<CaseProps>) => {
-      if (!child?.props || !child?.props.expect) {
+      if (!child?.props || lodash.isEmpty(child?.props.expect)) {
         return child;
       }
       const { expect } = child.props;
