@@ -1,0 +1,46 @@
+---
+name: Show(显示)
+route: /Show
+menu: Display(展示)
+---
+
+import { Playground, Props } from 'docz';
+import { Button } from 'antd';
+import 'antd/dist/antd.css';
+import Show, { Switch } from '.';
+
+# Show(显示)
+
+控制 children 是否显示
+
+## 基本用法(Basic usage)
+
+<Playground>
+  <Show actual={0} expect={0}>
+    显示
+  </Show>
+  <Show actual={0} expect={1}>
+    不显示
+  </Show>
+</Playground>
+
+## 属性(Properties)
+
+<Props of={Show} />
+
+# Switch(匹配显示)
+
+根据 Switch.Case 组件的匹配显示
+
+## 基本用法(Basic usage)
+
+<Playground>
+  <Switch actual={0}>
+    <Switch.Case expect={0}>显示</Switch.Case>
+    <Switch.Case expect={1}>不显示</Switch.Case>
+  </Switch>
+</Playground>
+
+## 属性(Properties)
+
+<Props of={Switch} />

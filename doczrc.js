@@ -1,5 +1,14 @@
 import { css } from 'docz-plugin-css';
 
+const fs = require('fs');
+
+let babelPlugin = [];
+
+if (fs.existsSync('./.babelrc')) {
+  const babelJson = JSON.parse(fs.readFileSync('./.babelrc').toString());
+  babelPlugin = babelPlugin.concat(babelJson.plugins || []);
+}
+
 export default {
   base: '/teaness/',
   dest: 'docs',
@@ -61,9 +70,10 @@ export default {
       require.resolve('@babel/plugin-proposal-decorators'),
       { legacy: true },
     ]);
-    babelrc.plugins.unshift(
-      require.resolve('@babel/plugin-proposal-nullish-coalescing-operator'),
-    );
+    babelPlugin.forEach(plugin => {
+      babelrc.plugins.unshift(require.resolve(plugin));
+    });
+
     return babelrc;
   },
 };
