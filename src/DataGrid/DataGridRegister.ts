@@ -1,16 +1,6 @@
-import request, { RequestMethod } from 'umi-request';
+import { Sorter, RequestMethod, ResponseData } from './typings';
+import { CancellablePromise } from '../typings';
 
-export interface Sorter {
-  colId: string;
-  sort: string;
-}
-
-enum respCode {
-  success = 200,
-  cancel = 0,
-}
-
-type Enum<E> = Record<keyof E, number> & { [k: number]: string };
 export interface RouteData {
   pathname: string;
   query?: any;
@@ -32,18 +22,19 @@ export interface ReqResponse {
 }
 
 const DataGridRegister: {
-  respCode: Enum<{
-    success: number;
-    cancel: number;
-  }>;
   request: RequestMethod;
   router?: Router;
   defaultPage: number;
   defaultPageSize: number;
   defaultSorters: Sorter[];
 } = {
-  respCode,
-  request,
+  request: () => {
+    const r = Promise.reject(new Error('未注册请求方法')) as CancellablePromise<
+      ResponseData<{}>
+    >;
+    r.cancel = () => {};
+    return r;
+  },
   defaultPage: 1,
   defaultPageSize: 10,
   defaultSorters: [],

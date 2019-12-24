@@ -2,10 +2,7 @@ import { UploadProps as AntUploadProps } from 'antd/lib/upload';
 
 import { UploadFile, UploadChangeParam } from 'antd/lib/upload/interface';
 import { Dispatch, SetStateAction } from 'react';
-
-export type CancellablePromise<T> = Promise<T> & {
-  cancel(): void;
-};
+import { CancellablePromise } from '../../../typings';
 
 export type GetFileInfoType = (
   uid: string,

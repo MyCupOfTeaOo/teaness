@@ -1,5 +1,6 @@
 import React from 'react';
-import { UploadContextType, CancellablePromise } from './typings';
+import { UploadContextType } from './typings';
+import { CancellablePromise } from '../../../typings';
 
 export const UploadContext = React.createContext<UploadContextType>({
   register: () => {},

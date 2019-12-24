@@ -8,10 +8,7 @@ import {
 import classnames from 'classnames';
 import './styles/select.scss';
 import { useEffectState } from '../../hooks/index';
-
-export type CancellablePromise<T> = Promise<T> & {
-  cancel(): void;
-};
+import { CancellablePromise } from '../../typings';
 
 export interface SelectProps extends AntSelectProps {
   requestMethod?: () => CancellablePromise<{ label: string; value: any }[]>;

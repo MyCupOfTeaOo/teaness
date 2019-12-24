@@ -1,5 +1,5 @@
 import Scheme, { RuleItem } from 'async-validator';
-import { CancellablePromise } from 'mobx/lib/api/flow';
+import { CancellablePromise } from '../typings';
 
 export type ValidFormatterType<U> = any;
 export interface ErrorMessage {

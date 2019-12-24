@@ -17,8 +17,8 @@ import { stringify } from 'querystring';
 import BaseGrid, { BaseGridProps } from './BaseGrid';
 import Modal from '../Modal';
 import locale from './locale';
-import { Location } from './typings';
-import DataGridRegister, { ReqResponse, Sorter } from './DataGridRegister';
+import { Location, Sorter, RequestData } from './typings';
+import DataGridRegister, { ReqResponse } from './DataGridRegister';
 
 export interface DataGridProps
   extends Omit<
@@ -106,18 +106,15 @@ const DataGrid: React.FC<DataGridProps> = (props, ref) => {
       props.location,
     ),
   }));
-
+  /* eslint-disable prefer-arrow-callback */
   const [total, setTotal] = useState(0);
 
   // 后续可以参看 select requestMethod 剔除
   // 只依赖 fetchurl
   const fetch = useCallback(
-    (searchProps: {
-      queryData: any;
-      page: number;
-      pageSize: number;
-      sorters: Sorter[];
-    }) => {
+    function<T extends { [key: string]: any } = { [key: string]: any }>(
+      searchProps: RequestData<T>,
+    ) {
       if (gridRef.current) {
         if (gridRef.current.api) {
           gridRef.current.api.showLoadingOverlay();
@@ -127,14 +124,6 @@ const DataGrid: React.FC<DataGridProps> = (props, ref) => {
         }
       }
       let noData = !(Array.isArray(rowData) && rowData.length > 0);
-
-      // 业务接口转换
-      const sorterMap = searchProps.sorters[0]
-        ? {
-            columnOrder: searchProps.sorters[0].sort,
-            columnProp: searchProps.sorters[0].colId,
-          }
-        : {};
 
       if (props.location && props.historyId && DataGridRegister.router) {
         // 同步到url,记得注册router
@@ -148,49 +137,28 @@ const DataGrid: React.FC<DataGridProps> = (props, ref) => {
           search: stringify(routerSearch),
         });
       }
-      // 创建取消的token
-      const {
-        token: cancelToken,
-        cancel,
-      } = DataGridRegister.request.CancelToken.source();
+
       loadCount.current += 1;
-      DataGridRegister.request
-        .post<ReqResponse>(props.fetchUrl, {
-          cancelToken,
-          // 业务数据转换
-          data: {
-            ...searchProps.queryData,
-            ...sorterMap,
-            len: searchProps.pageSize,
-            page: searchProps.page,
-          },
-        })
-        .then(resp => {
-          if (resp.code === DataGridRegister.respCode.success) {
-            if (resp.data) {
-              setTotal(resp.data.totalitem);
-              setRowData(resp.data.list || []);
-              if (Array.isArray(resp.data.list) && resp.data.list.length > 0) {
-                noData = false;
-              }
-            }
-          } else if (resp.code === DataGridRegister.respCode.cancel) {
+      const res = DataGridRegister.request(props.fetchUrl, searchProps);
+      res
+        .then(data => {
+          if (data.isCancel) {
             return undefined;
-          } else if (props.fetchErrorCallback) props.fetchErrorCallback(resp);
-          else {
-            Modal.error({
-              title: '列表加载失败',
-              content: resp.msg,
-            });
+          } else {
+            setTotal(data.total);
+            setRowData(data.list || []);
+            if (Array.isArray(data.list) && data.list.length > 0) {
+              noData = false;
+            }
           }
         })
-        .catch(err => {
+        .catch((err: Error) => {
           console.error(err);
           if (props.fetchErrorCallback) props.fetchErrorCallback(err);
           else {
             Modal.error({
               title: '列表加载失败',
-              content: '服务器异常',
+              content: err.message,
             });
           }
         })
@@ -204,7 +172,7 @@ const DataGrid: React.FC<DataGridProps> = (props, ref) => {
             }
           }
         });
-      return () => cancel('取消列表请求');
+      return res.cancel;
     },
     [props.fetchUrl],
   );
@@ -253,11 +221,13 @@ const DataGrid: React.FC<DataGridProps> = (props, ref) => {
     ref,
     () => ({
       gridRef,
-      fetch: (data: {
-        queryData: any;
-        page: number;
-        pageSize: number;
-        sorters: Sorter[];
+      fetch: <
+        T extends { [key: string]: any } = { [key: string]: any }
+      >(data?: {
+        queryData?: T;
+        page?: number;
+        pageSize?: number;
+        sorters?: Sorter[];
       }) => {
         setSearch(item => ({
           ...item,
@@ -330,7 +300,7 @@ export type SetState<T> = (state: T | ((prevState: T) => T)) => void;
 
 export type DataGridRef = {
   gridRef: AgGridReact;
-  fetch: (searchProps: {
+  fetch: (searchProps?: {
     queryData?: any;
     page?: number;
     pageSize?: number;

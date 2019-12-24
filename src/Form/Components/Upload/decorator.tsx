@@ -3,15 +3,11 @@ import lodash from 'lodash-es';
 import { message, Progress } from 'antd';
 import Modal from '../../../Modal';
 import { UploadContext } from './context';
-import {
-  UploadRefType,
-  CancellablePromise,
-  UploadFile,
-  onUpload,
-} from './typings';
+import { UploadRefType, UploadFile, onUpload } from './typings';
 import Registry from './Registry';
 import './styles.scss';
 import Img from '../../../Img';
+import { CancellablePromise } from '../../../typings';
 
 export interface OptionsType {
   errorBack?: (err: any) => void;

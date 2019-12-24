@@ -13,10 +13,7 @@ import {
   CascaderOptionType,
 } from 'antd/lib/cascader';
 import './styles/cascader.scss';
-
-export type CancellablePromise<T> = Promise<T> & {
-  cancel(): void;
-};
+import { CancellablePromise } from '../../typings';
 
 export interface CascaderProps
   extends Omit<AntCascaderProps, 'options' | 'value' | 'onChange'> {
