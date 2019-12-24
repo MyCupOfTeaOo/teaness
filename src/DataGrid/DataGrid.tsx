@@ -300,8 +300,10 @@ export type SetState<T> = (state: T | ((prevState: T) => T)) => void;
 
 export type DataGridRef = {
   gridRef: AgGridReact;
-  fetch: (searchProps?: {
-    queryData?: any;
+  fetch: <
+    T extends { [key: string]: any } = { [key: string]: any }
+  >(searchProps?: {
+    queryData?: Partial<T>;
     page?: number;
     pageSize?: number;
     sorters?: Sorter[];
