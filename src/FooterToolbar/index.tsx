@@ -4,10 +4,6 @@ import classNames from 'classnames';
 import './index.scss';
 
 export interface FooterToolbarProps {
-  /**
-   * 额外的操作 会显示在左边
-   */
-  extra?: React.ReactNode;
   style?: React.CSSProperties;
   className?: string;
   /**
@@ -44,7 +40,7 @@ export default class FooterToolbar extends Component<FooterToolbarProps> {
   };
 
   render() {
-    const { children, className, extra, ...restProps } = this.props;
+    const { children, className, ...restProps } = this.props;
     const { width } = this.state;
     return (
       <div
@@ -52,8 +48,7 @@ export default class FooterToolbar extends Component<FooterToolbarProps> {
         style={{ width }}
         {...restProps}
       >
-        <div className="left">{extra}</div>
-        <div className="right">{children}</div>
+        {children}
       </div>
     );
   }
