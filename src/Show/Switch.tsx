@@ -13,7 +13,7 @@ export interface CaseProps {
   /**
    * 预期值
    */
-  expect: Value | Value[] | RegExp | ((actual?: Value) => boolean);
+  expect?: Value | Value[] | RegExp | ((actual?: Value) => boolean);
 }
 
 export const Case: React.FC<CaseProps> = props => {
