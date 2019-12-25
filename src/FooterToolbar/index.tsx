@@ -40,15 +40,17 @@ export default class FooterToolbar extends Component<FooterToolbarProps> {
   };
 
   render() {
-    const { children, className, ...restProps } = this.props;
+    const { children, className, style, ...restProps } = this.props;
     const { width } = this.state;
     return (
-      <div
-        className={classNames(className, 'tea-footer-toolbar')}
-        style={{ width }}
-        {...restProps}
-      >
-        {children}
+      <div className="tea-footer-toolbar-layout">
+        <div
+          className={classNames(className, 'tea-footer-toolbar')}
+          style={{ width, ...style }}
+          {...restProps}
+        >
+          {children}
+        </div>
       </div>
     );
   }
