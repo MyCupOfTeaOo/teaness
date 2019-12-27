@@ -63,7 +63,10 @@ export function getLocationGridInit<T>(
   if (!location.query[historyId]) return defaultValue;
   const search = JSON.parse(location.query[historyId]);
   if (search[key] === undefined) return defaultValue;
-  return search[key];
+  return {
+    ...defaultValue,
+    ...search[key],
+  };
 }
 
 export const showTotal = (item: number, range: [number, number]) =>
