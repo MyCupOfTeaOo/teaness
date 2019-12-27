@@ -14,6 +14,7 @@ import classNames from 'classnames';
 import { ColDef, GridApi } from 'ag-grid-community';
 import { stringify } from 'querystring';
 
+import { isObject } from 'lodash-es';
 import BaseGrid, { BaseGridProps } from './BaseGrid';
 import Modal from '../Modal';
 import locale from './locale';
@@ -63,10 +64,13 @@ export function getLocationGridInit<T>(
   if (!location.query[historyId]) return defaultValue;
   const search = JSON.parse(location.query[historyId]);
   if (search[key] === undefined) return defaultValue;
-  return {
-    ...defaultValue,
-    ...search[key],
-  };
+  if (isObject(search[key])) {
+    return {
+      ...defaultValue,
+      ...search[key],
+    };
+  }
+  return search[key];
 }
 
 export const showTotal = (item: number, range: [number, number]) =>
