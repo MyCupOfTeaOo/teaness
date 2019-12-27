@@ -18,7 +18,7 @@ const DatePicker: React.FC<DatePickerProps> & {
   year: string;
   getFormatMode: (value: string) => string | undefined;
 } = props => {
-  const { onChange, format, value, ...rest } = props;
+  const { onChange, format, value, style, ...rest } = props;
   const parseValue = useMemo(() => {
     if (value) {
       if (moment.isMoment(value)) {
@@ -49,6 +49,11 @@ const DatePicker: React.FC<DatePickerProps> & {
       format={format || undefined}
       onChange={onChange && handle}
       showTime={showTime}
+      style={{
+        minWidth: 'auto',
+        width: '100%',
+        ...style,
+      }}
       {...rest}
     />
   );
