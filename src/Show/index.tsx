@@ -30,9 +30,6 @@ export interface ShowProps {
 const Show: React.FC<ShowProps> = props => {
   const { expect, actual, position } = props;
   const show = useMemo(() => {
-    if (expect === undefined) {
-      return true;
-    }
     if (lodash.isFunction(expect)) {
       return expect(actual);
     }
