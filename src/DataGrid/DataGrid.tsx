@@ -64,6 +64,9 @@ export function getLocationGridInit<T>(
   if (!location.query[historyId]) return defaultValue;
   const search = JSON.parse(location.query[historyId]);
   if (search[key] === undefined) return defaultValue;
+  if (Array.isArray(search[key])) {
+    return search[key];
+  }
   if (isObject(search[key])) {
     return {
       ...defaultValue,
