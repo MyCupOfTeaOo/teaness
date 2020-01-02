@@ -2,6 +2,7 @@ import React, { useState, useCallback } from 'react';
 import moment, { Moment } from 'moment';
 import classnames from 'classnames';
 import './styles.scss';
+import { useEffectState } from '../../../hooks';
 
 export interface DateGroupProps {
   /**
@@ -34,11 +35,13 @@ const DateGroup: React.FC<DateGroupProps> = props => {
       );
     }
   }, []);
-  const [startDate, setStartDate] = useState(
-    props.children[0].props.value || (props.values && props.values[0]),
+  const [startDate, setStartDate] = useEffectState(
+    props.children[0].props.value || props.values?.[0],
+    [props.children[0].props.value, props.values?.[0]],
   );
-  const [endDate, setEndDate] = useState(
-    props.children[1].props.value || (props.values && props.values[1]),
+  const [endDate, setEndDate] = useEffectState(
+    props.children[1].props.value || props.values?.[1],
+    [props.children[1].props.value, props.values?.[1]],
   );
   const disableStartDateFunc = useCallback(
     (date: moment.Moment) => {
