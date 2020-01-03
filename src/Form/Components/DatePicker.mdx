@@ -55,11 +55,23 @@ antd [DatePicker](https://ant.design/components/datePicker-cn/) 差不多
   {() => {
     const [value, setValue] = useState(undefined);
     const [value2, setValue2] = useState(undefined);
+    console.log(value2)
     return (
-      <DateGroup>
+      <div>
+        <DateGroup>
         <DatePicker value={value} onChange={setValue} />
         <DatePicker value={value2} onChange={setValue2} />
-      </DateGroup>
+        </DateGroup>
+        严格模式
+        <DateGroup strict>
+          <DatePicker value={value} onChange={setValue} />
+          <DatePicker value={value2} onChange={setValue2} />
+        </DateGroup>
+        <DateGroup strict>
+          <DatePicker format={DatePicker.sec} value={value} onChange={setValue} />
+          <DatePicker format={DatePicker.sec} value={value2} onChange={setValue2} />
+        </DateGroup>
+      </div>
     );
 
 }}
