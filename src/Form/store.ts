@@ -147,6 +147,10 @@ export class ComponentStore<U = any, T = {}>
         | undefined = yield this.scheme
         .validate({ [this.key]: this.value })
         .catch(errs => errs);
+      if (!this.isChange) {
+        // fix reset bug(show err) when async validing
+        return err;
+      }
       if (e) {
         err = (e as {
           errors: ErrorList;
