@@ -1,6 +1,8 @@
 # teaness(v2)
 
 是一个偏业务型的 react component 库
+定位成辅助型的组件库,主要对 ant design 缺少,和不喜欢的组件进行封装
+当时写这个库的目的只是为了结局 ant design form 不好用的问题,但是ant design这个问题 v4 版本可能能解决
 
 ## todo
 - [x] useForm formStore component api 移出
