@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useEffect } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { DatePicker as AntDatePicker } from 'antd';
 import { DatePickerProps as AntDatePickerProps } from 'antd/lib/date-picker/interface';
 import moment from 'moment';
@@ -7,10 +7,6 @@ export interface DatePickerProps
   extends Omit<AntDatePickerProps, 'format' | 'onChange'> {
   format?: string | null;
   onChange?: (date: moment.Moment | string | undefined) => void;
-  /**
-   * 只要value改变就会触发
-   */
-  valueChange?: (value: moment.Moment | string | undefined) => void;
 }
 
 const DatePicker: React.FC<DatePickerProps> & {
@@ -22,7 +18,7 @@ const DatePicker: React.FC<DatePickerProps> & {
   year: string;
   getFormatMode: (value: string) => string | undefined;
 } = props => {
-  const { onChange, format, value, style, valueChange, ...rest } = props;
+  const { onChange, format, value, style, ...rest } = props;
   const parseValue = useMemo(() => {
     if (value) {
       if (moment.isMoment(value)) {
@@ -47,11 +43,7 @@ const DatePicker: React.FC<DatePickerProps> & {
   const showTime = useMemo(() => {
     if (format) return getShowTimeObject(format);
   }, [format]);
-  useEffect(() => {
-    if (valueChange) {
-      valueChange(parseValue);
-    }
-  }, [parseValue]);
+
   return (
     <AntDatePicker
       value={parseValue ?? undefined}

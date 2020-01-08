@@ -12,7 +12,6 @@ import {
   ComponentStoresType,
   ErrorType,
   Rules,
-  ComponentType,
   ErrorMessage,
 } from './typings';
 
@@ -26,8 +25,6 @@ export class ComponentStore<U = any, T = {}>
 
   @observable
   isChange = false;
-
-  component: ComponentType<U>;
 
   @observable
   prevValue: U | undefined = undefined;
@@ -53,18 +50,13 @@ export class ComponentStore<U = any, T = {}>
 
   scheme?: Scheme;
 
-  props?: {
-    [key: string]: any;
-  };
-
   constructor(props: ComponentStoreProps<U, T>) {
-    const { key, formStore, defaultValue, rules, component } = props;
+    const { key, formStore, defaultValue, rules } = props;
     this.key = key;
     this.formStore = formStore;
     this.defaultValue = defaultValue;
     this.value = defaultValue;
     this.rules = rules;
-    this.component = component;
     if (rules) this.scheme = new Scheme({ [key]: rules });
   }
 
@@ -120,14 +112,6 @@ export class ComponentStore<U = any, T = {}>
     if (this.isChange) {
       this.valid();
     }
-  };
-
-  setProps = (props: { [key: string]: any } | undefined) => {
-    this.props = props;
-  };
-
-  setComponent = (component: ComponentType<U>) => {
-    this.component = component;
   };
 
   valid = flow<Promise<ErrorType>, any[]>(function*(

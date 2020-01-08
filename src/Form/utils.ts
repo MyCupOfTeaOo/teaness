@@ -1,15 +1,11 @@
-import React, { memo, useCallback } from 'react';
 import { mapValues } from 'lodash-es';
-import { observer } from 'mobx-react';
 import { reaction } from 'mobx';
 import { FormStore, ComponentStore } from './store';
 import {
   FormConfig,
   ComponentStoresType,
   FormStoreInstance,
-  ComponentStoreInstance,
   Rules,
-  ComponentType,
   AutoValid,
   AutoHandle,
 } from './typings';
@@ -90,54 +86,24 @@ export function runCrossValid<T>(
   });
 }
 
-export function configToComponent<T, U extends T[keyof T]>(
-  id: string,
-  formConfig: FormConfig<U, T>,
-  compoentStore: ComponentStoreInstance<U, T>,
-) {
-  return memo(
-    observer(props => {
-      const onChange = useCallback(
-        (e: any) => {
-          if (props.onChange) props.onChange(e);
-          compoentStore.onChange(e);
-        },
-        [props.onChange],
-      );
-      return (
-        <formConfig.component
-          disabled={compoentStore.formStore.disabled}
-          area-form-id={id}
-          {...props}
-          onChange={onChange}
-          value={compoentStore.value}
-          errors={compoentStore.errors}
-        />
-      );
-    }),
-  );
-}
-
 export function configToComponentStore<T, P extends keyof T>(props: {
   key: P;
   formStore: FormStoreInstance<T>;
-  component: ComponentType<T[P]>;
   defaultValue?: T[P];
   rules?: Rules;
 }) {
-  const { key, formStore, defaultValue, rules, component } = props;
+  const { key, formStore, defaultValue, rules } = props;
   return new ComponentStore({
     key,
     formStore,
     defaultValue,
     rules,
-    component,
   });
 }
 
 export function parseFormConfigs<T = {}>(
-  formConfigs: { [P in keyof T]: FormConfig<T[P], T> },
-): { formStore: FormStore<T>; components: { [P in keyof T]: any } } {
+  formConfigs: { [P in keyof T]: FormConfig<T[P]> },
+): { formStore: FormStore<T> } {
   function getInstances(formStore: FormStoreInstance<T>) {
     const componentStores: Partial<ComponentStoresType<T>> = {};
     for (const key in formConfigs) {
@@ -147,7 +113,6 @@ export function parseFormConfigs<T = {}>(
           formStore,
           defaultValue: formConfigs[key].defaultValue,
           rules: formConfigs[key].rules,
-          component: formConfigs[key].component,
         });
       }
     }
@@ -158,16 +123,7 @@ export function parseFormConfigs<T = {}>(
     getInstances,
   });
 
-  const components = mapValues(formConfigs, (formConfig, key) => {
-    return configToComponent(
-      key,
-      formConfig,
-      formStore.componentStores[key as keyof T],
-    );
-  });
-
   return {
     formStore,
-    components,
   };
 }

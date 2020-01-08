@@ -22,19 +22,6 @@ export type SubmitType<T> = (callback: SubmitCallBackType<T>) => void;
 export interface FunctionProperty {
   [key: string]: any;
 }
-export interface ComponentBaseProps<U = any> {
-  onChange?: (value: U) => void;
-  value?: U | undefined;
-  errors?: ErrorType;
-}
-export interface FunctionComponent<T = {}>
-  extends React.FC<T>,
-    FunctionProperty {}
-export interface Component<T = {}> extends React.ComponentClass<T> {}
-export type ComponentType<
-  U,
-  T extends ComponentBaseProps<U> = ComponentBaseProps<U>
-> = FunctionComponent<T> | Component<T>;
 
 export interface ComponentStoreInstance<U = any, T = {}> {
   key: keyof T;
@@ -50,23 +37,11 @@ export interface ComponentStoreInstance<U = any, T = {}> {
   isChange: boolean;
   scheme?: Scheme;
   rules?: Rules;
-  props?: {
-    [key: string]: any;
-  };
-  component: ComponentType<U>;
   setCrossErr: (props: { [key: string]: ErrorMessage }) => void;
   delCrossErr: (keys: string[]) => void;
   onChange: (value: U | undefined) => void;
   setDefaultValue: (value: U | undefined) => void;
   setRules: (rules: Rules | undefined) => void;
-  setProps: (
-    props:
-      | {
-          [key: string]: any;
-        }
-      | undefined,
-  ) => void;
-  setComponent: (component: ComponentType<U>) => void;
   valid: () => CancellablePromise<any>;
   reset: () => void;
 }
@@ -74,7 +49,6 @@ export interface ComponentStoreProps<U = any, T = {}> {
   key: keyof T;
   formStore: FormStoreInstance<T>;
   defaultValue: U | undefined;
-  component: ComponentType<U>;
   rules?: Rules;
 }
 
@@ -166,11 +140,10 @@ export interface AutoHandle<T> {
   effect: (arg: T, formStore: FormStoreInstance<T>) => void;
 }
 
-export interface FormConfig<U, T, C = any> {
+export interface FormConfig<U> {
   /**
    * form组件,只要支持 onChange,value即可
    */
-  component: C;
   /**
    * 校验规则 建议观看 https://github.com/yiminghe/async-validator
    */
@@ -179,16 +152,10 @@ export interface FormConfig<U, T, C = any> {
    * 默认值
    */
   defaultValue?: U | undefined;
-  /**
-   * 组件props,不过不建议在这边传
-   */
-  props?: {
-    [key: string]: any;
-  };
 }
 
 export type FormConfigs<T = {}> = {
-  [P in keyof T]: FormConfig<T[P], T>;
+  [P in keyof T]: FormConfig<T[P]>;
 };
 
 export type PartialUndefined<T> = {

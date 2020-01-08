@@ -1,22 +1,19 @@
-import { useMemo, useState, useEffect } from 'react';
-import { mapValues } from 'lodash-es';
+import React, { useMemo, useEffect } from 'react';
 import { IReactionDisposer } from 'mobx';
+import { observer } from 'mobx-react';
 import { useEffectExcludeFirst } from '../hooks';
 import { FormConfigs, HookOptions } from './typings';
 import {
   parseFormConfigs,
-  configToComponent,
   configToComponentStore,
   runCrossValid,
   crossValidFunc,
   runHandle,
 } from './utils';
 import { ComponentStore, FormStore } from './store';
+import { Autowired, AutowiredProps } from './Context/Autowired';
 
-export function useForm<
-  T,
-  C extends { [P in keyof T]: any } = { [P in keyof T]: any }
->(
+export function useStore<T>(
   /**
    * 表单配置
    */
@@ -25,11 +22,8 @@ export function useForm<
    * 可选配置,目前支持交联验证,交联handle
    */
   options?: HookOptions<T>,
-) {
-  const { formStore, components: initComponents } = useMemo(
-    () => parseFormConfigs(formConfigs),
-    [],
-  );
+): FormStore<T> {
+  const { formStore } = useMemo(() => parseFormConfigs(formConfigs), []);
   const memoOptions = useMemo(() => options, []);
   const autoValidIdMap = useMemo(() => {
     let index = 1;
@@ -48,7 +42,6 @@ export function useForm<
       [P in keyof T]: string;
     };
   }, []);
-  const [components, setComponents] = useState(initComponents);
   useEffectExcludeFirst(() => {
     for (const key in formStore.componentStores) {
       if (
@@ -76,39 +69,11 @@ export function useForm<
             formStore,
             defaultValue: formConfigs[key].defaultValue,
             rules: formConfigs[key].rules,
-            component: formConfigs[key].component,
           }) as any) as ComponentStore<T[keyof T], T>;
           formStore.addComponentStore(componentStore);
         }
       }
     }
-    setComponents(prevComponents => {
-      return mapValues(formConfigs, (formConfig, key) => {
-        if (prevComponents[key as keyof T]) {
-          const targetStore = formStore.componentStores[key as keyof T];
-
-          if (
-            targetStore.props !== formConfig.props ||
-            targetStore.component !== formConfig.component
-          ) {
-            targetStore.setComponent(formConfig.component);
-            targetStore.setProps(formConfig.props);
-            return configToComponent(
-              key,
-              formConfig,
-              formStore.componentStores[key as keyof T],
-            );
-          } else {
-            return prevComponents[key as keyof T];
-          }
-        }
-        return configToComponent(
-          key,
-          formConfig,
-          formStore.componentStores[key as keyof T],
-        );
-      });
-    });
   }, [formConfigs]);
   useEffect(() => {
     const unlisten: IReactionDisposer[] = [];
@@ -168,11 +133,14 @@ export function useForm<
       }
     }
   }, []);
-  return ({
-    formStore,
-    components,
-  } as any) as {
-    formStore: FormStore<T>;
-    components: C;
-  };
+  return formStore;
+}
+
+export function useAutoWired<T = { [key: string]: any }>(store: FormStore<T>) {
+  return useMemo(() => {
+    const ListenAutowired = observer(Autowired as React.FC<AutowiredProps<T>>);
+    return (props: AutowiredProps<T>) => (
+      <ListenAutowired store={store} {...props} />
+    );
+  }, [store]);
 }
