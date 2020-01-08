@@ -19,10 +19,7 @@ const ShowError: React.FC<ShowErrorProps> = props => {
   );
   return (
     <div
-      className={classnames(
-        { formErrorLayout: !!props.error },
-        props.className,
-      )}
+      className={classnames({ 'form-error': !!props.error }, props.className)}
     >
       {props.children}
       <div className="tea-form-err-message">{errMessage}</div>

@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect } from 'react';
+import React, { useMemo, useEffect, DependencyList } from 'react';
 import { IReactionDisposer } from 'mobx';
 import { observer } from 'mobx-react';
 import { useEffectExcludeFirst } from '../hooks';
@@ -18,6 +18,7 @@ export function useStore<T>(
    * 表单配置
    */
   formConfigs: FormConfigs<T>,
+  deps: DependencyList = [],
   /**
    * 可选配置,目前支持交联验证,交联handle
    */
@@ -52,6 +53,12 @@ export function useStore<T>(
             formStore.componentStores[key as keyof T],
           );
         } else {
+          formStore.componentStores[key as keyof T].setParse(
+            formConfigs[key].parse,
+          );
+          formStore.componentStores[key as keyof T].setFormat(
+            formConfigs[key].format,
+          );
           formStore.componentStores[key as keyof T].setDefaultValue(
             formConfigs[key].defaultValue,
           );
@@ -69,12 +76,14 @@ export function useStore<T>(
             formStore,
             defaultValue: formConfigs[key].defaultValue,
             rules: formConfigs[key].rules,
+            parse: formConfigs[key].parse,
+            format: formConfigs[key].format,
           }) as any) as ComponentStore<T[keyof T], T>;
           formStore.addComponentStore(componentStore);
         }
       }
     }
-  }, [formConfigs]);
+  }, deps);
   useEffect(() => {
     const unlisten: IReactionDisposer[] = [];
     if (memoOptions && memoOptions.autoValid) {
@@ -112,7 +121,7 @@ export function useStore<T>(
         listen();
       }
     };
-  }, [formConfigs]);
+  }, deps);
   useEffect(() => {
     if (memoOptions && memoOptions.autoValid) {
       if (Array.isArray(memoOptions.autoValid)) {

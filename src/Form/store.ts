@@ -13,6 +13,8 @@ import {
   ErrorType,
   Rules,
   ErrorMessage,
+  Parse,
+  Format,
 } from './typings';
 
 export class ComponentStore<U = any, T = {}>
@@ -46,17 +48,30 @@ export class ComponentStore<U = any, T = {}>
     return errors;
   }
 
+  @computed get formatValue(): U | undefined {
+    if (this.format) {
+      return this.format(this.value);
+    }
+    return this.value;
+  }
+
   rules?: Rules;
 
   scheme?: Scheme;
 
+  parse?: Parse<U>;
+
+  format?: Format<U>;
+
   constructor(props: ComponentStoreProps<U, T>) {
-    const { key, formStore, defaultValue, rules } = props;
+    const { key, formStore, defaultValue, rules, parse, format } = props;
     this.key = key;
     this.formStore = formStore;
     this.defaultValue = defaultValue;
     this.value = defaultValue;
     this.rules = rules;
+    this.parse = parse;
+    this.format = format;
     if (rules) this.scheme = new Scheme({ [key]: rules });
   }
 
@@ -78,7 +93,9 @@ export class ComponentStore<U = any, T = {}>
   @action
   onChange = (value: U | Event | SyntheticEvent | undefined) => {
     let realValue: U | undefined;
-    if (!isEmpty(value)) {
+    if (this.parse) {
+      realValue = this.parse(value);
+    } else if (!isEmpty(value)) {
       if (value instanceof Event) {
         realValue = (value.target as { value?: U }).value;
       } else if ((value as SyntheticEvent).nativeEvent instanceof Event) {
@@ -112,6 +129,14 @@ export class ComponentStore<U = any, T = {}>
     if (this.isChange) {
       this.valid();
     }
+  };
+
+  setParse = (parse?: Parse<U>) => {
+    this.parse = parse;
+  };
+
+  setFormat = (format?: Format<U>) => {
+    this.format = format;
   };
 
   valid = flow<Promise<ErrorType>, any[]>(function*(

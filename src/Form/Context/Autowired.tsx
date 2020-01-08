@@ -5,9 +5,9 @@ import { FormStore } from '../store';
 import { ErrorMessage } from '../typings';
 
 export type Params = {
-  value?: any;
   onChange?: (...arg: any) => void;
   errors?: ErrorMessage[];
+  [key: string]: any;
 };
 
 export type AutowiredFuncChild = (params: Params) => React.ReactNode;
@@ -19,18 +19,19 @@ export interface AutowiredProps<
   store?: FormStore<T>;
   id: P;
   children?: React.ReactNode | AutowiredFuncChild;
+  valueName?: string;
 }
 
 const Autowired: React.FC<AutowiredProps> = props => {
-  const { id, store, children } = props;
+  const { id, store, children, valueName = 'value' } = props;
   let p: Params;
   if (Array.isArray(id)) {
     p = {
-      value: id.map(key => store?.componentStores[key]?.value),
-      onChange: (...values) =>
-        id.forEach((key, index) =>
-          store?.componentStores[key]?.onChange(values?.[index]),
-        ),
+      [valueName]: id.map(key => store?.componentStores[key]?.formatValue),
+      onChange: value =>
+        id.forEach((key, index) => {
+          store?.componentStores[key]?.onChange(value?.[index]);
+        }),
       errors: id.reduce((e: ErrorMessage[] | undefined, key) => {
         const errors = store?.componentStores[key]?.errors;
         if (errors) {
@@ -45,7 +46,7 @@ const Autowired: React.FC<AutowiredProps> = props => {
     };
   } else {
     p = {
-      value: store?.componentStores[id]?.value,
+      [valueName]: store?.componentStores[id]?.formatValue,
       onChange: store?.componentStores[id]?.onChange,
       errors: store?.componentStores[id]?.errors,
     };
@@ -56,7 +57,13 @@ const Autowired: React.FC<AutowiredProps> = props => {
   return (
     <React.Fragment>
       {React.Children.map(children, child => {
-        return React.cloneElement(child as React.ReactElement, p);
+        return React.cloneElement(child as React.ReactElement, {
+          ...p,
+          onChange: (...args: any) => {
+            p.onChange?.(...args);
+            return (child as React.ReactElement)?.props?.onChange?.(...args);
+          },
+        });
       })}
     </React.Fragment>
   );

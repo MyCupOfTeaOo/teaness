@@ -23,6 +23,10 @@ export interface FunctionProperty {
   [key: string]: any;
 }
 
+export type Parse<U> = (...args: any) => U;
+
+export type Format<U> = (value?: U) => any;
+
 export interface ComponentStoreInstance<U = any, T = {}> {
   key: keyof T;
   err: ErrorType;
@@ -33,10 +37,15 @@ export interface ComponentStoreInstance<U = any, T = {}> {
   formStore: FormStoreInstance<T>;
   prevValue: U | undefined;
   value: U | undefined;
+  formatValue: U | undefined;
   defaultValue: U | undefined;
   isChange: boolean;
   scheme?: Scheme;
   rules?: Rules;
+  parse?: Parse<U>;
+  setParse: (parse?: Parse<U>) => void;
+  format?: Format<U>;
+  setFormat: (format?: Format<U>) => void;
   setCrossErr: (props: { [key: string]: ErrorMessage }) => void;
   delCrossErr: (keys: string[]) => void;
   onChange: (value: U | undefined) => void;
@@ -50,6 +59,8 @@ export interface ComponentStoreProps<U = any, T = {}> {
   formStore: FormStoreInstance<T>;
   defaultValue: U | undefined;
   rules?: Rules;
+  parse?: Parse<U>;
+  format?: Format<U>;
 }
 
 export interface ComponentStoreConstructor<U = any, T = {}> {
@@ -152,6 +163,14 @@ export interface FormConfig<U> {
    * 默认值
    */
   defaultValue?: U | undefined;
+  /**
+   * 输入解析
+   */
+  parse?: Parse<U>;
+  /**
+   * 输入格式化
+   */
+  format?: Format<U>;
 }
 
 export type FormConfigs<T = {}> = {

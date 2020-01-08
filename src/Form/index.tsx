@@ -1,6 +1,7 @@
 import React from 'react';
-import { useStore } from './hooks';
+import { useStore, useAutoWired } from './hooks';
 import { FormStore } from './store';
+import Autowired from './Context/Autowired';
 
 export interface FormProps<T> {
   children?: React.ReactNode;
@@ -11,6 +12,6 @@ function Form<T>(props: FormProps<T>) {
   return <form>{props.children}</form>;
 }
 
-export { useStore };
+export { useStore, Autowired, useAutoWired };
 
 export default Form;

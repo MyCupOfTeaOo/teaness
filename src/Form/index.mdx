@@ -6,11 +6,13 @@ menu: Form Component
 
 import { Playground, Props } from 'docz';
 import { useMemo, useState } from 'react';
+import moment from 'moment';
 import 'antd/dist/antd.css';
-import { Radio, Icon, Button, Input, InputNumber } from 'antd';
+import { Radio, Icon, Button, Input, InputNumber, Switch, DatePicker as AntDatePicker } from 'antd';
 import Select from './Components/Select';
 import Upload, { UploadContext } from './Components/Upload';
 import DatePicker from './Components/DatePicker';
+import { useStore, useAutoWired } from '.';
 
 # Form(表单)
 
@@ -22,11 +24,12 @@ import DatePicker from './Components/DatePicker';
 
 ## hooks
 
-### useForm
+### useStore
 
 #### 属性(Properties)
 
 ```ts
+1;
 ```
 
 ```ts
@@ -46,11 +49,64 @@ export interface FormConfig<U, T, C = any> {
 }
 ```
 
-<Props />
-
 #### 基本用法(Basic usage)
 
-<Playground>{() => {}}</Playground>
+<Playground>
+  {() => {
+    const store = useStore({
+      name: {},
+      gender: {
+        defaultValue: true,
+      },
+      adult: {
+        defaultValue: true,
+      },
+      startDate: {
+        parse(value){
+          return value ? value.format(DatePicker.day) : value;
+        },
+        format(value){
+          console.log(value)
+          if (value) return moment(value);
+          return value;
+        }
+      },
+      endDate: {
+        parse(value){
+          return value ? value.format(DatePicker.day) : value;
+        },
+        format(value){
+          if (value) return moment(value);
+          return value;
+        }
+      },
+    });
+    const Autowired = useAutoWired(store);
+    console.log('reload')
+    return (
+      <div>
+        <Autowired id="name">
+          <Input onChange={(e) => console.log(e.target.value)}/>
+        </Autowired>
+        <Autowired id="gender">
+          <Radio.Group>
+            <Radio value>男</Radio>
+            <Radio value={false}>女</Radio>
+          </Radio.Group>
+        </Autowired>
+        是否成年
+        <Autowired id="adult" valueName="checked">
+          <Switch />
+        </Autowired>
+        <Autowired id={['startDate', 'endDate']}>
+          <AntDatePicker.RangePicker />
+        </Autowired>
+        <Button onClick={() => { store.submit(data => console.log(data)) }}>提交</Button>
+        <Button onClick={() => { store.reset() }}>重置</Button>
+      </div>
+    );
+  }}
+</Playground>
 
 如果使用 TypeScript 如下
 
@@ -65,8 +121,6 @@ formStore 的 api 如下
 ### Form
 
 #### 属性(Properties)
-
-<Props />
 
 ```ts
 ```

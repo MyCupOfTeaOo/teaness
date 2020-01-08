@@ -8,6 +8,8 @@ import {
   Rules,
   AutoValid,
   AutoHandle,
+  Parse,
+  Format,
 } from './typings';
 
 export function getListenValues<T>(
@@ -91,13 +93,17 @@ export function configToComponentStore<T, P extends keyof T>(props: {
   formStore: FormStoreInstance<T>;
   defaultValue?: T[P];
   rules?: Rules;
+  parse?: Parse<T[P]>;
+  format?: Format<T[P]>;
 }) {
-  const { key, formStore, defaultValue, rules } = props;
+  const { key, formStore, defaultValue, rules, parse, format } = props;
   return new ComponentStore({
     key,
     formStore,
     defaultValue,
     rules,
+    parse,
+    format,
   });
 }
 
@@ -113,6 +119,8 @@ export function parseFormConfigs<T = {}>(
           formStore,
           defaultValue: formConfigs[key].defaultValue,
           rules: formConfigs[key].rules,
+          parse: formConfigs[key].parse,
+          format: formConfigs[key].format,
         });
       }
     }

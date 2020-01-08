@@ -52,6 +52,8 @@
     "react/jsx-filename-extension": "off",
     "max-len": "warn",
     "sort-imports": 0,
+    "no-unused-expressions": 0,
+    "@typescript-eslint/no-unused-expressions": "error",
     // Use function hoisting to improve code readability
     "no-use-before-define": [
       "warn",
