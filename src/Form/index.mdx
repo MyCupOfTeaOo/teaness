@@ -63,7 +63,7 @@ interface FormConfig<U> {
   format?: Format<U>;
 }
 
-type Parse<U> = (...args: any) => U;
+type Parse<U> = (...args: any) => U | undefined;
 
 type Format<U> = (value?: U) => any;
 ```
