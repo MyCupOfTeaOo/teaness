@@ -11,6 +11,7 @@
 /dist
 /es
 /.docz
+/docs
 
 # misc
 .DS_Store

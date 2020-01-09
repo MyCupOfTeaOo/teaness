@@ -10,16 +10,12 @@ if (fs.existsSync('./.babelrc')) {
 }
 
 export default {
-  base: '/teaness/',
+  base: '/',
   dest: 'docs',
   typescript: true,
-  menu: [
-    'Getting Started',
-    'Display(展示)',
-    'components',
-    'Form Component',
-    'hooks',
-  ],
+  codeSandbox: false,
+  menu: ['Getting Started', 'Display', 'components', 'Form Component', 'hooks'],
+
   theme: 'docz-theme-ztopia',
   themeConfig: {
     colors: {
