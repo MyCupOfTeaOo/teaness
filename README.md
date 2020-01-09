@@ -9,12 +9,14 @@
 https://MyCupOfTeaOo.github.io/teaness/
 
 ## todo
-- [x] useForm formStore component api 移出
-- [x] 新增 Form 组件(插拔 formstore)
+- [x] formConfig 的 component,props 属性删除
+- [x] 删除原有的 useForm
+- [x] 新增 Form,Item,useForm 组件
 - [x] 新增 Autowired 组件(处理数据注入)
 - [ ] 增加错误定位
-- [x] label 嵌入 form.item
+- [x] label 嵌入 Item
 - [ ] upload 上传方式修改(每个upload自身实现上传,upload.create只调用每个upload的上传方法)
+- [ ] 测试用例
 
 ## 安装
 
