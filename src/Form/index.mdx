@@ -12,7 +12,7 @@ import { Radio, Icon, Button, Input, InputNumber, Switch, DatePicker as AntDateP
 import Select from './Components/Select';
 import Upload, { UploadContext } from './Components/Upload';
 import DatePicker from './Components/DatePicker';
-import { useStore, useAutoWired } from '.';
+import { useStore, useForm } from '.';
 
 # Form(表单)
 
@@ -54,7 +54,12 @@ export interface FormConfig<U, T, C = any> {
 <Playground>
   {() => {
     const store = useStore({
-      name: {},
+      name: {
+        rules: [{
+          required: true,
+          message: "名称必填"
+        }]
+      },
       gender: {
         defaultValue: true,
       },
@@ -81,29 +86,29 @@ export interface FormConfig<U, T, C = any> {
         }
       },
     });
-    const Autowired = useAutoWired(store);
+    const { Form, Item} = useForm(store);
     console.log('reload')
     return (
-      <div>
-        <Autowired id="name">
+      <Form>
+        <Item text="名称" id="name">
           <Input onChange={(e) => console.log(e.target.value)}/>
-        </Autowired>
-        <Autowired id="gender">
+        </Item>
+        <Item id="gender">
           <Radio.Group>
             <Radio value>男</Radio>
             <Radio value={false}>女</Radio>
           </Radio.Group>
-        </Autowired>
+        </Item>
         是否成年
-        <Autowired id="adult" valueName="checked">
+        <Item id="adult" valueName="checked">
           <Switch />
-        </Autowired>
-        <Autowired id={['startDate', 'endDate']}>
+        </Item>
+        <Item id={['startDate', 'endDate']}>
           <AntDatePicker.RangePicker />
-        </Autowired>
+        </Item>
         <Button onClick={() => { store.submit(data => console.log(data)) }}>提交</Button>
         <Button onClick={() => { store.reset() }}>重置</Button>
-      </div>
+      </Form>
     );
   }}
 </Playground>

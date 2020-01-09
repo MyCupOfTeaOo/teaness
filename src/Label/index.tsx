@@ -1,6 +1,5 @@
 import React, { useMemo, memo, useContext } from 'react';
 import classnames from 'classnames';
-import { uniqueId } from 'lodash-es';
 import './index.scss';
 import { Col } from '../Grid';
 import { LabelProps, FloatSize } from './typings';
@@ -9,10 +8,6 @@ import LabelRow from './LabelRow';
 
 const Label: React.FC<LabelProps> = props => {
   const labelRowContext = useContext(LabelRowContext);
-  const id = useMemo(() => {
-    if (props.id) return props.id;
-    return uniqueId('label');
-  }, [props.id]);
   const colProps = props.colProps || labelRowContext.colProps;
   const float = props.float || labelRowContext.labelFloat;
   const text = useMemo(() => {
@@ -37,7 +32,7 @@ const Label: React.FC<LabelProps> = props => {
       >
         <label
           title={props.text}
-          htmlFor={id}
+          htmlFor={props.id}
           className={classnames(
             'tea-label',
             props.className,
@@ -62,15 +57,7 @@ const Label: React.FC<LabelProps> = props => {
     props.labelStyle,
     labelRowContext.colProps,
   ]);
-  const children = useMemo(
-    () =>
-      React.Children.map(props.children, child => {
-        return React.cloneElement(child as React.ReactElement, {
-          id,
-        });
-      }),
-    [props.children],
-  );
+
   return (
     <React.Fragment>
       {text}
@@ -82,7 +69,7 @@ const Label: React.FC<LabelProps> = props => {
         }}
         {...(colProps ? colProps.children : {})}
       >
-        {children}
+        {props.children}
       </Col>
     </React.Fragment>
   );

@@ -135,3 +135,20 @@ export function parseFormConfigs<T = {}>(
     formStore,
   };
 }
+
+export function genFormId(id: string | string[]) {
+  if (Array.isArray(id)) {
+    return `form_id=${id.join('&')}`;
+  }
+  return `form_id=${id}`;
+}
+
+export function searchRequired(
+  id: string | string[],
+  store?: FormStore<any>,
+): boolean {
+  if (Array.isArray(id)) return false;
+  const rules = store?.componentStores[id]?.rules;
+  if (Array.isArray(rules)) return rules.some(item => item.required);
+  return rules?.required || false;
+}

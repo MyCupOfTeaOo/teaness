@@ -1,6 +1,6 @@
 import React from 'react';
 import { Input, DatePicker } from 'antd';
-import { useStore, useAutoWired } from '../hooks';
+import { useStore, useForm } from '../hooks';
 
 interface TestProps {}
 
@@ -18,16 +18,16 @@ const Test: React.FC<TestProps> = () => {
     startDate: {},
     endDate: {},
   });
-  const Autowired = useAutoWired(store);
+  const { Form, Item } = useForm(store);
   return (
-    <div>
-      <Autowired id="name">
+    <Form>
+      <Item id="name">
         <Input />;
-      </Autowired>
-      <Autowired id={['startDate', 'endDate']}>
+      </Item>
+      <Item id={['startDate', 'endDate']}>
         <DatePicker.RangePicker />
-      </Autowired>
-    </div>
+      </Item>
+    </Form>
   );
 };
 

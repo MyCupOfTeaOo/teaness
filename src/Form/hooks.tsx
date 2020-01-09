@@ -12,6 +12,8 @@ import {
 } from './utils';
 import { ComponentStore, FormStore } from './store';
 import { Autowired, AutowiredProps } from './Context/Autowired';
+import Form, { FormProps } from '.';
+import Item, { ItemProps } from './Item';
 
 export function useStore<T>(
   /**
@@ -147,9 +149,22 @@ export function useStore<T>(
 
 export function useAutoWired<T = { [key: string]: any }>(store: FormStore<T>) {
   return useMemo(() => {
-    const ListenAutowired = observer(Autowired as React.FC<AutowiredProps<T>>);
+    const ListenAutowired = observer(Autowired);
     return (props: AutowiredProps<T>) => (
       <ListenAutowired store={store} {...props} />
     );
+  }, [store]);
+}
+
+export function useForm<T = { [key: string]: any }>(store: FormStore<T>) {
+  return useMemo(() => {
+    const FormHelp = (
+      props: Omit<FormProps<T>, 'store'> & { store?: FormStore<T> },
+    ) => <Form store={store} {...props} />;
+    const FormItemHelp = (props: ItemProps<T>) => <Item {...props} />;
+    return {
+      Form: FormHelp,
+      Item: FormItemHelp,
+    };
   }, [store]);
 }

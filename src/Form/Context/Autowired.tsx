@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import lodash from 'lodash-es';
 import { observer } from 'mobx-react';
 import { FormStore } from '../store';
 import { ErrorMessage } from '../typings';
+import FormContext from './FormContext';
+import { ShowError } from '../Components';
+import { genFormId } from '../utils';
 
 export type Params = {
+  id: string;
   errors?: ErrorMessage[];
   [key: string]: any;
 };
@@ -12,7 +16,7 @@ export type Params = {
 export type AutowiredFuncChild = (params: Params) => React.ReactNode;
 
 export interface AutowiredProps<
-  T extends { [key: string]: any } = { [key: string]: any },
+  T extends { [key: string]: any } = any,
   P extends keyof T | (keyof T)[] = keyof T | (keyof T)[]
 > {
   store?: FormStore<T>;
@@ -26,22 +30,26 @@ export interface AutowiredProps<
    */
   valueName?: string;
   /**
-   * 数据手机的时机  默认 onChange
+   * 数据收集的时机  默认 onChange
    */
   trigger?: string;
+  showError?: boolean;
 }
 
 const Autowired: React.FC<AutowiredProps> = props => {
   const {
     id,
-    store,
     children,
     valueName = 'value',
     trigger = 'onChange',
+    showError,
   } = props;
+  const context = useContext(FormContext);
+  const store = props.store || context.store;
   let p: Params;
   if (Array.isArray(id)) {
     p = {
+      id: genFormId(id),
       [valueName]: id.map(key => store?.componentStores[key]?.formatValue),
       [trigger]: (value: any) =>
         id.forEach((key, index) => {
@@ -61,32 +69,36 @@ const Autowired: React.FC<AutowiredProps> = props => {
     };
   } else {
     p = {
+      id: genFormId(id),
       [valueName]: store?.componentStores[id]?.formatValue,
       [trigger]: store?.componentStores[id]?.onChange,
       errors: store?.componentStores[id]?.errors,
     };
   }
+  let childnode;
   if (lodash.isFunction(children)) {
-    return <React.Fragment>{children(p)}</React.Fragment>;
+    childnode = <React.Fragment>{children(p)}</React.Fragment>;
+  } else {
+    childnode = React.Children.map(children, child => {
+      return React.cloneElement(child as React.ReactElement, {
+        ...p,
+        onChange: (...args: any) => {
+          p.onChange?.(...args);
+          return (child as React.ReactElement)?.props?.onChange?.(...args);
+        },
+      });
+    });
   }
-  return (
-    <React.Fragment>
-      {React.Children.map(children, child => {
-        return React.cloneElement(child as React.ReactElement, {
-          ...p,
-          onChange: (...args: any) => {
-            p.onChange?.(...args);
-            return (child as React.ReactElement)?.props?.onChange?.(...args);
-          },
-        });
-      })}
-    </React.Fragment>
-  );
+  if (showError) {
+    return <ShowError error={p.errors}>{childnode}</ShowError>;
+  }
+  return <React.Fragment>{childnode}</React.Fragment>;
 };
 
 Autowired.defaultProps = {
   trigger: 'onChange',
   valueName: 'value',
+  showError: true,
 };
 
 export { Autowired };
