@@ -4,6 +4,10 @@
 定位成辅助型的组件库,主要对 ant design 缺少,和不喜欢的组件进行封装
 当时写这个库的目的只是为了解决 ant design form 不好用的问题,但是ant design这个问题 v4 版本可能能解决
 
+## 文档
+
+https://MyCupOfTeaOo.github.io/teaness/
+
 ## todo
 - [x] useForm formStore component api 移出
 - [x] 新增 Form 组件(插拔 formstore)
@@ -16,6 +20,3 @@
 
 `npm i -S teaness`
 
-## 文档
-
-https://MyCupOfTeaOo.github.io/teaness/
