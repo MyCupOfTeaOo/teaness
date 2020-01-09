@@ -6,7 +6,7 @@
 
 ## 文档
 
-https://MyCupOfTeaOo.github.io/teaness/
+https://blissful-blackwell-0e6e7c.netlify.com/
 
 ## todo
 - [x] formConfig 的 component,props 属性删除
@@ -22,3 +22,6 @@ https://MyCupOfTeaOo.github.io/teaness/
 
 `npm i -S teaness`
 
+## 运行文档
+
+`npm run dev`
