@@ -1,2 +1,7 @@
 [build.environment]
   NODE_OPTIONS = "--max_old_space_size=4096"
+# COMMENT: This a rule for Single Page Applications as Docz site is one
+[[redirects]]
+  from = "/*"
+  to = "/"
+  status = 200
