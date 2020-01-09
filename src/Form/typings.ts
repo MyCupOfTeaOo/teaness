@@ -136,9 +136,21 @@ export interface FormStoreInstance<T extends {}> {
   ): Promise<Partial<U>>;
 }
 
+/**
+ * 自动交联验证
+ */
 export interface AutoValid<T, P extends keyof T = keyof T> {
+  /**
+   * 错误显示在那个key上
+   */
   primaryKey: P;
+  /**
+   * 除 primaryKey 外监听的其他key,primaryKey 与 key对应的值改变,即触发动作
+   */
   listenKey: (keyof T)[];
+  /**
+   * 触发动作
+   */
   effect: (
     arg: T,
     formStore: FormStoreInstance<T>,
@@ -146,8 +158,17 @@ export interface AutoValid<T, P extends keyof T = keyof T> {
   ) => string | undefined;
 }
 
+/**
+ * 自动处理
+ */
 export interface AutoHandle<T> {
+  /**
+   * 监听的key,key对应的值改变,即触发动作
+   */
   listenKey: (keyof T)[];
+  /**
+   * 触发动作
+   */
   effect: (arg: T, formStore: FormStoreInstance<T>) => void;
 }
 

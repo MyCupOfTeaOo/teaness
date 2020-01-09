@@ -19,6 +19,7 @@ import Form,{ useStore, useForm, Item } from '.';
 ---
 
 > 注 ant design 的 InputNumber 组件性能很差 用多了表单会卡
+> 另外增加了 自动关联验证 和 自动处理数据 的功能
 
 ---
 
@@ -36,6 +37,69 @@ interface useStoreParams {
    * 可选配置,目前支持交联验证,交联handle
    */
   options?: HookOptions<T>;
+}
+
+export interface HookOptions<T> {
+  autoValid?: AutoValid<T> | AutoValid<T>[];
+  autoHandle?: AutoHandle<T> | AutoHandle<T>[];
+}
+
+/**
+ * 自动交联验证
+ */
+export interface AutoValid<T, P extends keyof T = keyof T> {
+  /**
+   * 错误显示在那个key上
+   */
+  primaryKey: P;
+  /**
+   * 除 primaryKey 外监听的其他key,primaryKey 与 key对应的值改变,即触发动作
+   */
+  listenKey: (keyof T)[];
+  /**
+   * 触发动作
+   */
+  effect: (
+    arg: T,
+    formStore: FormStoreInstance<T>,
+    value?: T[P],
+  ) => string | undefined;
+}
+
+/**
+ * 自动处理
+ */
+export interface AutoHandle<T> {
+  /**
+   * 监听的key,key对应的值改变,即触发动作
+   */
+  listenKey: (keyof T)[];
+  /**
+   * 触发动作
+   */
+  effect: (arg: T, formStore: FormStoreInstance<T>) => void;
+}
+
+export interface FormConfig<U> {
+  /**
+   * form组件,只要支持 onChange,value即可
+   */
+  /**
+   * 校验规则 建议观看 https://github.com/yiminghe/async-validator
+   */
+  rules?: Rules;
+  /**
+   * 默认值
+   */
+  defaultValue?: U | undefined;
+  /**
+   * 输入解析
+   */
+  parse?: Parse<U>;
+  /**
+   * 输入格式化
+   */
+  format?: Format<U>;
 }
 
 type FormConfigs<T = {}> = {
