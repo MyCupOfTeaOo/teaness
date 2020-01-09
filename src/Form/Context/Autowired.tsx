@@ -5,7 +5,6 @@ import { FormStore } from '../store';
 import { ErrorMessage } from '../typings';
 
 export type Params = {
-  onChange?: (...arg: any) => void;
   errors?: ErrorMessage[];
   [key: string]: any;
 };
@@ -17,18 +16,34 @@ export interface AutowiredProps<
   P extends keyof T | (keyof T)[] = keyof T | (keyof T)[]
 > {
   store?: FormStore<T>;
+  /**
+   * 注入的字段 Key,可以是字符串 或 字符串数组
+   */
   id: P;
   children?: React.ReactNode | AutowiredFuncChild;
+  /**
+   * 数据注入props的名称 默认 value
+   */
   valueName?: string;
+  /**
+   * 数据手机的时机  默认 onChange
+   */
+  trigger?: string;
 }
 
 const Autowired: React.FC<AutowiredProps> = props => {
-  const { id, store, children, valueName = 'value' } = props;
+  const {
+    id,
+    store,
+    children,
+    valueName = 'value',
+    trigger = 'onChange',
+  } = props;
   let p: Params;
   if (Array.isArray(id)) {
     p = {
       [valueName]: id.map(key => store?.componentStores[key]?.formatValue),
-      onChange: value =>
+      [trigger]: (value: any) =>
         id.forEach((key, index) => {
           store?.componentStores[key]?.onChange(value?.[index]);
         }),
@@ -47,7 +62,7 @@ const Autowired: React.FC<AutowiredProps> = props => {
   } else {
     p = {
       [valueName]: store?.componentStores[id]?.formatValue,
-      onChange: store?.componentStores[id]?.onChange,
+      [trigger]: store?.componentStores[id]?.onChange,
       errors: store?.componentStores[id]?.errors,
     };
   }
@@ -67,6 +82,11 @@ const Autowired: React.FC<AutowiredProps> = props => {
       })}
     </React.Fragment>
   );
+};
+
+Autowired.defaultProps = {
+  trigger: 'onChange',
+  valueName: 'value',
 };
 
 export { Autowired };
