@@ -12,7 +12,7 @@ import { Radio, Icon, Button, Input, InputNumber, Switch, DatePicker as AntDateP
 import Select from './Components/Select';
 import Upload, { UploadContext } from './Components/Upload';
 import DatePicker from './Components/DatePicker';
-import { useStore, useForm } from '.';
+import Form,{ useStore, useForm, Item } from '.';
 
 # Form(表单)
 
@@ -29,15 +29,22 @@ import { useStore, useForm } from '.';
 #### 属性(Properties)
 
 ```ts
-1;
-```
+interface useStoreParams {
+  formConfigs: FormConfigs<T>;
+  deps: DependencyList;
+  /**
+   * 可选配置,目前支持交联验证,交联handle
+   */
+  options?: HookOptions<T>;
+}
 
-```ts
 type FormConfigs<T = {}> = {
-  [P in keyof T]: FormConfig<T[P], T>;
+  [P in keyof T]: FormConfig<T[P]>;
 };
-
-export interface FormConfig<U, T, C = any> {
+interface FormConfig<U> {
+  /**
+   * form组件,只要支持 onChange,value即可
+   */
   /**
    * 校验规则 建议观看 https://github.com/yiminghe/async-validator
    */
@@ -46,7 +53,19 @@ export interface FormConfig<U, T, C = any> {
    * 默认值
    */
   defaultValue?: U | undefined;
+  /**
+   * 输入解析
+   */
+  parse?: Parse<U>;
+  /**
+   * 输入格式化
+   */
+  format?: Format<U>;
 }
+
+type Parse<U> = (...args: any) => U;
+
+type Format<U> = (value?: U) => any;
 ```
 
 #### 基本用法(Basic usage)
@@ -86,10 +105,9 @@ export interface FormConfig<U, T, C = any> {
         }
       },
     });
-    const { Form, Item} = useForm(store);
     console.log('reload')
     return (
-      <Form>
+      <Form store={store}>
         <Item text="名称" id="name">
           <Input onChange={(e) => console.log(e.target.value)}/>
         </Item>
@@ -115,21 +133,138 @@ export interface FormConfig<U, T, C = any> {
 
 如果使用 TypeScript 如下
 
+> 注 `useForm` 其实只是为了方便类型推断用的,如果不需要可以直接把 `store` 放入 `Form` 组件中
+
 ```tsx
+import React from 'react';
+import { Input, DatePicker } from 'antd';
+import { useStore, useForm } from '../hooks';
+
+interface TestProps {}
+
+interface Person {
+  name: string;
+  gender: number;
+  startDate?: string;
+  endDate?: string;
+}
+
+const Test: React.FC<TestProps> = () => {
+  const store = useStore<Person>({
+    name: {},
+    gender: {},
+    startDate: {},
+    endDate: {},
+  });
+  const { Form, Item } = useForm(store);
+  return (
+    <Form>
+      <Item id="name">
+        <Input />;
+      </Item>
+      <Item id={['startDate', 'endDate']}>
+        <DatePicker.RangePicker />
+      </Item>
+    </Form>
+  );
+};
+
+export default Test;
 ```
 
-formStore 的 api 如下
+store 的 api 如下
 
 ```ts
+export interface FormStoreInstance<T extends {}> {
+  /**
+   * 全局disabled
+   */
+  disabled: boolean;
+
+  setDisabled: (disabled: boolean) => void;
+  /**
+   * 所有的component store
+   */
+  componentStores: ComponentStoresType<T>;
+  crossValidFuncsDict: {
+    [P in keyof T]?: (() => void)[];
+  };
+  /**
+   * 提交
+   */
+  submit: SubmitType<T>;
+  /**
+   * 表单是否输入过
+   */
+  isChange: boolean;
+  /**
+   * 重置
+   */
+  setChangeState: (isChange: boolean) => void;
+  reset: () => void;
+  getValue<U extends T[keyof T]>(key: keyof T): U | undefined;
+  /**
+   * keys不传的情况下返回所有值
+   * @param keys 获取的值
+   */
+  getValues<U extends T = T>(keys?: (keyof T)[]): Partial<U>;
+  setValue(key: keyof T, value?: T[keyof T]): void;
+  setValues(props: Partial<T>): void;
+  /**
+   * 跟上面 setValues 区别在于 此接口是把所有值更新成props,setValues({})不会更新任何值,setAllValues({})会把所有值更新成undefined
+   * @param props
+   */
+  setAllValues(props: Partial<T>): void;
+  /**
+   * 触发全局验证
+   */
+  valid: () => Promise<Partial<ErrorsType<T>> | undefined>;
+  /**
+   * 触发key对应的字段验证
+   * @param key
+   */
+  validValue(key: keyof T): Promise<ErrorType>;
+  /**
+   *  触发keys对应的字段集验证
+   * @param keys
+   */
+  validValues<U extends ErrorsType<T> = ErrorsType<T>>(
+    keys: (keyof T)[],
+  ): Promise<Partial<U>>;
+}
 ```
 
-### Form
 
-#### 属性(Properties)
+> 每个 `componentStore` 接口如下
 
 ```ts
+export interface ComponentStoreInstance<U = any, T = {}> {
+  key: keyof T;
+  err: ErrorType;
+  crossErr: {
+    [key: string]: ErrorMessage;
+  };
+  errors: ErrorType;
+  formStore: FormStoreInstance<T>;
+  prevValue: U | undefined;
+  value: U | undefined;
+  formatValue: U | undefined;
+  defaultValue: U | undefined;
+  isChange: boolean;
+  scheme?: Scheme;
+  rules?: Rules;
+  parse?: Parse<U>;
+  setParse: (parse?: Parse<U>) => void;
+  format?: Format<U>;
+  setFormat: (format?: Format<U>) => void;
+  setCrossErr: (props: { [key: string]: ErrorMessage }) => void;
+  delCrossErr: (keys: string[]) => void;
+  onChange: (value: U | undefined) => void;
+  setDefaultValue: (value: U | undefined) => void;
+  setRules: (rules: Rules | undefined) => void;
+  valid: () => CancellablePromise<any>;
+  reset: () => void;
+}
 ```
 
-#### 基本用法
 
-<Playground>{() => {}}</Playground>
