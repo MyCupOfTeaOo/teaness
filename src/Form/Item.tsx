@@ -7,7 +7,9 @@ import FormContext from './Context/FormContext';
 
 export interface ItemProps<
   T extends { [key: string]: any } = any,
-  P extends keyof T | (keyof T)[] = keyof T | (keyof T)[]
+  P extends Extract<keyof T, string> | Extract<keyof T, string>[] =
+    | Extract<keyof T, string>
+    | Extract<keyof T, string>[]
 > extends AutowiredProps<T, P>, Omit<LabelProps, 'children' | 'id'> {}
 
 const Item: React.FC<ItemProps> = props => {

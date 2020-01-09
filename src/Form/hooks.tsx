@@ -55,18 +55,12 @@ export function useStore<T>(
             formStore.componentStores[key as keyof T],
           );
         } else {
-          formStore.componentStores[key as keyof T].setParse(
-            formConfigs[key].parse,
-          );
-          formStore.componentStores[key as keyof T].setFormat(
-            formConfigs[key].format,
-          );
-          formStore.componentStores[key as keyof T].setDefaultValue(
+          formStore.componentStores[key].setParse(formConfigs[key].parse);
+          formStore.componentStores[key].setFormat(formConfigs[key].format);
+          formStore.componentStores[key].setDefaultValue(
             formConfigs[key].defaultValue,
           );
-          formStore.componentStores[key as keyof T].setRules(
-            formConfigs[key].rules,
-          );
+          formStore.componentStores[key].setRules(formConfigs[key].rules);
         }
       }
     }

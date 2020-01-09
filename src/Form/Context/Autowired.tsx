@@ -17,7 +17,9 @@ export type AutowiredFuncChild = (params: Params) => React.ReactNode;
 
 export interface AutowiredProps<
   T extends { [key: string]: any } = any,
-  P extends keyof T | (keyof T)[] = keyof T | (keyof T)[]
+  P extends Extract<keyof T, string> | Extract<keyof T, string>[] =
+    | Extract<keyof T, string>
+    | Extract<keyof T, string>[]
 > {
   store?: FormStore<T>;
   /**
