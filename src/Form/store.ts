@@ -233,7 +233,7 @@ export class FormStore<T> implements FormStoreInstance<T> {
         this.componentStores[key].reset();
       }
     }
-    this.isChange = false;
+    this.setChangeState(false);
   };
 
   @action
