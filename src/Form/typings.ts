@@ -23,7 +23,7 @@ export interface FunctionProperty {
   [key: string]: any;
 }
 
-export type Parse<U> = (...args: any) => U;
+export type Parse<U> = (...args: any) => U | undefined;
 
 export type Format<U> = (value?: U) => any;
 
