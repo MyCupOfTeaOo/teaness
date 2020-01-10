@@ -10,6 +10,7 @@ import { genFormId } from '../utils';
 export type Params = {
   id: string;
   errors?: ErrorMessage[];
+  disabled?: boolean;
   [key: string]: any;
 };
 
@@ -57,6 +58,7 @@ const Autowired: React.FC<AutowiredProps> = props => {
         id.forEach((key, index) => {
           store?.componentStores[key]?.onChange(value?.[index]);
         }),
+      disabled: store?.disabled,
       errors: id.reduce((e: ErrorMessage[] | undefined, key) => {
         const errors = store?.componentStores[key]?.errors;
         if (errors) {
@@ -75,6 +77,7 @@ const Autowired: React.FC<AutowiredProps> = props => {
       [valueName]: store?.componentStores[id]?.formatValue,
       [trigger]: store?.componentStores[id]?.onChange,
       errors: store?.componentStores[id]?.errors,
+      disabled: store?.disabled,
     };
   }
   let childnode;
@@ -84,9 +87,10 @@ const Autowired: React.FC<AutowiredProps> = props => {
     childnode = React.Children.map(children, child => {
       return React.cloneElement(child as React.ReactElement, {
         ...p,
-        onChange: (...args: any) => {
-          p.onChange?.(...args);
-          return (child as React.ReactElement)?.props?.onChange?.(...args);
+        disabled: (child as React.ReactElement)?.props?.disabled ?? p.disabled,
+        [trigger]: (...args: any) => {
+          p[trigger]?.(...args);
+          return (child as React.ReactElement)?.props?.[trigger]?.(...args);
         },
       });
     });
