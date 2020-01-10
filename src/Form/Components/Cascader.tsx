@@ -29,6 +29,14 @@ export interface CascaderProps
     selectedOptions?: CascaderOptionType[],
   ) => void;
   separator?: string;
+  /**
+   * 根节点
+   */
+  root?: string;
+  /**
+   * 加载最大深度
+   */
+  maxDept?: number;
 }
 
 const depthLoad = (
@@ -41,8 +49,9 @@ const depthLoad = (
   setOptions: Dispatch<SetStateAction<CascaderOptionType[] | undefined>>,
   errorCallback: any,
   options?: CascaderOptionType[],
+  maxDept?: number,
 ) => {
-  if (options && value.length > i) {
+  if (options && value.length > i && (maxDept ? maxDept >= i : true)) {
     const curValue = value[i - 1];
     const targetOption = options.find(item => item.value === curValue);
     if (targetOption) {
@@ -63,7 +72,14 @@ const depthLoad = (
         unListions.add(p);
         p.then(resp => {
           targetOption.loading = false;
-          targetOption.children = resp;
+          if (maxDept && maxDept === i) {
+            targetOption.children = resp.map(item => ({
+              ...item,
+              isLeaf: true,
+            }));
+          } else {
+            targetOption.children = resp;
+          }
           setOptions(prevOptions => {
             if (prevOptions) return [...prevOptions];
           });
@@ -89,7 +105,9 @@ const Cascader: React.FC<CascaderProps> = props => {
     errorCallback,
     value: source,
     className,
-    separator,
+    separator = '-',
+    root,
+    maxDept,
     ...otherProps
   } = props;
   const unListions = useMemo<Set<CancellablePromise<CascaderOptionType[]>>>(
@@ -131,12 +149,11 @@ const Cascader: React.FC<CascaderProps> = props => {
     () =>
       (props.value
         ? props.value
-            .split(separator || '-')
+            .split(separator)
             .reduce<string[]>((prevValues, curValue) => {
               if (prevValues.length > 0) {
                 prevValues.push(
-                  `${prevValues[prevValues.length - 1]}${separator ||
-                    '-'}${curValue}`,
+                  `${prevValues[prevValues.length - 1]}${separator}${curValue}`,
                 );
               } else {
                 prevValues.push(curValue);
@@ -148,7 +165,7 @@ const Cascader: React.FC<CascaderProps> = props => {
   );
   useEffect(() => {
     if (requestMethod) {
-      const p = requestMethod();
+      const p = requestMethod(root);
       unListions.add(p);
       p.then(resp => setOptions(resp))
         .catch(error => {
@@ -171,7 +188,7 @@ const Cascader: React.FC<CascaderProps> = props => {
     if (!isChange && requestMethod) {
       if (options && Array.isArray(value) && value.length > 1) {
         depthLoad(
-          1,
+          (root?.split(separator)?.length ?? 0) + 1,
           value,
           unListions,
           requestMethod,
