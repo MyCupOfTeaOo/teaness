@@ -37,6 +37,10 @@ export interface CascaderProps
    * 加载最大深度
    */
   maxDept?: number;
+  /**
+   * 严格模式下 value实际深度超过maxDept,不会加载
+   */
+  strict?: boolean;
 }
 
 const depthLoad = (
@@ -50,35 +54,48 @@ const depthLoad = (
   errorCallback: any,
   options?: CascaderOptionType[],
   maxDept?: number,
+  strict?: boolean,
 ) => {
-  if (options && value.length > i && (maxDept ? maxDept >= i : true)) {
+  if (options && value.length > i) {
     const curValue = value[i - 1];
     const targetOption = options.find(item => item.value === curValue);
     if (targetOption) {
       // 已经加载
       if (targetOption.children) {
-        depthLoad(
-          i + 1,
-          value,
-          unListions,
-          requestMethod,
-          setOptions,
-          errorCallback,
-          targetOption.children,
-        );
+        if (
+          maxDept === undefined ||
+          !strict ||
+          maxDept >= targetOption.depth + 2
+        ) {
+          depthLoad(
+            i + 1,
+            value,
+            unListions,
+            requestMethod,
+            setOptions,
+            errorCallback,
+            targetOption.children,
+            maxDept,
+            strict,
+          );
+        }
       } else {
         // 还没有加载
         const p = requestMethod(curValue);
         unListions.add(p);
         p.then(resp => {
           targetOption.loading = false;
-          if (maxDept && maxDept === i) {
+          if (!maxDept || maxDept > targetOption.depth + 1) {
+            targetOption.children = resp.map(item => ({
+              ...item,
+              depth: targetOption.depth + 1,
+            }));
+          } else {
             targetOption.children = resp.map(item => ({
               ...item,
               isLeaf: true,
+              depth: targetOption.depth + 1,
             }));
-          } else {
-            targetOption.children = resp;
           }
           setOptions(prevOptions => {
             if (prevOptions) return [...prevOptions];
@@ -108,6 +125,7 @@ const Cascader: React.FC<CascaderProps> = props => {
     separator = '-',
     root,
     maxDept,
+    strict,
     ...otherProps
   } = props;
   const unListions = useMemo<Set<CancellablePromise<CascaderOptionType[]>>>(
@@ -126,7 +144,19 @@ const Cascader: React.FC<CascaderProps> = props => {
           unListions.add(p);
           p.then(resp => {
             targetOption.loading = false;
-            targetOption.children = resp;
+            if (!maxDept || maxDept > targetOption.depth + 1) {
+              targetOption.children = resp.map(item => ({
+                ...item,
+                depth: targetOption.depth + 1,
+              }));
+            } else {
+              targetOption.children = resp.map(item => ({
+                ...item,
+                isLeaf: true,
+                depth: targetOption.depth + 1,
+              }));
+            }
+
             setOptions(prevOptions => {
               if (prevOptions) return [...prevOptions];
             });
@@ -145,29 +175,47 @@ const Cascader: React.FC<CascaderProps> = props => {
     [requestMethod],
   );
 
-  const value = useMemo<string[] | undefined>(
-    () =>
-      (props.value
-        ? props.value
-            .split(separator)
-            .reduce<string[]>((prevValues, curValue) => {
-              if (prevValues.length > 0) {
-                prevValues.push(
-                  `${prevValues[prevValues.length - 1]}${separator}${curValue}`,
-                );
-              } else {
-                prevValues.push(curValue);
-              }
-              return prevValues;
-            }, [])
-        : undefined),
-    [props.value],
-  );
+  const value = useMemo<string[] | undefined>(() => {
+    const values = props.value
+      ? props.value
+          .split(separator)
+          .reduce<string[]>((prevValues, curValue) => {
+            if (prevValues.length > 0) {
+              prevValues.push(
+                `${prevValues[prevValues.length - 1]}${separator}${curValue}`,
+              );
+            } else {
+              prevValues.push(curValue);
+            }
+            return prevValues;
+          }, [])
+      : undefined;
+    // 有根节点时剔出前面的value
+    values?.splice(0, root?.split(separator).length);
+    return values;
+  }, [props.value, root]);
   useEffect(() => {
     if (requestMethod) {
       const p = requestMethod(root);
       unListions.add(p);
-      p.then(resp => setOptions(resp))
+      p.then(resp => {
+        if (maxDept === 0) {
+          setOptions(
+            resp.map(item => ({
+              ...item,
+              isLeaf: true,
+              depth: 0,
+            })),
+          );
+        } else {
+          setOptions(
+            resp.map(item => ({
+              ...item,
+              depth: 0,
+            })),
+          );
+        }
+      })
         .catch(error => {
           if (errorCallback) {
             errorCallback(error);
@@ -182,13 +230,18 @@ const Cascader: React.FC<CascaderProps> = props => {
         cp.cancel();
       });
     };
-  }, [requestMethod]);
+  }, [requestMethod, root]);
 
   useEffect(() => {
     if (!isChange && requestMethod) {
-      if (options && Array.isArray(value) && value.length > 1) {
+      if (
+        options &&
+        Array.isArray(value) &&
+        value.length > 1 &&
+        (!strict || maxDept !== 0)
+      ) {
         depthLoad(
-          (root?.split(separator)?.length ?? 0) + 1,
+          1,
           value,
           unListions,
           requestMethod,
@@ -196,6 +249,7 @@ const Cascader: React.FC<CascaderProps> = props => {
           errorCallback,
           options,
           maxDept,
+          strict,
         );
       }
     }
