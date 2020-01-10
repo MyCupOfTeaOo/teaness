@@ -147,7 +147,13 @@ export function searchRequired(
   id: string | string[],
   store?: FormStore<any>,
 ): boolean {
-  if (Array.isArray(id)) return false;
+  if (Array.isArray(id)) {
+    return id.some(i => {
+      const rules = store?.componentStores[i]?.rules;
+      if (Array.isArray(rules)) return rules.some(item => item.required);
+      return false;
+    });
+  }
   const rules = store?.componentStores[id]?.rules;
   if (Array.isArray(rules)) return rules.some(item => item.required);
   return rules?.required || false;
