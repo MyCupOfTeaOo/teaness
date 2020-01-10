@@ -236,6 +236,7 @@ export class FormStore<T> implements FormStoreInstance<T> {
     this.isChange = false;
   };
 
+  @action
   addComponentStore = <U extends ComponentStoreInstance<T[keyof T], T>>(
     component: U,
   ) => {
@@ -246,6 +247,7 @@ export class FormStore<T> implements FormStoreInstance<T> {
     }
   };
 
+  @action
   removeComponentStore = <U extends ComponentStoreInstance<T[keyof T], T>>(
     component: U,
   ) => {
