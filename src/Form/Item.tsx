@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import { observer } from 'mobx-react';
 import Label from '../Label';
 import { LabelProps } from '../Label/typings';
 import Autowired, { AutowiredProps } from './Context/Autowired';
@@ -34,4 +35,4 @@ const Item: React.FC<ItemProps> = props => {
   );
 };
 
-export default Item;
+export default observer(Item);

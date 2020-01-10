@@ -55,6 +55,7 @@ export class ComponentStore<U = any, T = {}>
     return this.value;
   }
 
+  @observable
   rules?: Rules;
 
   scheme?: Scheme;
@@ -186,6 +187,7 @@ export class ComponentStore<U = any, T = {}>
 export type submitReduceType<T> = [T, ErrorsType<T>];
 
 export class FormStore<T> implements FormStoreInstance<T> {
+  @observable
   componentStores: ComponentStoresType<T>;
 
   @observable
