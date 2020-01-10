@@ -195,6 +195,7 @@ const Cascader: React.FC<CascaderProps> = props => {
           setOptions,
           errorCallback,
           options,
+          maxDept,
         );
       }
     }
