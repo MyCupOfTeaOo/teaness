@@ -17,6 +17,7 @@ https://blissful-blackwell-0e6e7c.netlify.com/
 - [x] label 嵌入 Item
 - [ ] upload 上传方式修改(每个upload自身实现上传,upload.create只调用每个upload的上传方法)
 - [ ] 测试用例
+- [ ] 表单验证去抖
 
 ## 安装
 
