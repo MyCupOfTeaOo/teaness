@@ -38,6 +38,9 @@ export class ComponentStore<U = any, T = {}>
   err: ErrorType;
 
   @observable
+  validing = false;
+
+  @observable
   crossErr: {
     [key: string]: ErrorMessage;
   } = {};
@@ -75,6 +78,11 @@ export class ComponentStore<U = any, T = {}>
     this.format = format;
     if (rules) this.scheme = new Scheme({ [key]: rules });
   }
+
+  @action
+  setValiding = (validing: boolean) => {
+    this.validing = validing;
+  };
 
   @action
   setCrossErr = (props: { [key: string]: ErrorMessage }) => {
@@ -149,6 +157,7 @@ export class ComponentStore<U = any, T = {}>
     }
     let err;
     if (this.scheme) {
+      this.setValiding(true);
       const e:
         | {
             errors: ErrorList;
@@ -171,6 +180,7 @@ export class ComponentStore<U = any, T = {}>
         this.err = e;
       }
     }
+    this.setValiding(false);
     return err;
   });
 

@@ -40,11 +40,13 @@ export interface ComponentStoreInstance<U = any, T = {}> {
   formatValue: U | undefined;
   defaultValue: U | undefined;
   isChange: boolean;
+  validing: boolean;
   scheme?: Scheme;
   rules?: Rules;
   parse?: Parse<U>;
-  setParse: (parse?: Parse<U>) => void;
   format?: Format<U>;
+  setValiding: (validing: boolean) => void;
+  setParse: (parse?: Parse<U>) => void;
   setFormat: (format?: Format<U>) => void;
   setCrossErr: (props: { [key: string]: ErrorMessage }) => void;
   delCrossErr: (keys: string[]) => void;
