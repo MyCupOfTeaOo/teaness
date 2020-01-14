@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import lodash from 'lodash-es';
 import { observer } from 'mobx-react';
 import { FormStore } from '../store';
-import { ErrorMessage } from '../typings';
+import { ErrorMessage, CheckResult } from '../typings';
 import FormContext from './FormContext';
 import { ShowError } from '../Components';
 import { genFormId } from '../utils';
@@ -11,7 +11,7 @@ export type Params = {
   id: string;
   errors?: ErrorMessage[];
   disabled?: boolean;
-  validing: boolean | boolean[];
+  checkresult: CheckResult | CheckResult[];
   [key: string]: any;
 };
 
@@ -53,7 +53,9 @@ const Autowired: React.FC<AutowiredProps> = props => {
   let p: Params;
   if (Array.isArray(id)) {
     p = {
-      validing: id.map(key => store?.componentStores[key]?.validing || false),
+      checkresult: id.map(
+        key => store?.componentStores[key]?.checkResult || 'default',
+      ),
       id: genFormId(id),
       [valueName]: id.map(key => store?.componentStores[key]?.formatValue),
       [trigger]: (value: any) =>
@@ -63,7 +65,7 @@ const Autowired: React.FC<AutowiredProps> = props => {
       disabled: store?.disabled,
       errors: id.reduce((e: ErrorMessage[] | undefined, key) => {
         const errors = store?.componentStores[key]?.errors;
-        if (errors && !store?.componentStores[key]?.validing) {
+        if (errors && store?.componentStores[key]?.checkResult !== 'loading') {
           if (Array.isArray(e)) {
             e.push(...errors);
           } else {
@@ -75,13 +77,14 @@ const Autowired: React.FC<AutowiredProps> = props => {
     };
   } else {
     p = {
-      validing: store?.componentStores[id]?.validing || false,
+      checkresult: store?.componentStores[id]?.checkResult || 'default',
       id: genFormId(id),
       [valueName]: store?.componentStores[id]?.formatValue,
       [trigger]: store?.componentStores[id]?.onChange,
-      errors: store?.componentStores[id]?.validing
-        ? undefined
-        : store?.componentStores[id]?.errors,
+      errors:
+        store?.componentStores[id]?.checkResult === 'loading'
+          ? undefined
+          : store?.componentStores[id]?.errors,
       disabled: store?.disabled,
     };
   }

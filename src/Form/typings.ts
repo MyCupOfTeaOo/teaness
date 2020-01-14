@@ -27,6 +27,8 @@ export type Parse<U> = (...args: any) => U | undefined;
 
 export type Format<U> = (value?: U) => any;
 
+export type CheckResult = 'loading' | 'error' | 'success' | 'default';
+
 export interface ComponentStoreInstance<U = any, T = {}> {
   key: keyof T;
   err: ErrorType;
@@ -41,6 +43,7 @@ export interface ComponentStoreInstance<U = any, T = {}> {
   defaultValue: U | undefined;
   isChange: boolean;
   validing: boolean;
+  checkResult: CheckResult;
   scheme?: Scheme;
   rules?: Rules;
   parse?: Parse<U>;

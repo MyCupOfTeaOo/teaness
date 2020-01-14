@@ -15,6 +15,7 @@ import {
   ErrorMessage,
   Parse,
   Format,
+  CheckResult,
 } from './typings';
 
 export class ComponentStore<U = any, T = {}>
@@ -56,6 +57,13 @@ export class ComponentStore<U = any, T = {}>
       return this.format(this.value);
     }
     return this.value;
+  }
+
+  @computed get checkResult(): CheckResult {
+    if (this.validing) return 'loading';
+    if (this.errors) return 'error';
+    if (this.isChange) return 'success';
+    return 'default';
   }
 
   @observable
