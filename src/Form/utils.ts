@@ -138,9 +138,9 @@ export function parseFormConfigs<T = {}>(
 
 export function genFormId(id: string | string[]) {
   if (Array.isArray(id)) {
-    return `form_id=${id.join('&')}`;
+    return id[0];
   }
-  return `form_id=${id}`;
+  return id;
 }
 
 export function searchRequired(
