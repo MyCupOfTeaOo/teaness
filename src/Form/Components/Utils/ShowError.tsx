@@ -6,7 +6,8 @@ import './ShowError.scss';
 interface ShowErrorProps {
   children: React.ReactNode;
   error?: ErrorMessage[];
-  className?: React.CSSProperties;
+  className?: string;
+  style?: React.CSSProperties;
 }
 
 const ShowError: React.FC<ShowErrorProps> = props => {

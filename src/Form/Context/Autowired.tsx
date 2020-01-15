@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, CSSProperties } from 'react';
 import lodash from 'lodash-es';
 import { observer } from 'mobx-react';
 import { FormStore } from '../store';
@@ -38,6 +38,8 @@ export interface AutowiredProps<
    */
   trigger?: string;
   showError?: boolean;
+  errorClassName?: string;
+  errorStyle?: CSSProperties;
 }
 
 const Autowired: React.FC<AutowiredProps> = props => {
@@ -104,7 +106,15 @@ const Autowired: React.FC<AutowiredProps> = props => {
     });
   }
   if (showError) {
-    return <ShowError error={p.errors}>{childnode}</ShowError>;
+    return (
+      <ShowError
+        className={props.errorClassName}
+        style={props.errorStyle}
+        error={p.errors}
+      >
+        {childnode}
+      </ShowError>
+    );
   }
   return <React.Fragment>{childnode}</React.Fragment>;
 };
