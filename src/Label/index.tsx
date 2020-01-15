@@ -35,7 +35,7 @@ const Label: React.FC<LabelProps> = props => {
           htmlFor={props.id}
           className={classnames(
             'tea-label',
-            props.className,
+            props.textClassName,
             {
               'label-required': props.required,
             },
@@ -50,7 +50,7 @@ const Label: React.FC<LabelProps> = props => {
     );
   }, [
     props.text,
-    props.className,
+    props.textClassName,
     props.required,
     float,
     colProps,
@@ -68,6 +68,7 @@ const Label: React.FC<LabelProps> = props => {
           ...props.childrenStyle,
         }}
         {...(colProps ? colProps.children : {})}
+        className={props.className}
       >
         {props.children}
       </Col>

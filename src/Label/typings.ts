@@ -21,6 +21,7 @@ export interface LabelProps {
    * 覆盖标题的渲染
    */
   renderText?: React.ReactNode;
+  textClassName?: string;
   className?: string;
   /**
    * 必填状态样式
