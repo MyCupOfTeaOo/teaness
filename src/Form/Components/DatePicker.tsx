@@ -4,9 +4,10 @@ import { DatePickerProps as AntDatePickerProps } from 'antd/lib/date-picker/inte
 import moment from 'moment';
 
 export interface DatePickerProps
-  extends Omit<AntDatePickerProps, 'format' | 'onChange'> {
+  extends Omit<AntDatePickerProps, 'format' | 'onChange' | 'value'> {
   format?: string | null;
   onChange?: (date: moment.Moment | string | undefined) => void;
+  value?: AntDatePickerProps['value'] | string;
 }
 
 const DatePicker: React.FC<DatePickerProps> & {
