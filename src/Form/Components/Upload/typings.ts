@@ -56,11 +56,6 @@ export interface UploadProps extends Omit<AntUploadProps, 'onChange'> {
   max?: number;
 }
 
-export interface UploadState {
-  loadings: number;
-  fileList: UploadFile[] | undefined;
-}
-
 export interface UploadRefType {
   uniqueId: string;
   fileList: AntUploadProps['fileList'];

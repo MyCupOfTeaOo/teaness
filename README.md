@@ -15,7 +15,7 @@ https://blissful-blackwell-0e6e7c.netlify.com/
 - [x] 新增 Autowired 组件(处理数据注入)
 - [ ] 增加错误定位
 - [x] label 嵌入 Item
-- [ ] upload 上传方式修改(每个upload自身实现上传,upload.create只调用每个upload的上传方法)
+- [x] upload 上传方式优化,增加了 `UploadGroup`,每个局部的 upload 还可以替换全局 Upload.create 对自身的调用的 onUpload
 - [ ] 测试用例
 - [ ] 表单验证去抖
 - [ ] 研究下form布局问题
