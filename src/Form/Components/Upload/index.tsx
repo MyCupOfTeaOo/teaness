@@ -45,6 +45,7 @@ const Upload: React.FC<UploadProps> & { create: typeof bind } = props => {
     loading,
     maxSize,
     max,
+    onUpload,
     ...rest
   } = props;
   const context = useContext(UploadContext);
@@ -243,6 +244,7 @@ const Upload: React.FC<UploadProps> & { create: typeof bind } = props => {
           }
         }
       },
+      onUpload,
     };
     if (context.register) {
       context.register(temp);

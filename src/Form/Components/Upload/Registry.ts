@@ -1,9 +1,9 @@
-import { UploadFile, onUpload, GetFileInfoType } from './typings';
+import { UploadFile, UploadFunc, GetFileInfoType } from './typings';
 
 const Registry: {
   onDownLoad?: (file: UploadFile) => void;
   onPreview?: (file: UploadFile) => void;
-  upload?: onUpload;
+  onUpload?: UploadFunc;
   getFileInfo?: GetFileInfoType;
 } = {};
 

@@ -13,7 +13,7 @@ export type GetFileInfoType = (
   type: string;
 }>;
 
-export type onUpload = (
+export type UploadFunc = (
   file: UploadFile,
   onUploadProgress: (percent: number) => void,
 ) => CancellablePromise<{
@@ -28,6 +28,8 @@ export interface UploadProps extends Omit<AntUploadProps, 'onChange'> {
   value?: string;
   onChange?: (value: string | undefined) => void;
   children?: React.ReactNode;
+  // 可替代局部的上传方法,覆盖全局的
+  onUpload?: UploadFunc;
   /**
    * 选择图片后触发
    */
@@ -54,17 +56,28 @@ export interface UploadProps extends Omit<AntUploadProps, 'onChange'> {
   max?: number;
 }
 
+export interface UploadState {
+  loadings: number;
+  fileList: UploadFile[] | undefined;
+}
+
 export interface UploadRefType {
   uniqueId: string;
   fileList: AntUploadProps['fileList'];
   setFileList: Dispatch<SetStateAction<AntUploadProps['fileList'] | undefined>>;
   add?: (values: string[]) => void;
+  onUpload?: UploadFunc;
 }
 
 export interface UploadContextType {
   register: (ref: UploadRefType) => void;
   unregister: (ref: UploadRefType) => void;
   upload: () => CancellablePromise<boolean>;
+}
+
+export interface UploadGroupProps {
+  onError?: (err: any) => void;
+  onUpload?: UploadFunc;
 }
 
 export { UploadFile, UploadChangeParam };
