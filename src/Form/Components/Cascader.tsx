@@ -224,6 +224,8 @@ const Cascader: React.FC<CascaderProps> = props => {
         .finally(() => {
           unListions.delete(p);
         });
+    } else {
+      setOptions(props.options);
     }
     return () => {
       Array.from(unListions).forEach(cp => {
