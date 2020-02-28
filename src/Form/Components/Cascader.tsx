@@ -13,6 +13,7 @@ import {
   CascaderOptionType,
 } from 'antd/lib/cascader';
 import './styles/cascader.scss';
+import { useEffectState } from '../../hooks';
 import { CancellablePromise } from '../../typings';
 
 export interface CascaderProps
@@ -132,7 +133,9 @@ const Cascader: React.FC<CascaderProps> = props => {
     () => new Set(),
     [],
   );
-  const [options, setOptions] = useState(defaultOptions);
+  const [options, setOptions] = useEffectState(defaultOptions, [
+    defaultOptions,
+  ]);
   const [isChange, setIsChange] = useState(false);
   const loadData = useCallback(
     (selectedOptions?: CascaderOptionType[]) => {
