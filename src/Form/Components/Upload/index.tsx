@@ -223,6 +223,8 @@ const Upload: React.FC<UploadProps> & { create: typeof bind } = props => {
         unmount = true;
         all.forEach(item => item.cancel());
       };
+    } else {
+      setFileList(undefined);
     }
   }, [value]);
   useEffect(() => {
