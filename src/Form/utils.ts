@@ -44,6 +44,7 @@ export function crossValidFunc<T>(
         componentStore.setCrossErr({
           [autoValidIdMap[componentStore.key]]: {
             message: err,
+            field: componentStore.key as string,
           },
         });
       } else {
@@ -79,6 +80,7 @@ export function runCrossValid<T>(
         componentStore.setCrossErr({
           [autoValidIdMap[componentStore.key]]: {
             message: err,
+            field: componentStore.key as string,
           },
         });
       } else {

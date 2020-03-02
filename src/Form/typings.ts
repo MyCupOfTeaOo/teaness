@@ -4,6 +4,7 @@ import { CancellablePromise } from '../typings';
 export type ValidFormatterType<U> = any;
 export interface ErrorMessage {
   message: string;
+  field: string;
 }
 export type ErrorType = ErrorMessage[] | undefined;
 

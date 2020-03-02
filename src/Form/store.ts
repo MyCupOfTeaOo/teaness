@@ -182,7 +182,7 @@ export class ComponentStore<U = any, T = {}>
         err = (e as {
           errors: ErrorList;
           fields: FieldErrorList;
-        }).errors.map(item => ({ message: item.message }));
+        }).errors.map(item => ({ message: item.message, field: item.field }));
         this.err = err;
       } else {
         this.err = e;
