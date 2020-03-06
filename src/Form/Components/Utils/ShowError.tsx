@@ -5,7 +5,7 @@ import { ErrorMessage } from '../../typings';
 import Show from '../../../Show';
 import './ShowError.scss';
 
-interface ShowErrorProps {
+export interface ShowErrorProps {
   children: React.ReactNode;
   error?: ErrorMessage[];
   className?: string;
@@ -13,6 +13,7 @@ interface ShowErrorProps {
   isToolTip?: boolean;
   placement?: Tooltip['props']['placement'];
   overlayClassName?: string;
+  toolTipProps?: Tooltip['props'];
 }
 
 const ShowError: React.FC<ShowErrorProps> = props => {
@@ -35,6 +36,7 @@ const ShowError: React.FC<ShowErrorProps> = props => {
         title={errMessage}
         placement={props.placement}
         visible={props.isToolTip && !!(props.error && props.error?.length)}
+        {...props.toolTipProps}
       >
         {props.children}
       </Tooltip>

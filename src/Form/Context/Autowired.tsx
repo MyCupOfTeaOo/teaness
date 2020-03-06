@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import { FormStore } from '../store';
 import { ErrorMessage, CheckResult } from '../typings';
 import FormContext from './FormContext';
-import { ShowError } from '../Components';
+import { ShowError, ShowErrorProps } from '../Components';
 import { genFormId } from '../utils';
 
 export type Params = {
@@ -40,6 +40,7 @@ export interface AutowiredProps<
   showError?: boolean;
   errorClassName?: string;
   errorStyle?: CSSProperties;
+  showErrorProps?: ShowErrorProps;
 }
 
 const Autowired: React.FC<AutowiredProps> = props => {
@@ -49,6 +50,7 @@ const Autowired: React.FC<AutowiredProps> = props => {
     valueName = 'value',
     trigger = 'onChange',
     showError,
+    showErrorProps,
   } = props;
   const context = useContext(FormContext);
   const store = props.store || context.store;
@@ -111,6 +113,7 @@ const Autowired: React.FC<AutowiredProps> = props => {
         className={props.errorClassName}
         style={props.errorStyle}
         error={p.errors}
+        {...showErrorProps}
       >
         {childnode}
       </ShowError>

@@ -5,6 +5,7 @@ import { LabelProps } from '../Label/typings';
 import Autowired, { AutowiredProps } from './Context/Autowired';
 import { genFormId, searchRequired } from './utils';
 import FormContext from './Context/FormContext';
+import { ShowErrorProps } from './Components/Utils/ShowError';
 
 export interface ItemProps<
   T extends { [key: string]: any } = any,
@@ -14,6 +15,7 @@ export interface ItemProps<
 > extends AutowiredProps<T, P>, Omit<LabelProps, 'children' | 'id'> {
   errorClassName?: string;
   errorStyle?: CSSProperties;
+  showErrorProps?: ShowErrorProps;
 }
 
 const Item: React.FC<ItemProps> = props => {
@@ -26,6 +28,7 @@ const Item: React.FC<ItemProps> = props => {
     showError,
     errorClassName,
     errorStyle,
+    showErrorProps,
     ...rest
   } = props;
   const context = useContext(FormContext);
@@ -43,6 +46,7 @@ const Item: React.FC<ItemProps> = props => {
         showError={showError}
         errorClassName={errorClassName}
         errorStyle={errorStyle}
+        showErrorProps={showErrorProps}
       >
         {children}
       </Autowired>
