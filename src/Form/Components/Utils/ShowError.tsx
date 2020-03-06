@@ -36,6 +36,7 @@ const ShowError: React.FC<ShowErrorProps> = props => {
         overlayClassName={classnames(props.overlayClassName, 'error-tip')}
         title={errMessage}
         placement={props.placement}
+        getPopupContainer={props.getPopupContainer}
         visible={props.isToolTip && !!(props.error && props.error?.length)}
         {...props.toolTipProps}
       >
@@ -51,7 +52,7 @@ const ShowError: React.FC<ShowErrorProps> = props => {
 ShowError.defaultProps = {
   isToolTip: true,
   placement: 'topLeft',
-  getPopupContainer: e => e,
+  getPopupContainer: e => e.parentElement ?? document.body,
 };
 
 export default ShowError;

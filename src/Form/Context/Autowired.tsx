@@ -96,17 +96,16 @@ const Autowired: React.FC<AutowiredProps> = props => {
   if (lodash.isFunction(children)) {
     childnode = <React.Fragment>{children(p)}</React.Fragment>;
   } else {
-    childnode = React.Children.map(children, child => {
-      return React.cloneElement(child as React.ReactElement, {
-        ...p,
-        disabled: (child as React.ReactElement)?.props?.disabled ?? p.disabled,
-        [trigger]: (...args: any) => {
-          p[trigger]?.(...args);
-          return (child as React.ReactElement)?.props?.[trigger]?.(...args);
-        },
-      });
+    childnode = React.cloneElement(children as React.ReactElement, {
+      ...p,
+      disabled: (children as React.ReactElement)?.props?.disabled ?? p.disabled,
+      [trigger]: (...args: any) => {
+        p[trigger]?.(...args);
+        return (children as React.ReactElement)?.props?.[trigger]?.(...args);
+      },
     });
   }
+
   if (showError) {
     return (
       <ShowError

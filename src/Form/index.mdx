@@ -175,6 +175,9 @@ type Format<U> = (value?: U) => any;
         <Item text="名称" id="name">
           <Input onChange={(e) => console.log(e.target.value)}/>
         </Item>
+        <Item text="名称" id="name">
+          {(p) => <Input {...p}/>}
+        </Item>
         <Item id="gender">
           <Radio.Group>
             <Radio value>男</Radio>
