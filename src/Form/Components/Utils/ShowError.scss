@@ -5,8 +5,7 @@
   font-size: 14px;
   position: absolute;
 }
-
-.error-tip {
+.ant-tooltip.error-tip {
   z-index: 99;
   .ant-tooltip-arrow {
     &::before {
