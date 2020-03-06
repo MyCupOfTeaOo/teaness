@@ -63,12 +63,10 @@ const Label: React.FC<LabelProps> = props => {
       {text}
       <Col
         style={{
-          paddingTop: 10,
-          paddingBottom: 10,
           ...props.childrenStyle,
         }}
         {...(colProps ? colProps.children : {})}
-        className={props.className}
+        className={classnames(props.className, 'label-children')}
       >
         {props.children}
       </Col>
