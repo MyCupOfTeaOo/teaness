@@ -6,7 +6,7 @@ import Show from '../../../Show';
 import './ShowError.scss';
 
 export interface ShowErrorProps {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   error?: ErrorMessage[];
   className?: string;
   style?: React.CSSProperties;
