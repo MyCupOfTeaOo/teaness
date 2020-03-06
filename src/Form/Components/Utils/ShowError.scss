@@ -5,3 +5,14 @@
   font-size: 14px;
   position: absolute;
 }
+
+.error-tip {
+  .ant-tooltip-arrow {
+    &::before {
+      background-color: $red-6;
+    }
+  }
+  .ant-tooltip-inner {
+    background-color: $red-6;
+  }
+}
