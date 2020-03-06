@@ -7,6 +7,7 @@
 }
 
 .error-tip {
+  z-index: 99;
   .ant-tooltip-arrow {
     &::before {
       background-color: $red-6;
