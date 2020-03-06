@@ -13,6 +13,7 @@ export interface ShowErrorProps {
   isToolTip?: boolean;
   placement?: Tooltip['props']['placement'];
   overlayClassName?: string;
+  getPopupContainer?: Tooltip['props']['getPopupContainer'];
   toolTipProps?: Tooltip['props'];
 }
 
@@ -50,6 +51,7 @@ const ShowError: React.FC<ShowErrorProps> = props => {
 ShowError.defaultProps = {
   isToolTip: true,
   placement: 'topLeft',
+  getPopupContainer: e => e,
 };
 
 export default ShowError;
