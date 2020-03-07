@@ -44,7 +44,7 @@ export interface LabelProps {
    * 内容样式
    */
   childrenStyle?: React.CSSProperties;
-  id?: string;
+  id?: string | string[];
 }
 
 export interface LabelRowProps extends RowProps {

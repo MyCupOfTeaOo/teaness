@@ -27,6 +27,7 @@ const ShowError: React.FC<ShowErrorProps> = props => {
   );
   return (
     <div
+      style={props.style}
       className={classnames(
         { 'form-error': !!(props.error && props.error?.length) },
         props.className,

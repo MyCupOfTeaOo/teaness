@@ -8,7 +8,10 @@ import { ShowError, ShowErrorProps } from '../Components';
 import { genFormId } from '../utils';
 
 export type Params = {
-  id: string;
+  /**
+   * string | string[]
+   */
+  id: any;
   errors?: ErrorMessage[];
   disabled?: boolean;
   checkresult: CheckResult | CheckResult[];

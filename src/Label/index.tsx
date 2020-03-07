@@ -32,7 +32,7 @@ const Label: React.FC<LabelProps> = props => {
       >
         <label
           title={props.text}
-          htmlFor={props.id}
+          htmlFor={Array.isArray(props.id) ? props.id[0] : props.id}
           className={classnames(
             'tea-label',
             props.textClassName,
