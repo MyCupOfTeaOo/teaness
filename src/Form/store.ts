@@ -219,6 +219,8 @@ export class FormStore<T> implements FormStoreInstance<T> {
   @observable
   isChange = false;
 
+  validFirst = false;
+
   constructor(props: FormStoreProps<T>) {
     this.componentStores = props.getInstances(this);
   }
@@ -236,7 +238,7 @@ export class FormStore<T> implements FormStoreInstance<T> {
     const values: Partial<T> = {};
     for (const key in this.componentStores) {
       if (Object.prototype.hasOwnProperty.call(this.componentStores, key)) {
-        this.componentStores[key].valid();
+        // this.componentStores[key].valid();
         values[key] = this.componentStores[key].value;
       }
     }
@@ -319,24 +321,48 @@ export class FormStore<T> implements FormStoreInstance<T> {
 
   valid = async () => {
     const errs: Partial<ErrorsType<T>> = {};
-    const promiseErrors = (Object.keys(
-      this.componentStores,
-    ) as (keyof T)[]).map(async key => {
-      return [key, await this.componentStores[key].valid()];
-    }) as Promise<[keyof T, ErrorType]>[];
-    await Promise.all(promiseErrors);
-
-    for (const key in this.componentStores) {
-      if (Object.prototype.hasOwnProperty.call(this.componentStores, key)) {
-        const componentStore = this.componentStores[key];
-        const crossValidFuncs = this.crossValidFuncsDict[key];
-        if (Array.isArray(crossValidFuncs)) {
-          for (const crossValidFunc of crossValidFuncs) {
-            crossValidFunc();
+    if (this.validFirst) {
+      for (const key in this.componentStores) {
+        if (Object.prototype.hasOwnProperty.call(this.componentStores, key)) {
+          const componentStore = this.componentStores[key];
+          // eslint-disable-next-line
+          const errors = await componentStore.valid();
+          if (errors) {
+            errs[componentStore.key] = componentStore.errors;
+            return errs;
+          }
+          const crossValidFuncs = this.crossValidFuncsDict[key];
+          if (Array.isArray(crossValidFuncs)) {
+            for (const crossValidFunc of crossValidFuncs) {
+              crossValidFunc();
+              if (componentStore.errors) {
+                errs[componentStore.key] = componentStore.errors;
+                return errs;
+              }
+            }
           }
         }
-        const { errors } = componentStore;
-        if (errors) errs[componentStore.key] = errors;
+      }
+    } else {
+      const promiseErrors = (Object.keys(
+        this.componentStores,
+      ) as (keyof T)[]).map(async key => {
+        return [key, await this.componentStores[key].valid()];
+      }) as Promise<[keyof T, ErrorType]>[];
+      await Promise.all(promiseErrors);
+
+      for (const key in this.componentStores) {
+        if (Object.prototype.hasOwnProperty.call(this.componentStores, key)) {
+          const componentStore = this.componentStores[key];
+          const crossValidFuncs = this.crossValidFuncsDict[key];
+          if (Array.isArray(crossValidFuncs)) {
+            for (const crossValidFunc of crossValidFuncs) {
+              crossValidFunc();
+            }
+          }
+          const { errors } = componentStore;
+          if (errors) errs[componentStore.key] = errors;
+        }
       }
     }
     if (isEmpty(errs)) return undefined;

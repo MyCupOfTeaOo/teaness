@@ -143,6 +143,12 @@ type Format<U> = (value?: U) => any;
           message: "名称必填"
         }]
       },
+      desc: {
+        rules: [{
+          required: true,
+          message: "描述必填"
+        }]
+      },
       gender: {
         defaultValue: true,
       },
@@ -170,12 +176,16 @@ type Format<U> = (value?: U) => any;
       },
     });
     console.log('reload')
+    {/* store.validFirst = true */}
     return (
       <Form store={store}>
         <Item text="名称" id="name">
           <Input onChange={(e) => console.log(e.target.value)}/>
         </Item>
         <Item text="名称" id="name">
+          {(p) => <Input {...p}/>}
+        </Item>
+        <Item text="描述" id="desc">
           {(p) => <Input {...p}/>}
         </Item>
         <Item id="gender">

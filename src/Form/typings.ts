@@ -89,6 +89,10 @@ export interface FormStoreInstance<T extends {}> {
    * 全局disabled
    */
   disabled: boolean;
+  /**
+   * valid一个错误就停止
+   */
+  validFirst?: boolean;
 
   setDisabled: (disabled: boolean) => void;
   /**

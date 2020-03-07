@@ -10,7 +10,8 @@ type Value =
   | undefined
   | null
   | Function
-  | React.ReactNode;
+  | React.ReactNode
+  | Value[];
 
 export interface ShowProps {
   /**
