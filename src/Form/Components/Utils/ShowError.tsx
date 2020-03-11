@@ -15,6 +15,7 @@ export interface ShowErrorProps {
   overlayClassName?: string;
   getPopupContainer?: Tooltip['props']['getPopupContainer'];
   toolTipProps?: Tooltip['props'];
+  notDiv?: boolean;
 }
 
 const ShowError: React.FC<ShowErrorProps> = props => {
@@ -25,6 +26,27 @@ const ShowError: React.FC<ShowErrorProps> = props => {
         : props.error),
     [props.error],
   );
+
+  if (props.notDiv) {
+    return (
+      <React.Fragment>
+        <Tooltip
+          overlayClassName={classnames(props.overlayClassName, 'error-tip')}
+          title={errMessage}
+          placement={props.placement}
+          getPopupContainer={props.getPopupContainer}
+          visible={props.isToolTip && !!(props.error && props.error?.length)}
+          {...props.toolTipProps}
+        >
+          {props.children}
+        </Tooltip>
+        <Show actual={props.isToolTip} expect={false}>
+          <div className="tea-form-err-message">{errMessage}</div>
+        </Show>
+      </React.Fragment>
+    );
+  }
+
   return (
     <div
       style={props.style}
