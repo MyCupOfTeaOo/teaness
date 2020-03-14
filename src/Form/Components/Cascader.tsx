@@ -175,7 +175,7 @@ const Cascader: React.FC<CascaderProps> = props => {
         }
       }
     },
-    [requestMethod],
+    [requestMethod, maxDept],
   );
 
   const value = useMemo<string[] | undefined>(() => {
@@ -235,7 +235,7 @@ const Cascader: React.FC<CascaderProps> = props => {
         cp.cancel();
       });
     };
-  }, [requestMethod, root]);
+  }, [requestMethod, root, maxDept]);
 
   useEffect(() => {
     if (!isChange && requestMethod) {
@@ -258,7 +258,7 @@ const Cascader: React.FC<CascaderProps> = props => {
         );
       }
     }
-  }, [options, value]);
+  }, [options, value, maxDept]);
 
   const handle = useCallback(
     (v: string[], selectedOptions?: CascaderOptionType[]) => {
