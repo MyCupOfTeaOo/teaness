@@ -6,22 +6,29 @@ import { LabelRow } from '../Label';
 import { LabelRowProps } from '../Label/typings';
 import Item from './Item';
 
-export interface FormProps<T> {
+export interface FormProps<T>
+  extends React.DetailedHTMLProps<
+    React.FormHTMLAttributes<HTMLFormElement>,
+    HTMLFormElement
+  > {
   children?: React.ReactNode;
   store: FormStore<T>;
   layout?: LabelRowProps;
+  showError?: boolean;
 }
 
 function Form<T>(props: FormProps<T>) {
+  const { layout, store, children, showError, ...rest } = props;
   return (
-    <form>
-      <LabelRow {...props.layout}>
+    <form {...rest}>
+      <LabelRow {...layout}>
         <FormContext.Provider
           value={{
-            store: props.store,
+            store,
+            showError,
           }}
         >
-          {props.children}
+          {children}
         </FormContext.Provider>
       </LabelRow>
     </form>

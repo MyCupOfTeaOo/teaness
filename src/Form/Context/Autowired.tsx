@@ -52,11 +52,11 @@ const Autowired: React.FC<AutowiredProps> = props => {
     children,
     valueName = 'value',
     trigger = 'onChange',
-    showError,
     showErrorProps,
   } = props;
   const context = useContext(FormContext);
   const store = props.store || context.store;
+  const showError = props.showError || context.showError;
   let p: Params;
   if (Array.isArray(id)) {
     p = {
