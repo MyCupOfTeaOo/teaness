@@ -56,7 +56,7 @@ const Autowired: React.FC<AutowiredProps> = props => {
   } = props;
   const context = useContext(FormContext);
   const store = props.store || context.store;
-  const showError = props.showError ?? context.showError;
+  const showError = props.showError ?? context.showError ?? true;
   let p: Params;
   if (Array.isArray(id)) {
     p = {
