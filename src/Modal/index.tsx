@@ -2,11 +2,14 @@ import { Modal as AModal } from 'antd';
 import { ModalProps } from 'antd/lib/modal';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { isFunction } from 'lodash-es';
+import { NativeButtonProps } from 'antd/lib/button/button';
 
 interface OpenBase {
   visible?: boolean;
   onCancel?: (...args: any[]) => void | Promise<any>;
   onOk?: (...args: any[]) => void | Promise<any>;
+  okButtonProps?: NativeButtonProps;
 }
 
 export function open<T extends OpenBase>(
@@ -15,10 +18,46 @@ export function open<T extends OpenBase>(
 ) {
   const div = document.createElement('div');
   let isCancel = false;
+  let submitting = false;
   document.body.appendChild(div);
   function onOk(...args2: any[]) {
-    if (params.onOk) params.onOk(args2);
-    onCancel();
+    if (params.onOk) {
+      const ok = params.onOk(args2);
+      if (ok && isFunction(ok.then)) {
+        submitting = true;
+        render({
+          ...params,
+          onCancel,
+          onOk,
+          visible: true,
+          okButtonProps: {
+            ...params.okButtonProps,
+            loading: submitting,
+          },
+        });
+        ok.then(() => {
+          onCancel();
+        })
+          .catch(() => {})
+          .finally(() => {
+            submitting = false;
+            render({
+              ...params,
+              onCancel,
+              onOk,
+              visible: true,
+              okButtonProps: {
+                ...params.okButtonProps,
+                loading: submitting,
+              },
+            });
+          });
+      } else {
+        onCancel();
+      }
+    } else {
+      onCancel();
+    }
   }
   function onCancel(...args: any[]) {
     if (params.onCancel) params.onCancel(args);
@@ -43,7 +82,7 @@ export function open<T extends OpenBase>(
     }
   }
   function render(props: T) {
-    ReactDOM.render(<ModalComponent {...props} />, div);
+    if (!isCancel) ReactDOM.render(<ModalComponent {...props} />, div);
   }
   render({ ...params, onCancel, onOk, visible: true });
   return {
