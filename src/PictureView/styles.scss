@@ -20,24 +20,23 @@
   .ant-modal-close-x {
     font-size: 40px;
   }
-
-  .tea-picture-view-content {
-    max-width: 600px;
-    margin: auto;
-    .tea-picture-view-img {
-      transition: all 0.2s;
-      width: 100%;
-      cursor: move;
-      -webkit-user-drag: none;
-    }
-    .tea-picture-view-btns {
-      position: absolute;
-      bottom: 10px;
-      right: 10px;
-      width: 50px;
-      button {
-        margin-bottom: 12px;
-      }
+}
+.tea-picture-view-content {
+  max-width: 600px;
+  margin: auto;
+  .tea-picture-view-img {
+    transition: all 0.2s;
+    width: 100%;
+    cursor: move;
+    -webkit-user-drag: none;
+  }
+  .tea-picture-view-btns {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    width: 50px;
+    button {
+      margin-bottom: 12px;
     }
   }
 }
