@@ -230,7 +230,7 @@ const DataGrid: React.FC<DataGridProps> = (props, ref) => {
   useImperativeHandle(
     ref,
     () => ({
-      gridRef,
+      gridRef: gridRef.current,
       fetch: <
         T extends { [key: string]: any } = { [key: string]: any }
       >(data?: {
