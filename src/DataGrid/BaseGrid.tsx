@@ -5,7 +5,8 @@ import React, {
   useImperativeHandle,
   forwardRef,
 } from 'react';
-import { AgGridReact, AgGridReactProps } from 'ag-grid-react';
+import { AgGridReactProps } from 'ag-grid-react';
+import { AgGridReact } from 'ag-grid-react/lib/agGridReact';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-material.css';
 import classNames from 'classnames';
