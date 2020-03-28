@@ -69,17 +69,75 @@ antd [Cascader](https://ant.design/components/Cascader-cn/) 差不多
   }}
 </Playground>
 
+## 选择根节点
+
+<Playground>
+  {() => {
+    const [value, setValue] = useState(undefined);
+    return (
+      <div>
+        <Cascader
+          onChange={setValue}
+          value={value}
+          root="32"
+          options={[
+            {
+              label: '江苏省',
+              value: '32',
+              isLeaf: false,
+              children: [
+                {
+                  label: '南京市',
+                  value: '32-01',
+                  isLeaf: false,
+                  children: [
+                    {
+                      label: '市辖区',
+                      value: '32-01-01',
+                      isLeaf: true,
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              label: '广西省',
+              value: '54',
+              isLeaf: false,
+              children: [
+                {
+                  label: '柳州市',
+                  value: '54-50',
+                  isLeaf: false,
+                  children: [
+                    {
+                      label: '城中区',
+                      value: '54-50-00',
+                      isLeaf: true,
+                    },
+                  ],
+                },
+              ],
+            },
+          ]}
+        />
+      </div>
+    );
+  }}
+</Playground>
+
 > 此外还支持 `requestMethod` 方法 需要一个 `() => CancellablePromise<CascaderOptionType[]>`这样的方法
 > 会自动请求 `requestMethod` 加载 `options`
+
 ```ts
 interface CascaderOptionType {
-    value?: string;
-    label?: React.ReactNode;
-    disabled?: boolean;
-    isLeaf?: boolean;
-    loading?: boolean;
-    children?: Array<CascaderOptionType>;
-    [key: string]: any;
+  value?: string;
+  label?: React.ReactNode;
+  disabled?: boolean;
+  isLeaf?: boolean;
+  loading?: boolean;
+  children?: Array<CascaderOptionType>;
+  [key: string]: any;
 }
 ```
 

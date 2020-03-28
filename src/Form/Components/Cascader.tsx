@@ -13,7 +13,6 @@ import {
   CascaderOptionType,
 } from 'antd/lib/cascader';
 import './styles/cascader.scss';
-import { useEffectState } from '../../hooks';
 import { CancellablePromise } from '../../typings';
 
 export interface CascaderProps
@@ -42,6 +41,17 @@ export interface CascaderProps
    * 严格模式下 value实际深度超过maxDept,不会加载
    */
   strict?: boolean;
+}
+
+function getRootOptions(root?: string, options?: CascaderOptionType[]) {
+  let target = options?.find(option => option.value === root)?.children;
+  if (!target) {
+    options?.some(option => {
+      target = getRootOptions(root, option.children);
+      return !!target;
+    });
+  }
+  return target;
 }
 
 const depthLoad = (
@@ -133,9 +143,8 @@ const Cascader: React.FC<CascaderProps> = props => {
     () => new Set(),
     [],
   );
-  const [options, setOptions] = useEffectState(defaultOptions, [
-    defaultOptions,
-  ]);
+  const [options, setOptions] = useState(defaultOptions);
+
   const [isChange, setIsChange] = useState(false);
   const loadData = useCallback(
     (selectedOptions?: CascaderOptionType[]) => {
@@ -274,6 +283,15 @@ const Cascader: React.FC<CascaderProps> = props => {
     [onChange],
   );
 
+  useEffect(() => {
+    if (defaultOptions) {
+      if (root) {
+        setOptions(getRootOptions(root, defaultOptions));
+      } else {
+        setOptions(options);
+      }
+    }
+  }, [defaultOptions, root]);
   return (
     <AntCascader
       className={classnames('tea-cascader', className)}
