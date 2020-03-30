@@ -19,18 +19,6 @@ export function useEffectState<T>(
   return [state, setState];
 }
 
-export function useEffectExcludeFirst(
-  effect: EffectCallback,
-  deps?: DependencyList,
-): void {
-  const count = useRef(0);
-  return useEffect(() => {
-    if (!count.current) {
-      count.current += 1;
-    } else return effect();
-  }, deps);
-}
-
 export function useEffectExcludeNum(
   effect: EffectCallback,
   deps?: DependencyList,
@@ -42,4 +30,11 @@ export function useEffectExcludeNum(
       count.current += 1;
     } else return effect();
   }, deps);
+}
+
+export function useEffectExcludeFirst(
+  effect: EffectCallback,
+  deps?: DependencyList,
+): void {
+  return useEffectExcludeNum(effect, deps, 1);
 }
