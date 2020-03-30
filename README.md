@@ -12,8 +12,15 @@ https://blissful-blackwell-0e6e7c.netlify.com/
 
 ## todo
 - [ ] 升级到antd 4.0
-- [ ] 重构api
-- [ ] 重构不合理的组件结构
+- [ ] 重构api与不合理的组件结构
+  - [ ] DataGrid
+  - [ ] Form
+  - [ ] Grid
+  - [ ] hooks
+  - [ ] Label
+  - [x] Modal
+  - [x] PictureView
+  - [x] Show
 - [ ] 增加错误定位
 - [ ] 测试用例
 - [ ] 表单验证去抖

@@ -1,6 +1,6 @@
 {
   "name": "teaness",
-  "version": "2.0.45",
+  "version": "3.0.0",
   "main": "./es/index.js",
   "module": "./es/index.js",
   "authors": [
@@ -14,7 +14,7 @@
     "react",
     "component"
   ],
-  "description": "a react business component library",
+  "description": "a react business component library,example: https://blissful-blackwell-0e6e7c.netlify.com/",
   "scripts": {
     "dev": "docz dev",
     "build:doc": "docz build",
