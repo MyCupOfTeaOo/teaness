@@ -13,7 +13,7 @@ import Modal from './';
 
 ## 基本用法(Basic usage)
 
-参考[antd modal](https://ant.design/components/modal-cn/)(注:只是浮动位置默认改成了居中)
+参考[antd modal](https://ant.design/components/modal-cn/)(注:只是浮动位置默认改成了居中,可以修改 ModalConfig 为全局配置)
 
 <Playground>
   <Button onClick={() => Modal.info({title:"这是info",onOk: () => new Promise((resolve) => setTimeout(() => resolve(),2000))})}>info</Button>

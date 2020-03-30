@@ -4,15 +4,16 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { isFunction } from 'lodash-es';
 import { NativeButtonProps } from 'antd/lib/button/button';
+import config from './config';
 
-interface OpenBase {
+export interface OpenModalProps {
   visible?: boolean;
   onCancel?: (...args: any[]) => void | Promise<any>;
   onOk?: (...args: any[]) => void | Promise<any>;
   okButtonProps?: NativeButtonProps;
 }
 
-export function open<T extends OpenBase>(
+export function open<T extends OpenModalProps>(
   ModalComponent: React.ComponentType<T>,
   params: T,
 ) {
@@ -100,12 +101,12 @@ class Modal extends AModal {
     super(props, context);
   }
 }
+Modal.info = props => AModal.info({ ...config, ...props });
+Modal.success = props => AModal.success({ ...config, ...props });
+Modal.error = props => AModal.error({ ...config, ...props });
+Modal.warning = props => AModal.warning({ ...config, ...props });
+Modal.confirm = props => AModal.confirm({ ...config, ...props });
 
-Modal.error = props => AModal.error({ centered: true, ...props });
-Modal.success = props => AModal.success({ centered: true, ...props });
-Modal.confirm = props => AModal.confirm({ centered: true, ...props });
-Modal.warning = props => AModal.warning({ centered: true, ...props });
-
-export { ModalProps };
+export { ModalProps, config as ModalConfig };
 
 export default Modal;
