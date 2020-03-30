@@ -1,18 +1,13 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import lodash from 'lodash-es';
-import { message, Progress } from 'antd';
+import { message } from 'antd';
 import Modal from '../../../Modal';
 import { UploadContext } from './context';
 import { UploadRefType, UploadFile, UploadGroupProps } from './typings';
 import Registry from './Registry';
 import './styles.scss';
-import Img from '../../../Img';
 import { CancellablePromise } from '../../../typings';
-
-const strokeColor = {
-  '0%': '#108ee9',
-  '100%': '#87d068',
-};
+import UploadModal from './UploadModal';
 
 const UploadGroup: React.FC<UploadGroupProps> = props => {
   const { onError } = props;
@@ -178,33 +173,7 @@ const UploadGroup: React.FC<UploadGroupProps> = props => {
   }, []);
   return (
     <UploadContext.Provider value={{ register, unregister, upload }}>
-      <Modal
-        className="tea-upload-modal"
-        maskClosable={false}
-        onCancel={onCancel}
-        footer={null}
-        visible={visible}
-      >
-        <ul className="tea-upload-modal-body">
-          {Object.keys(loadings).map(key => (
-            <li key={key}>
-              <Img
-                className="tea-upload-modal-img"
-                src={loadings[key].thumbUrl || loadings[key].url}
-              />
-              <div className="tea-upload-modal-content">
-                <span className="tea-upload-modal-title">
-                  {loadings[key].name}
-                </span>
-                <Progress
-                  strokeColor={strokeColor}
-                  percent={loadings[key].percent}
-                />
-              </div>
-            </li>
-          ))}
-        </ul>
-      </Modal>
+      <UploadModal onCancel={onCancel} loadings={loadings} visible={visible} />
       {props.children}
     </UploadContext.Provider>
   );

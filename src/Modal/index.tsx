@@ -106,4 +106,6 @@ Modal.success = props => AModal.success({ centered: true, ...props });
 Modal.confirm = props => AModal.confirm({ centered: true, ...props });
 Modal.warning = props => AModal.warning({ centered: true, ...props });
 
+export { ModalProps };
+
 export default Modal;
