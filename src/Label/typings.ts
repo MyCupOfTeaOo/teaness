@@ -44,6 +44,10 @@ export interface LabelProps {
    * 内容样式
    */
   childrenStyle?: React.CSSProperties;
+  /**
+   * 是否展示冒号,默认true
+   */
+  colon?: boolean;
   id?: string | string[];
 }
 

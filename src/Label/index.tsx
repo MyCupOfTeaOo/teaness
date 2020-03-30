@@ -22,7 +22,8 @@ const Label: React.FC<LabelProps> = props => {
     } else {
       sizeClass[`label-${float}`] = float;
     }
-    return props.text ? (
+
+    return props.text !== undefined ? (
       <Col
         style={{
           display: 'flex',
@@ -42,7 +43,7 @@ const Label: React.FC<LabelProps> = props => {
             sizeClass,
           )}
         >
-          {props.renderText ?? props.text} :
+          {props.renderText ?? props.text} {props.colon ? ':' : undefined}
         </label>
       </Col>
     ) : (
@@ -74,7 +75,9 @@ const Label: React.FC<LabelProps> = props => {
   );
 };
 
-Label.defaultProps = {};
+Label.defaultProps = {
+  colon: true,
+};
 
 export { LabelRow, Label };
 
