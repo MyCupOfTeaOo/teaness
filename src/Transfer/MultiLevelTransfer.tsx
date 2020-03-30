@@ -1,6 +1,7 @@
 import React, { useCallback, useState, useEffect, useMemo } from 'react';
 import classnames from 'classnames';
-import { Icon, Checkbox } from 'antd';
+import { Checkbox } from 'antd';
+import { HomeOutlined } from '@ant-design/icons';
 import { CheckboxValueType } from 'antd/lib/checkbox/Group';
 import {
   MultiLevelTransferProps,
@@ -49,7 +50,7 @@ export function NavBar<T extends string | number>(props: NavBarProps<T>) {
             if (nodes.length && onClick) onClick();
           }}
         >
-          <Icon type="home" />
+          <HomeOutlined />
         </a>
         {!!nodes.length && <img alt="" src={arrowRight} />}
       </div>

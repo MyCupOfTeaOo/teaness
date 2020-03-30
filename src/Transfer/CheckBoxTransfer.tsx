@@ -1,7 +1,8 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import classnames from 'classnames';
-import { Input, Icon, Checkbox } from 'antd';
+import { Input, Checkbox } from 'antd';
 import { CheckboxValueType } from 'antd/lib/checkbox/Group';
+import { SearchOutlined } from '@ant-design/icons';
 import { CheckBoxTransferProps } from './typings';
 
 export const clearImg =
@@ -109,7 +110,7 @@ function CheckBoxTransfer<T extends number | string>(
           placeholder="搜索"
           value={search}
           onChange={e => setSearch(e.target.value)}
-          prefix={<Icon type="search" style={{ color: '#CCC' }} />}
+          prefix={<SearchOutlined style={{ color: '#CCC' }} />}
           suffix={
             search ? (
               <img

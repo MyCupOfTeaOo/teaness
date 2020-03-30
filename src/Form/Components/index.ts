@@ -1,4 +1,3 @@
-import DatePicker from './DatePicker';
 import Select from './Select';
 import ShowError, { ShowErrorHoc, ShowErrorProps } from './Utils/ShowError';
 import Cascader from './Cascader';
@@ -9,7 +8,6 @@ export {
   Checkbox,
   Upload,
   UploadContext,
-  DatePicker,
   Select,
   ShowError,
   ShowErrorHoc,

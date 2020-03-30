@@ -8,11 +8,11 @@ import { Playground, Props } from 'docz';
 import { useMemo, useState } from 'react';
 import moment from 'moment';
 import 'antd/dist/antd.css';
-import { Radio, Icon, Button, Input, InputNumber, Switch, DatePicker as AntDatePicker } from 'antd';
+import { Radio, Button, Input, InputNumber, Switch, DatePicker } from 'antd';
 import Select from './Components/Select';
 import Upload, { UploadContext } from './Components/Upload';
-import DatePicker from './Components/DatePicker';
 import Form,{ useStore, useForm, Item } from '.';
+import { DateFormat } from '../utils'
 
 # Form(表单)
 
@@ -157,7 +157,7 @@ type Format<U> = (value?: U) => any;
       },
       startDate: {
         parse(value){
-          return value ? value.format(DatePicker.day) : value;
+          return value ? value.format(DateFormat.day) : value;
         },
         format(value){
           console.log(value)
@@ -167,7 +167,7 @@ type Format<U> = (value?: U) => any;
       },
       endDate: {
         parse(value){
-          return value ? value.format(DatePicker.day) : value;
+          return value ? value.format(DateFormat.day) : value;
         },
         format(value){
           if (value) return moment(value);
@@ -199,7 +199,7 @@ type Format<U> = (value?: U) => any;
           <Switch />
         </Item>
         <Item id={['startDate', 'endDate']}>
-          <AntDatePicker.RangePicker />
+          <DatePicker.RangePicker />
         </Item>
         <Button onClick={() => { store.submit(data => console.log(data)) }}>提交</Button>
         <Button onClick={() => { store.reset() }}>重置</Button>
