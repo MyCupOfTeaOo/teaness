@@ -1,3 +1,5 @@
+@import '../global.scss';
+
 .tea-picture-view-modal {
   background: rgba(0, 0, 0, 0);
   height: 100vh;
@@ -18,7 +20,16 @@
     }
   }
   .ant-modal-close-x {
-    font-size: 40px;
+    $diameter: 36px;
+    font-size: 24px;
+    width: $diameter;
+    height: $diameter;
+    line-height: $diameter;
+    background: $component-background;
+    &:hover {
+      background-color: $red-8;
+      color: #fff;
+    }
   }
 }
 .tea-picture-view-content {

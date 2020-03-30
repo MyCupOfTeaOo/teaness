@@ -1,8 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import PictureModal, { PictureModalProps } from './PictureModal';
+import PictureModal, {
+  PictureModalProps,
+  Picture,
+  PictureProps,
+} from './PictureModal';
 
-export { PictureModal };
+export { PictureModal, Picture, PictureProps };
 
 export default function PictureView(params: PictureModalProps) {
   const div = document.createElement('div');

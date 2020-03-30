@@ -2,12 +2,17 @@ import React, { useState, useCallback, useEffect } from 'react';
 import classnames from 'classnames';
 import Draggable from 'react-draggable';
 import { Button } from 'antd';
+import {
+  PlusOutlined,
+  UndoOutlined,
+  RedoOutlined,
+  MinusOutlined,
+} from '@ant-design/icons';
 import Modal from '../Modal';
 import Img, { ImgProps } from '../Img';
 import './styles.scss';
 
-export interface PictureModalProps extends ImgProps {
-  modalClassName?: string;
+export interface PictureProps extends ImgProps {
   /**
    * 默认放大倍数
    */
@@ -16,23 +21,13 @@ export interface PictureModalProps extends ImgProps {
    * 默认旋转角度
    */
   defaultAngle?: number;
-  visible?: boolean;
-  onCancel?: () => void;
-  /**
-   * 默认宽度,一般不需要设置
-   */
-  width?: string | number;
 }
 
-const PictureModal: React.FC<PictureModalProps> = props => {
+export const Picture: React.FC<PictureProps> = props => {
   const {
     defaultZoom = 1,
     defaultAngle = 0,
-    visible,
-    onCancel,
-    modalClassName,
     className,
-    width,
     style,
     ...rest
   } = props;
@@ -63,6 +58,67 @@ const PictureModal: React.FC<PictureModalProps> = props => {
     return () => document.removeEventListener('mousewheel', onScroll);
   }, []);
   return (
+    <div className="tea-picture-view-content">
+      <Draggable>
+        <div style={{ padding: 2 }}>
+          <Img
+            className={classnames(className, 'tea-picture-view-img')}
+            style={{
+              transform: `scale(${zoom}) rotate(${angle}deg)`,
+              ...style,
+            }}
+            {...rest}
+          />
+        </div>
+      </Draggable>
+      <div className="tea-picture-view-btns">
+        <Button
+          size="large"
+          ghost
+          shape="circle"
+          onClick={plus}
+          icon={<PlusOutlined />}
+        />
+        <Button
+          size="large"
+          ghost
+          shape="circle"
+          onClick={minus}
+          icon={<MinusOutlined />}
+        />
+        <Button
+          size="large"
+          ghost
+          shape="circle"
+          onClick={left}
+          icon={<UndoOutlined />}
+        />
+        <Button
+          size="large"
+          ghost
+          shape="circle"
+          onClick={right}
+          icon={<RedoOutlined />}
+        />
+      </div>
+    </div>
+  );
+};
+
+export interface PictureModalProps extends PictureProps {
+  modalClassName?: string;
+  visible?: boolean;
+  onCancel?: () => void;
+  /**
+   * 默认宽度,一般不需要设置
+   */
+  width?: string | number;
+}
+
+const PictureModal: React.FC<PictureModalProps> = props => {
+  const { visible, onCancel, modalClassName, width, ...rest } = props;
+
+  return (
     <Modal
       className={classnames(modalClassName, 'tea-picture-view-modal')}
       visible={visible}
@@ -70,50 +126,7 @@ const PictureModal: React.FC<PictureModalProps> = props => {
       onCancel={onCancel}
       width={width}
     >
-      <div className="tea-picture-view-content">
-        <Draggable>
-          <div style={{ padding: 2 }}>
-            <Img
-              className={classnames(className, 'tea-picture-view-img')}
-              style={{
-                transform: `scale(${zoom}) rotate(${angle}deg)`,
-                ...style,
-              }}
-              {...rest}
-            />
-          </div>
-        </Draggable>
-        <div className="tea-picture-view-btns">
-          <Button
-            size="large"
-            ghost
-            shape="circle"
-            onClick={plus}
-            icon="plus"
-          />
-          <Button
-            size="large"
-            ghost
-            shape="circle"
-            onClick={minus}
-            icon="minus"
-          />
-          <Button
-            size="large"
-            ghost
-            shape="circle"
-            onClick={left}
-            icon="undo"
-          />
-          <Button
-            size="large"
-            ghost
-            shape="circle"
-            onClick={right}
-            icon="redo"
-          />
-        </div>
-      </div>
+      <Picture {...rest} />
     </Modal>
   );
 };

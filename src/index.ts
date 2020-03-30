@@ -2,10 +2,10 @@ import 'antd/dist/antd.less';
 import FoldCard from './FoldCard';
 import GlobalFooter from './GlobalFooter';
 import Modal from './Modal';
-import Label, { LabelRow } from './Label';
+import Label from './Label';
 import Form from './Form';
 import Img from './Img';
-import PictureView, { PictureModal } from './PictureView/index';
+import PictureView from './PictureView';
 import FooterToolbar from './FooterToolbar';
 
 export * from './Form';
@@ -16,15 +16,15 @@ export * from './Spin';
 export * from './hooks';
 export * from './Transfer';
 export * from './Show';
+export * from './PictureView';
+export * from './Label';
 export {
   FooterToolbar,
   PictureView,
-  PictureModal,
   FoldCard,
   GlobalFooter,
   Modal,
   Label,
-  LabelRow,
   Form,
   Img,
 };
