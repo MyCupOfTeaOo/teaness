@@ -1,26 +1,30 @@
-import React, { useMemo, memo, useContext } from 'react';
+import React, { useMemo, useContext } from 'react';
 import classnames from 'classnames';
 import './index.scss';
 import { Col } from '../Grid';
 import { LabelProps, FloatSize } from './typings';
-import { LabelRowContext } from './Context';
-import LabelRow from './LabelRow';
+import { LabelContext } from './Context';
 
-const Label: React.FC<LabelProps> = props => {
-  const labelRowContext = useContext(LabelRowContext);
-  const colProps = props.colProps || labelRowContext.colProps;
-  const float = props.float || labelRowContext.labelFloat;
+const Label: React.FC<LabelProps> = sourceProps => {
+  const labelContext = useContext(LabelContext);
+  const props: LabelProps = useMemo(
+    () => ({
+      ...labelContext,
+      ...sourceProps,
+    }),
+    [sourceProps, labelContext],
+  );
   const text = useMemo(() => {
     const sizeClass: {
       [key: string]: any;
     } = {};
-    if (typeof float === 'object') {
+    if (typeof props.float === 'object') {
       for (const size of ['xs', 'sm', 'md', 'lg', 'xl', 'xxl']) {
-        const target = (float as FloatSize)[size as keyof FloatSize];
+        const target = (props.float as FloatSize)[size as keyof FloatSize];
         if (target) sizeClass[`label-${size}-${target}`] = true;
       }
     } else {
-      sizeClass[`label-${float}`] = float;
+      sizeClass[`label-${props.float}`] = props.float;
     }
 
     return props.text !== undefined ? (
@@ -29,14 +33,14 @@ const Label: React.FC<LabelProps> = props => {
           display: 'flex',
           ...props.labelStyle,
         }}
-        {...(colProps ? colProps.label : {})}
+        {...(props.colProps ? props.colProps.label : {})}
       >
         <label
           title={props.text}
-          htmlFor={Array.isArray(props.id) ? props.id[0] : props.id}
+          htmlFor={props.id}
           className={classnames(
             'tea-label',
-            props.textClassName,
+            props.labelClassName,
             {
               'label-required': props.required,
             },
@@ -51,12 +55,11 @@ const Label: React.FC<LabelProps> = props => {
     );
   }, [
     props.text,
-    props.textClassName,
+    props.labelClassName,
     props.required,
-    float,
-    colProps,
+    props.float,
+    props.colProps,
     props.labelStyle,
-    labelRowContext.colProps,
   ]);
 
   return (
@@ -66,8 +69,8 @@ const Label: React.FC<LabelProps> = props => {
         style={{
           ...props.childrenStyle,
         }}
-        {...(colProps ? colProps.children : {})}
-        className={classnames(props.className, 'label-children')}
+        {...(props.colProps ? props.colProps.children : {})}
+        className={classnames(props.childrenClassName, 'label-children')}
       >
         {props.children}
       </Col>
@@ -79,6 +82,6 @@ Label.defaultProps = {
   colon: true,
 };
 
-export { LabelRow, Label };
+export { LabelContext };
 
-export default memo(Label);
+export default Label;

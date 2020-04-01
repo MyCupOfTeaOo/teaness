@@ -1,5 +1,5 @@
 import React from 'react';
-import { ColProps, RowProps } from '../Grid/typings';
+import { ColProps } from '../Grid/typings';
 
 export type Float = 'left' | 'right' | 'center';
 
@@ -14,15 +14,13 @@ export interface FloatSize {
 
 export interface LabelProps {
   /**
-   * 标题
+   * 标题,并且会附加到title属性上
    */
   text?: string;
   /**
    * 覆盖标题的渲染
    */
   renderText?: React.ReactNode;
-  textClassName?: string;
-  className?: string;
   /**
    * 必填状态样式
    */
@@ -35,7 +33,10 @@ export interface LabelProps {
    * 参考 label的colProps与 内容的 Colprops  grid col
    */
   colProps?: { label?: ColProps; children?: ColProps };
-  children?: React.ReactNode;
+  /**
+   * label classname
+   */
+  labelClassName?: string;
   /**
    * 文字样式
    */
@@ -45,19 +46,16 @@ export interface LabelProps {
    */
   childrenStyle?: React.CSSProperties;
   /**
+   * 内容classname
+   */
+  childrenClassName?: string;
+  children?: React.ReactNode;
+  /**
    * 是否展示冒号,默认true
    */
   colon?: boolean;
-  id?: string | string[];
-}
-
-export interface LabelRowProps extends RowProps {
   /**
-   * 可以被 Label colProps 覆盖
+   * 绑定的表单id
    */
-  colProps?: LabelProps['colProps'];
-  /**
-   * label文字对齐方式,可以被 Label float 覆盖
-   */
-  labelFloat?: FloatSize | Float;
+  id?: string;
 }

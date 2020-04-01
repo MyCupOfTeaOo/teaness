@@ -16,15 +16,15 @@ https://blissful-blackwell-0e6e7c.netlify.com/
   - [ ] DataGrid
   - [ ] Form
   - [ ] Grid
-  - [ ] hooks
-  - [ ] Label
+  - [x] Label
   - [x] Modal
   - [x] PictureView
   - [x] Show
 - [ ] 增加错误定位
-- [ ] 测试用例
 - [ ] 表单验证去抖
-- [ ] 研究下form布局问题
+- [ ] 表单验证/显示增加多种模式
+- [ ] 测试用例
+~~- [ ] 研究下form布局问题~~
 
 ## 安装
 

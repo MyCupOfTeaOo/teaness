@@ -1,10 +1,12 @@
 import React from 'react';
+import { Row } from '../Grid';
+import { RowProps } from '../Grid/typings';
 import { FormStore } from './store';
 import Autowired from './Context/Autowired';
 import FormContext from './Context/FormContext';
-import { LabelRow } from '../Label';
-import { LabelRowProps } from '../Label/typings';
 import Item from './Item';
+import { LabelProps } from '../Label/typings';
+import { LabelContext } from '../Label/Context';
 
 export interface FormProps<T>
   extends React.DetailedHTMLProps<
@@ -13,7 +15,10 @@ export interface FormProps<T>
   > {
   children?: React.ReactNode;
   store: FormStore<T>;
-  layout?: LabelRowProps;
+  layout?: {
+    row: RowProps;
+    label: LabelProps;
+  };
   showError?: boolean;
 }
 
@@ -21,16 +26,18 @@ function Form<T>(props: FormProps<T>) {
   const { layout, store, children, showError, ...rest } = props;
   return (
     <form {...rest}>
-      <LabelRow {...layout}>
-        <FormContext.Provider
-          value={{
-            store,
-            showError,
-          }}
-        >
-          {children}
-        </FormContext.Provider>
-      </LabelRow>
+      <LabelContext.Provider value={layout?.label}>
+        <Row {...layout?.row}>
+          <FormContext.Provider
+            value={{
+              store,
+              showError,
+            }}
+          >
+            {children}
+          </FormContext.Provider>
+        </Row>
+      </LabelContext.Provider>
     </form>
   );
 }
