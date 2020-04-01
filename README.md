@@ -23,6 +23,7 @@ https://blissful-blackwell-0e6e7c.netlify.com/
 - [ ] 表单验证去抖
 - [ ] 表单验证/显示增加多种模式
 - [ ] 测试用例
+- [ ] 增加更好用的grid hook
 ~~- [ ] 研究下form布局问题~~
 
 ## 安装
