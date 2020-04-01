@@ -15,7 +15,6 @@ https://blissful-blackwell-0e6e7c.netlify.com/
 - [ ] 重构api与不合理的组件结构
   - [ ] DataGrid
   - [ ] Form
-  - [ ] Grid
   - [x] Label
   - [x] Modal
   - [x] PictureView

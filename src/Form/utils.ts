@@ -140,7 +140,7 @@ export function parseFormConfigs<T = {}>(
 
 export function genFormId(id: string | string[]) {
   if (Array.isArray(id)) {
-    return id;
+    return id[0];
   }
   return id;
 }

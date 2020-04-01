@@ -16,8 +16,8 @@ export interface FormProps<T>
   children?: React.ReactNode;
   store: FormStore<T>;
   layout?: {
-    row: RowProps;
-    label: LabelProps;
+    row?: RowProps;
+    label?: LabelProps;
   };
   showError?: boolean;
 }
@@ -41,6 +41,67 @@ function Form<T>(props: FormProps<T>) {
     </form>
   );
 }
+
+export const vertical: {
+  row?: RowProps;
+  label?: LabelProps;
+} = {
+  row: {
+    align: 'middle',
+    gutter: [6, 0],
+  },
+  label: {
+    float: 'left',
+    colProps: {
+      label: {
+        span: 24,
+        style: {
+          padding: 0,
+        },
+      },
+      children: {
+        span: 24,
+        style: {
+          padding: 0,
+          marginBottom: 16,
+        },
+      },
+    },
+  },
+};
+
+export const horizontal: {
+  row?: RowProps;
+  label?: LabelProps;
+} = {
+  row: {
+    align: 'middle',
+    gutter: [6, 0],
+  },
+  label: {
+    float: {
+      xs: 'right',
+      md: 'right',
+    },
+    colProps: {
+      label: {
+        xs: { span: 7 },
+        md: { span: 5 },
+        lg: { span: 2 },
+        xl: { span: 3 },
+      },
+      children: {
+        xs: { span: 15 },
+        md: { span: 7 },
+        lg: { span: 6 },
+        xl: { span: 5 },
+      },
+    },
+  },
+};
+
+Form.vertical = vertical;
+Form.horizontal = horizontal;
 
 export { Autowired, Item };
 export * from './hooks';
