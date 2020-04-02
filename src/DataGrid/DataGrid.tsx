@@ -106,7 +106,7 @@ const DataGridCom: React.ForwardRefRenderFunction<
   const [count, setCount] = useState(0);
   // 解决 loading 与 nodata 同时显示bug
   const loadCount = useRef(0);
-  const gridRef = useRef<AgGridReact>();
+  const gridRef = useRef<AgGridReact>(null);
   const defaultColDef = useMemo(() => {
     return {
       comparator: () => 0,

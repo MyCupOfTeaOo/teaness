@@ -22,11 +22,11 @@ export interface BaseGridProps extends AgGridReactProps {
 }
 
 const BaseGridCom: React.ForwardRefRenderFunction<
-  AgGridReact,
+  AgGridReact | null,
   BaseGridProps
 > = ({ className, style, ...gridProps }, ref) => {
   const gridRef = useRef<AgGridReact>(null);
-  useImperativeHandle(ref, () => gridRef.current as AgGridReact, []);
+  useImperativeHandle(ref, () => gridRef.current, []);
   const gridClassName = useMemo(
     () => classNames('ag-theme-material', 'tea-grid', className),
     [className],

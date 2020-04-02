@@ -42,7 +42,7 @@ export type RequestMethod<
 export type Fetch<T> = CancellablePromise<ResponseData<T>>;
 
 export type DataGridRef = {
-  gridRef?: AgGridReact;
+  gridRef?: AgGridReact | null;
   fetch: <
     T extends { [key: string]: any } = { [key: string]: any }
   >(searchProps?: {
