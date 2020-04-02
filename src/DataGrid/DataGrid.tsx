@@ -150,8 +150,8 @@ const DataGridCom: React.ForwardRefRenderFunction<
     ) {
       if (gridRef.current) {
         if (gridRef.current.api) {
-          gridRef.current.api.showLoadingOverlay();
           gridRef.current.gridOptions.suppressNoRowsOverlay = true;
+          gridRef.current.api.showLoadingOverlay();
           // 同步grid sort
           gridRef.current.api.setSortModel(searchProps.sorters);
         }
@@ -201,7 +201,12 @@ const DataGridCom: React.ForwardRefRenderFunction<
             if (gridRef.current.api) {
               gridRef.current.api.hideOverlay();
               gridRef.current.gridOptions.suppressNoRowsOverlay = false;
-              if (noData) gridRef.current.api.showNoRowsOverlay();
+              if (noData) {
+                setTimeout(() => {
+                  // fix 太快调用会导致 noRowsOverLay 与 loadingOverLay 同时显示bug
+                  gridRef.current?.api?.showNoRowsOverlay();
+                });
+              }
             }
           }
         });
