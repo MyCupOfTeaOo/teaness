@@ -113,7 +113,7 @@ const DataGridCom: React.ForwardRefRenderFunction<
       ...props.defaultColDef,
     };
   }, [props.defaultColDef]);
-  const [rowData, setRowData] = useState<any[] | undefined>(undefined);
+  const [rowData, setRowData] = useState<any[] | undefined>([]);
 
   const [search, setSearch] = useState<{
     page: number;
