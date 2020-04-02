@@ -150,6 +150,8 @@ const DataGridCom: React.ForwardRefRenderFunction<
     ) {
       if (gridRef.current) {
         if (gridRef.current.api) {
+          // 结合 BaseGrid 默认 suppressLoadingOverlay = true fix 双loading bug
+          gridRef.current.gridOptions.suppressLoadingOverlay = false;
           gridRef.current.api.showLoadingOverlay();
           gridRef.current.gridOptions.suppressNoRowsOverlay = true;
           // 同步grid sort
@@ -296,6 +298,7 @@ const DataGridCom: React.ForwardRefRenderFunction<
         ref={gridRef}
         className={props.gridClassName}
         rowData={rowData}
+        suppressLoadingOverlay
         suppressMultiSort
         enableServerSideSorting
         onSortChanged={handleSortChange}
