@@ -20,8 +20,21 @@ https://blissful-blackwell-0e6e7c.netlify.com/
   - [x] PictureView
   - [x] Show
 - [x] 增加错误定位方法
-- [ ] 表单验证去抖
+~~- [ ] 表单验证去抖~~真有性能问题在加这个机制
 - [ ] 表单验证/显示增加多种模式
+  - [ ] 校验时机
+    - [ ] blur
+    - [ ] change
+    - [ ] submit
+  - [ ] 校验错误
+    - [ ] 校验到一个即停止
+    - [ ] 校验所有
+  - [ ] 显示错误
+    - [ ] 所有的错误全部显示
+    - [ ] 同时显示一个错误
+  - [ ] 显示错误ui
+    - [ ] toolTip
+    - [ ] bottomtext
 - [ ] 测试用例
 - [x] 增加更好用的grid hook
 ~~- [ ] 研究下form布局问题~~
