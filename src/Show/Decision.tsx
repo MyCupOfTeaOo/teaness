@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import Show, { Value } from './Show';
 
-export const SwitchContext = React.createContext<{
+export const DecisionContext = React.createContext<{
   /**
    * 实际值
    */
@@ -24,7 +24,7 @@ export interface CaseProps {
 }
 
 export const Case: React.FC<CaseProps> = props => {
-  const context = useContext(SwitchContext);
+  const context = useContext(DecisionContext);
   return (
     <Show {...context} {...props}>
       {props.children}
@@ -32,7 +32,7 @@ export const Case: React.FC<CaseProps> = props => {
   );
 };
 
-export interface SwitchProps {
+export interface DecisionProps {
   /**
    * 实际值
    */
@@ -43,23 +43,23 @@ export interface SwitchProps {
   position?: React.ReactNode;
 }
 
-const Switch: React.FC<SwitchProps> & {
+const Decision: React.FC<DecisionProps> & {
   Case: typeof Case;
 } = props => {
   const { actual, position } = props;
 
   return (
-    <SwitchContext.Provider
+    <DecisionContext.Provider
       value={{
         actual,
         position,
       }}
     >
       {props.children}
-    </SwitchContext.Provider>
+    </DecisionContext.Provider>
   );
 };
 
-Switch.Case = Case;
+Decision.Case = Case;
 
-export default Switch;
+export default Decision;

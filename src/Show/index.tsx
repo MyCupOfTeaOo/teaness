@@ -1,7 +1,7 @@
 import Show from './Show';
 
-import Switch from './Switch';
+import Decision from './Decision';
 
-export { Switch };
+export { Decision };
 
 export default Show;

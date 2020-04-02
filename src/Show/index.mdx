@@ -7,7 +7,7 @@ menu: Display
 import { Playground, Props } from 'docz';
 import { Button } from 'antd';
 import 'antd/dist/antd.css';
-import Show, { Switch } from '.';
+import Show, { Decision } from '.';
 
 # Show(显示)
 
@@ -28,23 +28,23 @@ import Show, { Switch } from '.';
 
 <Props of={Show} />
 
-# Switch(匹配显示)
+# Decision(匹配显示)
 
-根据 Switch.Case 组件的匹配显示
+根据 Decision.Case 组件的匹配显示
 
 ## 基本用法(Basic usage)
 
 <Playground>
-  <Switch actual={0}>
-    <Switch.Case expect={0}>显示</Switch.Case>
-    <Switch.Case expect={1}>不显示</Switch.Case>
+  <Decision actual={0}>
+    <Decision.Case expect={0}>显示</Decision.Case>
+    <Decision.Case expect={1}>不显示</Decision.Case>
     <div>
-      <Switch.Case expect={0}>显示2</Switch.Case>
-      <Switch.Case expect={1}>不显示2</Switch.Case>
+      <Decision.Case expect={0}>显示2</Decision.Case>
+      <Decision.Case expect={1}>不显示2</Decision.Case>
     </div>
-  </Switch>
+  </Decision>
 </Playground>
 
 ## 属性(Properties)
 
-<Props of={Switch} />
+<Props of={Decision} />
