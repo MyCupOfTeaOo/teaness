@@ -49,6 +49,7 @@ import { DataGrid, BaseGrid } from './';
     return (
       <div style={{ height: 500 }}>
         <DataGrid
+          silence
           columnDefs={columnDefs}
           fetchUrl="/api/user/personManage/"
         />
