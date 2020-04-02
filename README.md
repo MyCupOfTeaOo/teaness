@@ -19,7 +19,7 @@ https://blissful-blackwell-0e6e7c.netlify.com/
   - [x] Modal
   - [x] PictureView
   - [x] Show
-- [ ] 增加错误定位
+- [x] 增加错误定位方法
 - [ ] 表单验证去抖
 - [ ] 表单验证/显示增加多种模式
 - [ ] 测试用例
