@@ -21,12 +21,12 @@ export interface BaseGridProps extends AgGridReactProps {
   style?: CSSProperties;
 }
 
-const BaseGrid: React.FC<BaseGridProps> = (
-  { className, style, ...gridProps },
-  ref,
-) => {
+const BaseGridCom: React.ForwardRefRenderFunction<
+  AgGridReact,
+  BaseGridProps
+> = ({ className, style, ...gridProps }, ref) => {
   const gridRef = useRef<AgGridReact>(null);
-  useImperativeHandle(ref, () => gridRef.current, []);
+  useImperativeHandle(ref, () => gridRef.current as AgGridReact, []);
   const gridClassName = useMemo(
     () => classNames('ag-theme-material', 'tea-grid', className),
     [className],
@@ -39,7 +39,7 @@ const BaseGrid: React.FC<BaseGridProps> = (
   );
 };
 
-const BaseGridRef = forwardRef(BaseGrid);
+const BaseGridRef = forwardRef(BaseGridCom);
 BaseGridRef.defaultProps = {
   enableColResize: true,
   enableSorting: true,
