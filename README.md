@@ -11,9 +11,9 @@
 https://blissful-blackwell-0e6e7c.netlify.com/
 
 ## todo
-- [ ] 升级到antd 4.0
+- [x] 升级到antd 4.0
 - [ ] 重构api与不合理的组件结构
-  - [ ] DataGrid
+  - [x] DataGrid
   - [ ] Form
   - [x] Label
   - [x] Modal
@@ -23,7 +23,7 @@ https://blissful-blackwell-0e6e7c.netlify.com/
 - [ ] 表单验证去抖
 - [ ] 表单验证/显示增加多种模式
 - [ ] 测试用例
-- [ ] 增加更好用的grid hook
+- [x] 增加更好用的grid hook
 ~~- [ ] 研究下form布局问题~~
 
 ## 安装
