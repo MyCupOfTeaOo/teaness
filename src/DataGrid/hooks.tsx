@@ -32,6 +32,7 @@ export function useDataGrid<T extends { [key: string]: any }>(
       historyId,
       queryData: queryDataRef.current,
     },
+    gridRef,
     queryDataRef,
     setQueryData,
   };
