@@ -75,9 +75,9 @@ export interface DataGridProps
 
 export function getLocationGridInit<T>(
   key: string,
-  defaultValue: T,
   historyId: string | undefined,
   location: Location | undefined,
+  defaultValue: T,
 ): T {
   if (!historyId) return defaultValue;
   if (!location) return defaultValue;
@@ -122,21 +122,21 @@ const DataGridCom: React.ForwardRefRenderFunction<
   }>(() => ({
     page: getLocationGridInit(
       'page',
-      props.defaultPage || DataGridRegister.defaultPage,
       props.historyId,
       props.location,
+      props.defaultPage || DataGridRegister.defaultPage,
     ),
     pageSize: getLocationGridInit(
       'pageSize',
-      props.defaultPageSize || DataGridRegister.defaultPageSize,
       props.historyId,
       props.location,
+      props.defaultPageSize || DataGridRegister.defaultPageSize,
     ),
     sorters: getLocationGridInit(
       'sorters',
-      props.defaultSorters || DataGridRegister.defaultSorters,
       props.historyId,
       props.location,
+      props.defaultSorters || DataGridRegister.defaultSorters,
     ),
   }));
   /* eslint-disable prefer-arrow-callback */
