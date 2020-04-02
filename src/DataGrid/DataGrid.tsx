@@ -17,8 +17,14 @@ import { isObject } from 'lodash-es';
 import BaseGrid, { BaseGridProps } from './BaseGrid';
 import Modal from '../Modal';
 import locale from './locale';
-import { Location, Sorter, RequestData, DataGridRef } from './typings';
-import DataGridRegister, { ReqResponse } from './DataGridRegister';
+import {
+  Location,
+  Sorter,
+  RequestData,
+  DataGridRef,
+  ResponseData,
+} from './typings';
+import DataGridRegister from './DataGridRegister';
 
 export interface DataGridProps
   extends Omit<
@@ -32,7 +38,15 @@ export interface DataGridProps
   /**
    * 请求失败回调
    */
-  fetchErrorCallback?: (resp: ReqResponse | any) => void;
+  fetchErrorCallback?: (resp: Error) => void;
+  /**
+   * 请求成功回调
+   */
+  fetchSuccessCallback?: (
+    resp: ResponseData<{
+      [key: string]: any;
+    }>,
+  ) => void;
   /**
    * 查询参数
    */
@@ -175,6 +189,7 @@ const DataGridCom: React.ForwardRefRenderFunction<
       const res = DataGridRegister.request(props.fetchUrl, searchProps);
       res
         .then(data => {
+          if (props.fetchSuccessCallback) props.fetchSuccessCallback(data);
           if (data.isCancel) {
             return undefined;
           } else {
