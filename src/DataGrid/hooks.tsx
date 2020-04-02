@@ -4,8 +4,11 @@ import { getLocationGridInit } from './DataGrid';
 
 export function useDataGrid<T extends { [key: string]: any }>(
   options: {
+    // 与historyId一起使用
     location?: Location;
+    // grid 绑定的地址栏id,用来区分不同的grid地址栏数据,要与location一起传递
     historyId?: string;
+    // 默认查询参数
     defaultQueryData?: Partial<T>;
   } = {},
 ) {

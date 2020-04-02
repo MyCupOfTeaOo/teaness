@@ -8,7 +8,7 @@ import { Playground, Props } from 'docz';
 import 'antd/dist/antd.css';
 
 import { Button } from 'antd';
-import { DataGrid, BaseGrid } from './';
+import { DataGrid, BaseGrid, useDataGrid } from './';
 
 # DataGrid(数据表格)
 
@@ -95,6 +95,12 @@ type Location<S = any> = H.Location<S> & {
   query: { [key: string]: any };
 };
 ```
+
+## hooks
+
+### useDataGrid
+
+<Props of={useDataGrid}/>
 
 # BaseGrid
 
