@@ -14,7 +14,10 @@ import { Input } from 'antd';
 ## 基本用法(Basic usage)
 
 <Playground>
-  <ShowError error={[{ message: '这是错误信息' }]} getPopupContainer={() => document.body}>
+  <ShowError error={[{ message: '这是错误信息' }]} style={{ marginBottom: 24}}>
+    <Input />
+  </ShowError>
+  <ShowError error={[{ message: '这是错误信息' }]} mode="tooltip" getPopupContainer={() => document.body}>
     <Input />
   </ShowError>
 </Playground>

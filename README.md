@@ -32,9 +32,9 @@ https://blissful-blackwell-0e6e7c.netlify.com/
   - [ ] 显示错误
     - [ ] 所有的错误全部显示
     - [ ] 同时显示一个错误
-  - [ ] 显示错误ui
-    - [ ] toolTip
-    - [ ] bottomtext
+  - [x] 错误显示组件
+    - [x] toolTip
+    - [x] bottomtext
 - [ ] 测试用例
 - [x] 增加更好用的grid hook
 ~~- [ ] 研究下form布局问题~~

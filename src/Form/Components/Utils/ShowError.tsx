@@ -2,7 +2,6 @@ import React, { useMemo } from 'react';
 import { Tooltip } from 'antd';
 import classnames from 'classnames';
 import { ErrorMessage } from '../../typings';
-import Show from '../../../Show';
 import './ShowError.scss';
 
 export interface ShowErrorProps {
@@ -20,9 +19,9 @@ export interface ShowErrorProps {
    */
   style?: React.CSSProperties;
   /**
-   * 是否使用 tooltip 展示错误信息
+   * 使用哪个组件显示错误信息.默认 BottomText
    */
-  isToolTip?: boolean;
+  mode?: 'tooltip' | 'bottomText';
   /**
    * getPopupContainer,当 isToolTip 为 true 生效,默认  e => e.parentElement ?? document.body
    */
@@ -41,6 +40,20 @@ export interface ShowErrorProps {
   fragment?: boolean;
 }
 
+export interface BottomTextProps {
+  errMessage?: string;
+}
+
+export const BottomText: React.FC<BottomTextProps> = props => {
+  const { errMessage } = props;
+  return (
+    <React.Fragment>
+      {props.children}
+      <div className="tea-form-err-message">{errMessage}</div>
+    </React.Fragment>
+  );
+};
+
 const ShowError: React.FC<ShowErrorProps> = props => {
   const errMessage = useMemo(
     () =>
@@ -50,23 +63,37 @@ const ShowError: React.FC<ShowErrorProps> = props => {
     [props.error],
   );
 
+  let child;
+  switch (props.mode) {
+    case 'tooltip': {
+      child = (
+        <React.Fragment>
+          <Tooltip
+            overlayClassName={classnames(props.overlayClassName, 'error-tip')}
+            title={errMessage}
+            getPopupContainer={props.getPopupContainer}
+            visible={!!(props.error && props.error?.length)}
+            {...props.toolTipProps}
+          >
+            {props.children}
+          </Tooltip>
+        </React.Fragment>
+      );
+      break;
+    }
+
+    default: {
+      child = (
+        <React.Fragment>
+          <BottomText errMessage={errMessage}>{props.children}</BottomText>
+        </React.Fragment>
+      );
+      break;
+    }
+  }
+
   if (props.fragment) {
-    return (
-      <React.Fragment>
-        <Tooltip
-          overlayClassName={classnames(props.overlayClassName, 'error-tip')}
-          title={errMessage}
-          getPopupContainer={props.getPopupContainer}
-          visible={props.isToolTip && !!(props.error && props.error?.length)}
-          {...props.toolTipProps}
-        >
-          {props.children}
-        </Tooltip>
-        <Show actual={props.isToolTip} expect={false}>
-          <div className="tea-form-err-message">{errMessage}</div>
-        </Show>
-      </React.Fragment>
-    );
+    return <React.Fragment>{child}</React.Fragment>;
   }
 
   return (
@@ -77,24 +104,13 @@ const ShowError: React.FC<ShowErrorProps> = props => {
         props.className,
       )}
     >
-      <Tooltip
-        overlayClassName={classnames(props.overlayClassName, 'error-tip')}
-        title={errMessage}
-        getPopupContainer={props.getPopupContainer}
-        visible={props.isToolTip && !!(props.error && props.error?.length)}
-        {...props.toolTipProps}
-      >
-        {props.children}
-      </Tooltip>
-      <Show actual={props.isToolTip} expect={false}>
-        <div className="tea-form-err-message">{errMessage}</div>
-      </Show>
+      {child}
     </div>
   );
 };
 
 ShowError.defaultProps = {
-  isToolTip: false,
+  mode: 'bottomText',
   getPopupContainer: e => e.parentElement ?? document.body,
 };
 
