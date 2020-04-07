@@ -188,7 +188,7 @@ type Format<U> = (value?: U) => any;
             gutter: 12
         },
       }}>
-        <Item text="名称" id="name">
+        <Item text="名称(错误toolTip)" id="name" showErrorProps={{ isToolTip: true}}>
           <Input onChange={(e) => console.log(e.target.value)}/>
         </Item>
         <Item text="名称" id="name">
@@ -265,7 +265,7 @@ type Format<U> = (value?: U) => any;
     {/* store.validFirst = true */}
     return (
       <Form store={store} layout={Form.vertical}>
-        <Item text="名称" id="name">
+        <Item text="名称(错误toolTip)" id="name" showErrorProps={{ isToolTip: true}}>
           <Input onChange={(e) => console.log(e.target.value)}/>
         </Item>
         <Item text="名称" id="name">
@@ -340,7 +340,7 @@ type Format<U> = (value?: U) => any;
     {/* store.validFirst = true */}
     return (
       <Form store={store} layout={Form.horizontal}>
-        <Item text="名称" id="name">
+        <Item text="名称(错误toolTip)" id="name" showErrorProps={{ isToolTip: true}}>
           <Input onChange={(e) => console.log(e.target.value)}/>
         </Item>
         <Item text="名称" id="name">

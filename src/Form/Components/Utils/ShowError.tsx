@@ -7,15 +7,38 @@ import './ShowError.scss';
 
 export interface ShowErrorProps {
   children?: React.ReactElement;
+  /**
+   * 错误信息
+   */
   error?: ErrorMessage[];
+  /**
+   * fragment: true 时失效
+   */
   className?: string;
+  /**
+   * fragment: true 时失效
+   */
   style?: React.CSSProperties;
+  /**
+   * 是否使用 tooltip 展示错误信息
+   */
   isToolTip?: boolean;
-  placement?: Tooltip['props']['placement'];
-  overlayClassName?: string;
+  /**
+   * getPopupContainer,当 isToolTip 为 true 生效,默认  e => e.parentElement ?? document.body
+   */
   getPopupContainer?: Tooltip['props']['getPopupContainer'];
+  /**
+   * toolTip的overlayClassName,当 isToolTip 为 true 生效
+   */
+  overlayClassName?: string;
+  /**
+   * toolTip的props,当 isToolTip 为 true 生效,如无特殊需要不要传递 overlayClassName,title,getPopupContainer,visible
+   */
   toolTipProps?: Tooltip['props'];
-  notDiv?: boolean;
+  /**
+   * 输入组件外层不包裹div
+   */
+  fragment?: boolean;
 }
 
 const ShowError: React.FC<ShowErrorProps> = props => {
@@ -27,13 +50,12 @@ const ShowError: React.FC<ShowErrorProps> = props => {
     [props.error],
   );
 
-  if (props.notDiv) {
+  if (props.fragment) {
     return (
       <React.Fragment>
         <Tooltip
           overlayClassName={classnames(props.overlayClassName, 'error-tip')}
           title={errMessage}
-          placement={props.placement}
           getPopupContainer={props.getPopupContainer}
           visible={props.isToolTip && !!(props.error && props.error?.length)}
           {...props.toolTipProps}
@@ -58,7 +80,6 @@ const ShowError: React.FC<ShowErrorProps> = props => {
       <Tooltip
         overlayClassName={classnames(props.overlayClassName, 'error-tip')}
         title={errMessage}
-        placement={props.placement}
         getPopupContainer={props.getPopupContainer}
         visible={props.isToolTip && !!(props.error && props.error?.length)}
         {...props.toolTipProps}
@@ -73,23 +94,8 @@ const ShowError: React.FC<ShowErrorProps> = props => {
 };
 
 ShowError.defaultProps = {
-  isToolTip: true,
-  placement: 'topLeft',
+  isToolTip: false,
   getPopupContainer: e => e.parentElement ?? document.body,
 };
 
 export default ShowError;
-
-export function ShowErrorHoc<P extends any, T extends React.ComponentType<P>>(
-  Component: T,
-) {
-  const ComponentHasError = (props: P) => {
-    const { errors, ...rest } = props as P & { errors?: any };
-    return (
-      <ShowError error={errors}>
-        <Component {...(rest as any)} />
-      </ShowError>
-    );
-  };
-  return ComponentHasError as T;
-}

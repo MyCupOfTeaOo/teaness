@@ -1,4 +1,4 @@
-import React, { useContext, CSSProperties } from 'react';
+import React, { useContext } from 'react';
 import lodash from 'lodash-es';
 import { observer } from 'mobx-react';
 import { FormStore } from '../store';
@@ -40,16 +40,18 @@ export interface AutowiredProps<
    * 数据收集的时机  默认 onChange
    */
   trigger?: string;
+
+  /**
+   *
+   */
+  suppressErrorOnValiding?: boolean;
   /**
    * 是否展示错误信息
    */
   showError?: boolean;
   /**
-   *
+   * 错误信息组件props
    */
-  suppressErrorOnValiding?: boolean;
-  errorClassName?: string;
-  errorStyle?: CSSProperties;
   showErrorProps?: ShowErrorProps;
 }
 
@@ -125,12 +127,7 @@ const Autowired: React.FC<AutowiredProps> = props => {
 
   if (showError) {
     return (
-      <ShowError
-        className={props.errorClassName}
-        style={props.errorStyle}
-        error={p.errors}
-        {...showErrorProps}
-      >
+      <ShowError error={p.errors} {...showErrorProps}>
         {childnode}
       </ShowError>
     );

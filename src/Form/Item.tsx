@@ -1,22 +1,17 @@
-import React, { useContext, CSSProperties } from 'react';
+import React, { useContext } from 'react';
 import { observer } from 'mobx-react';
 import Label from '../Label';
 import { LabelProps } from '../Label/typings';
 import Autowired, { AutowiredProps } from './Context/Autowired';
 import { genFormId, searchRequired } from './utils';
 import FormContext from './Context/FormContext';
-import { ShowErrorProps } from './Components/Utils/ShowError';
 
 export interface ItemProps<
   T extends { [key: string]: any } = any,
   P extends Extract<keyof T, string> | Extract<keyof T, string>[] =
     | Extract<keyof T, string>
     | Extract<keyof T, string>[]
-> extends AutowiredProps<T, P>, Omit<LabelProps, 'children' | 'id'> {
-  errorClassName?: string;
-  errorStyle?: CSSProperties;
-  showErrorProps?: ShowErrorProps;
-}
+> extends AutowiredProps<T, P>, Omit<LabelProps, 'children' | 'id'> {}
 
 const Item: React.FC<ItemProps> = props => {
   const {
@@ -26,9 +21,8 @@ const Item: React.FC<ItemProps> = props => {
     valueName,
     trigger,
     showError,
-    errorClassName,
-    errorStyle,
     showErrorProps,
+    suppressErrorOnValiding,
     ...rest
   } = props;
   const context = useContext(FormContext);
@@ -39,13 +33,12 @@ const Item: React.FC<ItemProps> = props => {
       {...rest}
     >
       <Autowired
+        suppressErrorOnValiding={suppressErrorOnValiding}
         store={store}
         id={id}
         valueName={valueName}
         trigger={trigger}
         showError={showError}
-        errorClassName={errorClassName}
-        errorStyle={errorStyle}
         showErrorProps={showErrorProps}
       >
         {children}
