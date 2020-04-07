@@ -15,6 +15,8 @@ export type Params = {
   errors?: ErrorMessage[];
   disabled?: boolean;
   checkresult: CheckResult | CheckResult[];
+  onBlur: () => void;
+  onFocus: () => void;
   [key: string]: any;
 };
 
@@ -75,10 +77,30 @@ const Autowired: React.FC<AutowiredProps> = props => {
       ),
       id: genFormId(id),
       [valueName]: id.map(key => store?.componentStores[key]?.value),
-      [trigger]: (value: any) =>
+      onBlur: () => {
+        id.forEach(key => {
+          store?.componentStores[key]?.setInputStatus('blur');
+        });
+      },
+      onFocus: () => {
+        id.forEach(key => {
+          store?.componentStores[key]?.setInputStatus('focus');
+        });
+      },
+      [trigger]: (value: any) => {
+        if (trigger === 'onBlur') {
+          id.forEach(key => {
+            store?.componentStores[key]?.setInputStatus('blur');
+          });
+        } else if (trigger === 'onFocus') {
+          id.forEach(key => {
+            store?.componentStores[key]?.setInputStatus('focus');
+          });
+        }
         id.forEach((key, index) => {
           store?.componentStores[key]?.onChange(value?.[index]);
-        }),
+        });
+      },
       disabled: store?.disabled,
       errors: id.reduce((e: ErrorMessage[] | undefined, key) => {
         const errors = store?.componentStores[key]?.errors;
@@ -101,8 +123,21 @@ const Autowired: React.FC<AutowiredProps> = props => {
     p = {
       checkresult: store?.componentStores[id]?.checkResult || 'default',
       id: genFormId(id),
+      onBlur: () => {
+        store?.componentStores[id]?.setInputStatus('blur');
+      },
+      onFocus: () => {
+        store?.componentStores[id]?.setInputStatus('focus');
+      },
       [valueName]: store?.componentStores[id]?.value,
-      [trigger]: store?.componentStores[id]?.onChange,
+      [trigger]: (value: any) => {
+        if (trigger === 'onBlur') {
+          store?.componentStores[id]?.setInputStatus('blur');
+        } else if (trigger === 'onFocus') {
+          store?.componentStores[id]?.setInputStatus('focus');
+        }
+        store?.componentStores[id]?.onChange(value);
+      },
       errors:
         suppressErrorOnValiding &&
         store?.componentStores[id]?.checkResult === 'loading'
@@ -118,6 +153,14 @@ const Autowired: React.FC<AutowiredProps> = props => {
     childnode = React.cloneElement(children as React.ReactElement, {
       ...p,
       disabled: (children as React.ReactElement)?.props?.disabled ?? p.disabled,
+      onFocus: (...args: any) => {
+        p.onFocus?.();
+        return (children as React.ReactElement)?.props?.onFocus?.(...args);
+      },
+      onBlur: (...args: any) => {
+        p.onBlur?.();
+        return (children as React.ReactElement)?.props?.onBlur?.(...args);
+      },
       [trigger]: (...args: any) => {
         p[trigger]?.(...args);
         return (children as React.ReactElement)?.props?.[trigger]?.(...args);
