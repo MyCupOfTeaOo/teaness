@@ -21,3 +21,4 @@
 .umi-production
 *.tgz
 *.local.js
+report.*.json
