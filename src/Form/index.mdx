@@ -148,6 +148,9 @@ type Format<U> = (value?: U) => any;
         rules: [{
           required: true,
           message: "描述必填"
+        }, {
+          min: 4,
+          message: "描述不能小于4个字符"
         }]
       },
       gender: {

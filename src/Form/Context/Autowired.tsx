@@ -40,7 +40,14 @@ export interface AutowiredProps<
    * 数据收集的时机  默认 onChange
    */
   trigger?: string;
+  /**
+   * 是否展示错误信息
+   */
   showError?: boolean;
+  /**
+   *
+   */
+  suppressErrorOnValiding?: boolean;
   errorClassName?: string;
   errorStyle?: CSSProperties;
   showErrorProps?: ShowErrorProps;
@@ -52,6 +59,7 @@ const Autowired: React.FC<AutowiredProps> = props => {
     children,
     valueName = 'value',
     trigger = 'onChange',
+    suppressErrorOnValiding = false,
     showErrorProps,
   } = props;
   const context = useContext(FormContext);
@@ -72,7 +80,12 @@ const Autowired: React.FC<AutowiredProps> = props => {
       disabled: store?.disabled,
       errors: id.reduce((e: ErrorMessage[] | undefined, key) => {
         const errors = store?.componentStores[key]?.errors;
-        if (errors && store?.componentStores[key]?.checkResult !== 'loading') {
+        if (
+          errors &&
+          (suppressErrorOnValiding
+            ? store?.componentStores[key]?.checkResult !== 'loading'
+            : true)
+        ) {
           if (Array.isArray(e)) {
             e.push(...errors);
           } else {
@@ -89,6 +102,7 @@ const Autowired: React.FC<AutowiredProps> = props => {
       [valueName]: store?.componentStores[id]?.formatValue,
       [trigger]: store?.componentStores[id]?.onChange,
       errors:
+        suppressErrorOnValiding &&
         store?.componentStores[id]?.checkResult === 'loading'
           ? undefined
           : store?.componentStores[id]?.errors,
