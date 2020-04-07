@@ -74,7 +74,7 @@ const Autowired: React.FC<AutowiredProps> = props => {
         key => store?.componentStores[key]?.checkResult || 'default',
       ),
       id: genFormId(id),
-      [valueName]: id.map(key => store?.componentStores[key]?.source),
+      [valueName]: id.map(key => store?.componentStores[key]?.value),
       [trigger]: (value: any) =>
         id.forEach((key, index) => {
           store?.componentStores[key]?.onChange(value?.[index]);
@@ -101,7 +101,7 @@ const Autowired: React.FC<AutowiredProps> = props => {
     p = {
       checkresult: store?.componentStores[id]?.checkResult || 'default',
       id: genFormId(id),
-      [valueName]: store?.componentStores[id]?.source,
+      [valueName]: store?.componentStores[id]?.value,
       [trigger]: store?.componentStores[id]?.onChange,
       errors:
         suppressErrorOnValiding &&

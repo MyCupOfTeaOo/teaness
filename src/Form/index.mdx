@@ -174,10 +174,21 @@ type Format<U> = (value?: U) => any;
           return value ? value.format(DateFormat.day) : value;
         },
         format(value){
+            console.log(value)
           if (value) return moment(value);
           return value;
         }
       },
+    }, [], {
+      autoValid: [{
+        primaryKey: "gender",
+        listenKey: ["startDate"],
+        effect: (values) => {
+          if (values.gender && values.startDate < "2020") {
+            return "男生开始日期必须不小于2020"
+          }
+        }
+      }]
     });
     console.log('reload')
     {/* store.validFirst = true */}

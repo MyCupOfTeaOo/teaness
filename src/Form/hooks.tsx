@@ -1,7 +1,7 @@
 import React, { useMemo, useEffect, DependencyList } from 'react';
 import { IReactionDisposer } from 'mobx';
 import { useEffectExcludeFirst } from '../hooks';
-import { FormConfigs, GlobalOptions } from './typings';
+import { FormConfigs, GlobalOptions, AutoValid } from './typings';
 import {
   parseFormConfigs,
   configToComponentStore,
@@ -29,24 +29,27 @@ export function useStore<T>(
     () => parseFormConfigs(formConfigs, options),
     [],
   );
-  const memoOptions = useMemo(() => options, []);
-  const autoValidIdMap = useMemo(() => {
-    let index = 1;
-    const temp: { [P in keyof T]?: string } = {};
-    if (memoOptions && memoOptions.autoValid) {
-      if (Array.isArray(memoOptions.autoValid)) {
-        for (const autoValid of memoOptions.autoValid) {
-          temp[autoValid.primaryKey] = `form-valid-${index}`;
-          index += 1;
-        }
+  const autoValidMaps = useMemo<{ key: string; primaryKey: keyof T }[]>(() => {
+    if (options && options.autoValid) {
+      if (Array.isArray(options.autoValid)) {
+        return [...Array(options.autoValid.length)].map((_, i) => ({
+          key: `${
+            (options.autoValid as AutoValid<T, keyof T>[])[i].primaryKey
+          }-${i}`,
+          primaryKey: (options.autoValid as AutoValid<T, keyof T>[])[i]
+            .primaryKey,
+        }));
       } else {
-        temp[memoOptions.autoValid.primaryKey] = `form-valid-${index}`;
+        return [
+          {
+            key: `${options.autoValid.primaryKey}-0`,
+            primaryKey: options.autoValid.primaryKey,
+          },
+        ];
       }
     }
-    return temp as {
-      [P in keyof T]: string;
-    };
-  }, []);
+    return [];
+  }, deps);
   useEffectExcludeFirst(() => {
     for (const key in formStore.componentStores) {
       if (Reflect.has(formStore.componentStores, key)) {
@@ -78,18 +81,24 @@ export function useStore<T>(
   useEffect(() => {
     const unlisten: IReactionDisposer[] = [];
     // 处理 autoValid 注册
-    if (memoOptions && memoOptions.autoValid) {
-      if (Array.isArray(memoOptions.autoValid)) {
-        for (const autoValid of memoOptions.autoValid) {
-          const listen = runCrossValid(autoValid, formStore, autoValidIdMap);
+    if (options && options.autoValid) {
+      if (Array.isArray(options.autoValid)) {
+        let i = 0;
+        for (const autoValid of options.autoValid) {
+          const listen = runCrossValid(
+            autoValid,
+            formStore,
+            autoValidMaps[i].key,
+          );
 
           unlisten.push(listen);
+          i += 1;
         }
       } else {
         const listen = runCrossValid(
-          memoOptions.autoValid,
+          options.autoValid,
           formStore,
-          autoValidIdMap,
+          autoValidMaps[0].key,
         );
 
         unlisten.push(listen);
@@ -97,14 +106,14 @@ export function useStore<T>(
     }
     // 处理 autoHandle 注册
 
-    if (memoOptions && memoOptions.autoHandle) {
-      if (Array.isArray(memoOptions.autoHandle)) {
-        for (const autoHandle of memoOptions.autoHandle) {
+    if (options && options.autoHandle) {
+      if (Array.isArray(options.autoHandle)) {
+        for (const autoHandle of options.autoHandle) {
           const listen = runHandle(autoHandle, formStore);
           unlisten.push(listen);
         }
       } else {
-        const listen = runHandle(memoOptions.autoHandle, formStore);
+        const listen = runHandle(options.autoHandle, formStore);
         unlisten.push(listen);
       }
     }
@@ -116,26 +125,41 @@ export function useStore<T>(
     };
   }, deps);
   useEffect(() => {
-    // 处理 autoValid,创建store内的validFunc方便主动调用, 目前只支持一次渲染
-    if (memoOptions && memoOptions.autoValid) {
-      if (Array.isArray(memoOptions.autoValid)) {
-        for (const autoValid of memoOptions.autoValid) {
+    // 处理 autoValid,创建store内的validFunc方便主动调用
+    if (options && options.autoValid) {
+      if (Array.isArray(options.autoValid)) {
+        let i = 0;
+        for (const autoValid of options.autoValid) {
           const target = formStore.crossValidFuncsDict[autoValid.primaryKey];
           if (Array.isArray(target)) {
-            target.push(crossValidFunc(autoValid, formStore, autoValidIdMap));
+            target.push(
+              crossValidFunc(autoValid, formStore, autoValidMaps[i].key),
+            );
           } else {
             formStore.crossValidFuncsDict[autoValid.primaryKey] = [
-              crossValidFunc(autoValid, formStore, autoValidIdMap),
+              crossValidFunc(autoValid, formStore, autoValidMaps[i].key),
             ];
           }
+          i += 1;
         }
       } else {
-        formStore.crossValidFuncsDict[memoOptions.autoValid.primaryKey] = [
-          crossValidFunc(memoOptions.autoValid, formStore, autoValidIdMap),
+        formStore.crossValidFuncsDict[options.autoValid.primaryKey] = [
+          crossValidFunc(options.autoValid, formStore, autoValidMaps[0].key),
         ];
       }
     }
-  }, []);
+    // 生命周期结束删除crossValid及其验证结果,但是不验证新的valid func
+    return () => {
+      formStore.crossValidFuncsDict = {};
+      autoValidMaps.forEach(autoValidMap => {
+        const componentStore =
+          formStore.componentStores[autoValidMap.primaryKey];
+        if (componentStore) {
+          componentStore.delCrossErr([autoValidMap.key]);
+        }
+      });
+    };
+  }, deps);
   return formStore;
 }
 

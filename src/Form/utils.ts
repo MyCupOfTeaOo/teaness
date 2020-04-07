@@ -31,9 +31,7 @@ export function getValues<T>(formStore: FormStoreInstance<T>) {
 export function crossValidFunc<T>(
   autoValid: AutoValid<T>,
   formStore: FormStoreInstance<T>,
-  autoValidIdMap: {
-    [P in keyof T]: string;
-  },
+  autoValidId: string,
 ) {
   return () => {
     const err = autoValid.effect(getValues(formStore), formStore);
@@ -41,13 +39,13 @@ export function crossValidFunc<T>(
     if (componentStore) {
       if (err) {
         componentStore.setCrossErr({
-          [autoValidIdMap[componentStore.key]]: {
+          [autoValidId]: {
             message: err,
             field: componentStore.key as string,
           },
         });
       } else {
-        componentStore.delCrossErr([autoValidIdMap[componentStore.key]]);
+        componentStore.delCrossErr([autoValidId]);
       }
     }
   };
@@ -65,9 +63,7 @@ export function runHandle<T>(
 export function runCrossValid<T>(
   autoValid: AutoValid<T>,
   formStore: FormStoreInstance<T>,
-  autoValidIdMap: {
-    [P in keyof T]: string;
-  },
+  autoValidId: string,
 ) {
   // 去重
   const listenKey = new Set(autoValid.listenKey);
@@ -78,13 +74,13 @@ export function runCrossValid<T>(
     if (componentStore) {
       if (err) {
         componentStore.setCrossErr({
-          [autoValidIdMap[componentStore.key]]: {
+          [autoValidId]: {
             message: err,
             field: componentStore.key as string,
           },
         });
       } else {
-        componentStore.delCrossErr([autoValidIdMap[componentStore.key]]);
+        componentStore.delCrossErr([autoValidId]);
       }
     }
   });
