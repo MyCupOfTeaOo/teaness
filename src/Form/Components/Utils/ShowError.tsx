@@ -73,6 +73,7 @@ const ShowError: React.FC<ShowErrorProps> = props => {
             title={errMessage}
             getPopupContainer={props.getPopupContainer}
             visible={!!(props.error && props.error?.length)}
+            placement="leftTop"
             {...props.toolTipProps}
           >
             {props.children}
