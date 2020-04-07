@@ -82,6 +82,10 @@ export interface ComponentStoreInterface<U = any, T = {}> {
    */
   validing: boolean;
   /**
+   * 输入错误信息的时机,默认 "default"
+   */
+  errorOutputTrigger: InputStatus;
+  /**
    * 输入状态
    */
   inputStatus: InputStatus;
@@ -106,6 +110,9 @@ export interface ComponentStoreInterface<U = any, T = {}> {
    * 输出的值格式化
    */
   format?: Format<U>;
+  setProps: (
+    props: Omit<ComponentStoreProps<U, T>, 'key' | 'formStore'>,
+  ) => void;
   setValiding: (validing: boolean) => void;
   setParse: (parse?: Parse<U>) => void;
   setFormat: (format?: Format<U>) => void;
@@ -115,16 +122,18 @@ export interface ComponentStoreInterface<U = any, T = {}> {
   setDefaultValue: (value: U | undefined) => void;
   setRules: (rules: Rules | undefined) => void;
   setInputStatus: (inputStatus: InputStatus) => void;
+  setErrorOutputTrigger: (inputStatus: InputStatus) => void;
   valid: () => CancellablePromise<any>;
   reset: () => void;
 }
 export interface ComponentStoreProps<U = any, T = {}> {
   key: keyof T;
   formStore: FormStoreInstance<T>;
-  defaultValue: U | undefined;
+  defaultValue?: U;
   rules?: Rules;
   parse?: Parse<U>;
   format?: Format<U>;
+  errorOutputTrigger?: InputStatus;
 }
 
 export interface ComponentStoreConstructor<U = any, T = {}> {
@@ -240,27 +249,8 @@ export interface AutoHandle<T> {
   effect: (arg: T, formStore: FormStoreInstance<T>) => void;
 }
 
-export interface FormConfig<U> {
-  /**
-   * form组件,只要支持 onChange,value即可
-   */
-  /**
-   * 校验规则 建议观看 https://github.com/yiminghe/async-validator
-   */
-  rules?: Rules;
-  /**
-   * 默认值
-   */
-  defaultValue?: U | undefined;
-  /**
-   * 输入解析
-   */
-  parse?: Parse<U>;
-  /**
-   * 输入格式化
-   */
-  format?: Format<U>;
-}
+export interface FormConfig<U>
+  extends Omit<ComponentStoreProps<U, {}>, 'key' | 'formStore'> {}
 
 export type FormConfigs<T = {}> = {
   [P in keyof T]: FormConfig<T[P]>;
@@ -270,7 +260,8 @@ export type PartialUndefined<T> = {
   [P in keyof T]: T[P] | undefined;
 };
 
-export interface HookOptions<T> {
+export interface GlobalOptions<T> {
   autoValid?: AutoValid<T> | AutoValid<T>[];
   autoHandle?: AutoHandle<T> | AutoHandle<T>[];
+  errorOutputTrigger?: InputStatus;
 }

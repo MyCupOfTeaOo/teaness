@@ -22,10 +22,10 @@ https://blissful-blackwell-0e6e7c.netlify.com/
 - [x] 增加错误定位方法
 ~~- [ ] 表单验证去抖~~真有性能问题在加这个机制
 - [ ] 表单验证/显示增加多种模式
-  - [ ] 校验时机
-    - [ ] blur
-    - [ ] change
-    - [ ] submit
+  - [x] 输出错误时机
+    - [x] blur
+    - [x] focus
+    - [x] default
   - [ ] 校验错误
     - [ ] 校验到一个即停止
     - [ ] 校验所有

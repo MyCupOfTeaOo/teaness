@@ -5,11 +5,10 @@ import {
   FormConfig,
   ComponentStoresType,
   FormStoreInstance,
-  Rules,
   AutoValid,
   AutoHandle,
-  Parse,
-  Format,
+  ComponentStoreProps,
+  GlobalOptions,
 } from './typings';
 
 export function getListenValues<T>(
@@ -19,13 +18,13 @@ export function getListenValues<T>(
   return () =>
     keys
       .filter(key => formStore.componentStores[key])
-      .map(key => formStore.componentStores[key].value);
+      .map(key => formStore.componentStores[key].source);
 }
 
 export function getValues<T>(formStore: FormStoreInstance<T>) {
   return mapValues(
     formStore.componentStores,
-    componentStore => componentStore.value,
+    componentStore => componentStore.source,
   ) as T;
 }
 
@@ -70,6 +69,7 @@ export function runCrossValid<T>(
     [P in keyof T]: string;
   },
 ) {
+  // 去重
   const listenKey = new Set(autoValid.listenKey);
   listenKey.add(autoValid.primaryKey);
   return reaction(getListenValues(Array.from(listenKey), formStore), () => {
@@ -90,39 +90,23 @@ export function runCrossValid<T>(
   });
 }
 
-export function configToComponentStore<T, P extends keyof T>(props: {
-  key: P;
-  formStore: FormStoreInstance<T>;
-  defaultValue?: T[P];
-  rules?: Rules;
-  parse?: Parse<T[P]>;
-  format?: Format<T[P]>;
-}) {
-  const { key, formStore, defaultValue, rules, parse, format } = props;
-  return new ComponentStore({
-    key,
-    formStore,
-    defaultValue,
-    rules,
-    parse,
-    format,
-  });
+export function configToComponentStore<U, T>(props: ComponentStoreProps<U, T>) {
+  return new ComponentStore(props);
 }
 
 export function parseFormConfigs<T = {}>(
   formConfigs: { [P in keyof T]: FormConfig<T[P]> },
+  options?: GlobalOptions<T>,
 ): { formStore: FormStore<T> } {
   function getInstances(formStore: FormStoreInstance<T>) {
     const componentStores: Partial<ComponentStoresType<T>> = {};
     for (const key in formConfigs) {
-      if (Object.prototype.hasOwnProperty.call(formConfigs, key)) {
+      if (Reflect.has(formConfigs, key)) {
         componentStores[key] = configToComponentStore({
           key,
           formStore,
-          defaultValue: formConfigs[key].defaultValue,
-          rules: formConfigs[key].rules,
-          parse: formConfigs[key].parse,
-          format: formConfigs[key].format,
+          errorOutputTrigger: options?.errorOutputTrigger,
+          ...formConfigs[key],
         });
       }
     }

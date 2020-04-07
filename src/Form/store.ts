@@ -40,6 +40,9 @@ export class ComponentStore<U = any, T = {}>
   err: ErrorType;
 
   @observable
+  errorOutputTrigger: InputStatus = 'default';
+
+  @observable
   inputStatus: InputStatus = 'default';
 
   @observable
@@ -51,6 +54,14 @@ export class ComponentStore<U = any, T = {}>
   } = {};
 
   @computed get errors(): ErrorType {
+    switch (this.errorOutputTrigger) {
+      case 'focus':
+      case 'blur': {
+        if (this.inputStatus !== this.errorOutputTrigger) return undefined;
+        break;
+      }
+      default:
+    }
     const errors = (this.err || []).concat(Object.values(this.crossErr));
     if (isEmpty(errors)) return undefined;
     return errors;
@@ -81,16 +92,26 @@ export class ComponentStore<U = any, T = {}>
   parse?: Parse<U>;
 
   constructor(props: ComponentStoreProps<U, T>) {
-    const { key, formStore, defaultValue, rules, parse, format } = props;
+    const { key, formStore, ...rest } = props;
     this.key = key;
     this.formStore = formStore;
-    this.defaultValue = defaultValue;
-    this.source = defaultValue;
-    this.rules = rules;
-    this.parse = parse;
-    this.format = format;
-    if (rules) this.schema = new Schema({ [key]: rules });
+    this.setProps(rest);
   }
+
+  setProps = (props: Omit<ComponentStoreProps<U, T>, 'key' | 'formStore'>) => {
+    const {
+      defaultValue,
+      rules,
+      parse,
+      format,
+      errorOutputTrigger = 'default',
+    } = props;
+    this.setDefaultValue(defaultValue);
+    this.setRules(rules);
+    this.setParse(parse);
+    this.setFormat(format);
+    this.setErrorOutputTrigger(errorOutputTrigger);
+  };
 
   @action
   setValiding = (validing: boolean) => {
@@ -156,6 +177,11 @@ export class ComponentStore<U = any, T = {}>
   @action
   setInputStatus = (inputStatus: InputStatus) => {
     this.inputStatus = inputStatus;
+  };
+
+  @action
+  setErrorOutputTrigger = (errorOutputTrigger: InputStatus) => {
+    this.errorOutputTrigger = errorOutputTrigger;
   };
 
   valid = flow<Promise<ErrorType>, any[]>(function*(
@@ -247,7 +273,7 @@ export class FormStore<T> implements FormStoreInstance<T> {
   submit: SubmitType<T> = callback => {
     const values: Partial<T> = {};
     for (const key in this.componentStores) {
-      if (Object.prototype.hasOwnProperty.call(this.componentStores, key)) {
+      if (Reflect.has(this.componentStores, key)) {
         // this.componentStores[key].valid();
         values[key] = this.componentStores[key].source;
       }
@@ -259,7 +285,7 @@ export class FormStore<T> implements FormStoreInstance<T> {
 
   reset = () => {
     for (const key in this.componentStores) {
-      if (Object.prototype.hasOwnProperty.call(this.componentStores, key)) {
+      if (Reflect.has(this.componentStores, key)) {
         this.componentStores[key].reset();
       }
     }
@@ -314,7 +340,7 @@ export class FormStore<T> implements FormStoreInstance<T> {
 
   setValues = (props: Partial<T>) => {
     for (const key in props) {
-      if (Object.prototype.hasOwnProperty.call(props, key)) {
+      if (Reflect.has(props, key)) {
         if (this.componentStores[key]) this.componentStores[key].onChange(props[key]);
       }
     }
@@ -322,7 +348,7 @@ export class FormStore<T> implements FormStoreInstance<T> {
 
   setAllValues = (props: Partial<T>) => {
     for (const key in this.componentStores) {
-      if (Object.prototype.hasOwnProperty.call(this.componentStores, key)) {
+      if (Reflect.has(this.componentStores, key)) {
         if (props[key]) this.componentStores[key].onChange(props[key]);
         else this.componentStores[key].onChange(undefined);
       }
@@ -333,7 +359,7 @@ export class FormStore<T> implements FormStoreInstance<T> {
     const errs: Partial<ErrorsType<T>> = {};
     if (this.validFirst) {
       for (const key in this.componentStores) {
-        if (Object.prototype.hasOwnProperty.call(this.componentStores, key)) {
+        if (Reflect.has(this.componentStores, key)) {
           const componentStore = this.componentStores[key];
           // eslint-disable-next-line
           const errors = await componentStore.valid();
@@ -362,7 +388,7 @@ export class FormStore<T> implements FormStoreInstance<T> {
       await Promise.all(promiseErrors);
 
       for (const key in this.componentStores) {
-        if (Object.prototype.hasOwnProperty.call(this.componentStores, key)) {
+        if (Reflect.has(this.componentStores, key)) {
           const componentStore = this.componentStores[key];
           const crossValidFuncs = this.crossValidFuncsDict[key];
           if (Array.isArray(crossValidFuncs)) {

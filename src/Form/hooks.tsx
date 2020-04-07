@@ -1,8 +1,7 @@
 import React, { useMemo, useEffect, DependencyList } from 'react';
 import { IReactionDisposer } from 'mobx';
-import { observer } from 'mobx-react';
 import { useEffectExcludeFirst } from '../hooks';
-import { FormConfigs, HookOptions } from './typings';
+import { FormConfigs, GlobalOptions } from './typings';
 import {
   parseFormConfigs,
   configToComponentStore,
@@ -11,7 +10,7 @@ import {
   runHandle,
 } from './utils';
 import { ComponentStore, FormStore } from './store';
-import { Autowired, AutowiredProps } from './Context/Autowired';
+import Autowired, { AutowiredProps } from './Context/Autowired';
 import Form, { FormProps } from '.';
 import Item, { ItemProps } from './Item';
 
@@ -24,9 +23,12 @@ export function useStore<T>(
   /**
    * 可选配置,目前支持交联验证,交联handle
    */
-  options?: HookOptions<T>,
+  options?: GlobalOptions<T>,
 ): FormStore<T> {
-  const { formStore } = useMemo(() => parseFormConfigs(formConfigs), []);
+  const { formStore } = useMemo(
+    () => parseFormConfigs(formConfigs, options),
+    [],
+  );
   const memoOptions = useMemo(() => options, []);
   const autoValidIdMap = useMemo(() => {
     let index = 1;
@@ -47,33 +49,26 @@ export function useStore<T>(
   }, []);
   useEffectExcludeFirst(() => {
     for (const key in formStore.componentStores) {
-      if (
-        Object.prototype.hasOwnProperty.call(formStore.componentStores, key)
-      ) {
+      if (Reflect.has(formStore.componentStores, key)) {
         if (!formConfigs[key]) {
+          // 依赖更新后处理 删除不需要的 subStore
           formStore.removeComponentStore(
             formStore.componentStores[key as keyof T],
           );
         } else {
-          formStore.componentStores[key].setParse(formConfigs[key].parse);
-          formStore.componentStores[key].setFormat(formConfigs[key].format);
-          formStore.componentStores[key].setDefaultValue(
-            formConfigs[key].defaultValue,
-          );
-          formStore.componentStores[key].setRules(formConfigs[key].rules);
+          // 依赖更新后处理修改 subStore,幂等
+          formStore.componentStores[key].setProps(formConfigs[key]);
         }
       }
     }
+    // 依赖更新后处理 新增的 subStore
     for (const key in formConfigs) {
-      if (Object.prototype.hasOwnProperty.call(formConfigs, key)) {
+      if (Reflect.has(formConfigs, key)) {
         if (!formStore.componentStores[key]) {
           const componentStore = (configToComponentStore({
             key,
             formStore,
-            defaultValue: formConfigs[key].defaultValue,
-            rules: formConfigs[key].rules,
-            parse: formConfigs[key].parse,
-            format: formConfigs[key].format,
+            ...formConfigs[key],
           }) as any) as ComponentStore<T[keyof T], T>;
           formStore.addComponentStore(componentStore);
         }
@@ -82,6 +77,7 @@ export function useStore<T>(
   }, deps);
   useEffect(() => {
     const unlisten: IReactionDisposer[] = [];
+    // 处理 autoValid 注册
     if (memoOptions && memoOptions.autoValid) {
       if (Array.isArray(memoOptions.autoValid)) {
         for (const autoValid of memoOptions.autoValid) {
@@ -99,6 +95,7 @@ export function useStore<T>(
         unlisten.push(listen);
       }
     }
+    // 处理 autoHandle 注册
 
     if (memoOptions && memoOptions.autoHandle) {
       if (Array.isArray(memoOptions.autoHandle)) {
@@ -119,6 +116,7 @@ export function useStore<T>(
     };
   }, deps);
   useEffect(() => {
+    // 处理 autoValid,创建store内的validFunc方便主动调用, 目前只支持一次渲染
     if (memoOptions && memoOptions.autoValid) {
       if (Array.isArray(memoOptions.autoValid)) {
         for (const autoValid of memoOptions.autoValid) {
@@ -141,15 +139,23 @@ export function useStore<T>(
   return formStore;
 }
 
+/**
+ *  只是为了方便类型验证
+ * @param store store
+ */
 export function useAutoWired<T = { [key: string]: any }>(store: FormStore<T>) {
   return useMemo(() => {
-    const ListenAutowired = observer(Autowired);
+    const AutoWiredHelp = Autowired;
     return (props: AutowiredProps<T>) => (
-      <ListenAutowired store={store} {...props} />
+      <AutoWiredHelp store={store} {...props} />
     );
   }, [store]);
 }
 
+/**
+ * 只是为了方便类型验证
+ * @param store store
+ */
 export function useForm<T = { [key: string]: any }>(store: FormStore<T>) {
   return useMemo(() => {
     const FormHelp = (
