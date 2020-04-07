@@ -487,7 +487,7 @@ export interface ComponentStoreInstance<U = any, T = {}> {
   formatValue: U | undefined;
   defaultValue: U | undefined;
   isChange: boolean;
-  scheme?: Scheme;
+  schema?: Schema;
   rules?: Rules;
   parse?: Parse<U>;
   setParse: (parse?: Parse<U>) => void;

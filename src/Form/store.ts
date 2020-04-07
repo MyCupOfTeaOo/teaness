@@ -1,10 +1,10 @@
 import { action, observable, flow, computed } from 'mobx';
-import Scheme, { ErrorList, FieldErrorList } from 'async-validator';
+import Schema, { ErrorList, FieldErrorList } from 'async-validator';
 import { omit, isEmpty } from 'lodash-es';
 import { SyntheticEvent } from 'react';
 import {
   FormStoreInstance,
-  ComponentStoreInstance,
+  ComponentStoreInterface,
   ComponentStoreProps,
   SubmitType,
   ErrorsType,
@@ -16,10 +16,11 @@ import {
   Parse,
   Format,
   CheckResult,
+  InputStatus,
 } from './typings';
 
 export class ComponentStore<U = any, T = {}>
-  implements ComponentStoreInstance<U, T> {
+  implements ComponentStoreInterface<U, T> {
   key: keyof T;
 
   formStore: FormStoreInstance<T>;
@@ -33,10 +34,13 @@ export class ComponentStore<U = any, T = {}>
   prevValue: U | undefined = undefined;
 
   @observable
-  value: U | undefined = undefined;
+  source: U | undefined = undefined;
 
   @observable
   err: ErrorType;
+
+  @observable
+  inputStatus: InputStatus = 'default';
 
   @observable
   validing = false;
@@ -52,11 +56,11 @@ export class ComponentStore<U = any, T = {}>
     return errors;
   }
 
-  @computed get formatValue(): U | undefined {
+  @computed get value(): U | undefined {
     if (this.format) {
-      return this.format(this.value);
+      return this.format(this.source);
     }
-    return this.value;
+    return this.source;
   }
 
   @computed get checkResult(): CheckResult {
@@ -69,22 +73,23 @@ export class ComponentStore<U = any, T = {}>
   @observable
   rules?: Rules;
 
-  scheme?: Scheme;
+  @observable
+  format?: Format<U>;
+
+  schema?: Schema;
 
   parse?: Parse<U>;
-
-  format?: Format<U>;
 
   constructor(props: ComponentStoreProps<U, T>) {
     const { key, formStore, defaultValue, rules, parse, format } = props;
     this.key = key;
     this.formStore = formStore;
     this.defaultValue = defaultValue;
-    this.value = defaultValue;
+    this.source = defaultValue;
     this.rules = rules;
     this.parse = parse;
     this.format = format;
-    if (rules) this.scheme = new Scheme({ [key]: rules });
+    if (rules) this.schema = new Schema({ [key]: rules });
   }
 
   @action
@@ -128,32 +133,29 @@ export class ComponentStore<U = any, T = {}>
       this.isChange = true;
       this.formStore.setChangeState(true);
     }
-    this.prevValue = this.value;
-    this.value = realValue;
+    this.prevValue = this.source;
+    this.source = realValue;
     this.valid();
   };
 
   @action
   setDefaultValue = (value: U | undefined) => {
-    if (!this.isChange) this.value = value;
+    if (!this.isChange) this.source = value;
     this.defaultValue = value;
   };
 
-  setRules = (rules: Rules | undefined) => {
-    this.rules = rules;
-    if (rules) this.scheme = new Scheme({ [this.key]: rules });
-    else this.scheme = undefined;
-    if (this.isChange) {
-      this.valid();
-    }
+  @action
+  reset = () => {
+    this.isChange = false;
+    this.prevValue = undefined;
+    this.source = this.defaultValue;
+    this.err = undefined;
+    this.crossErr = {};
   };
 
-  setParse = (parse?: Parse<U>) => {
-    this.parse = parse;
-  };
-
-  setFormat = (format?: Format<U>) => {
-    this.format = format;
+  @action
+  setInputStatus = (inputStatus: InputStatus) => {
+    this.inputStatus = inputStatus;
   };
 
   valid = flow<Promise<ErrorType>, any[]>(function*(
@@ -164,15 +166,15 @@ export class ComponentStore<U = any, T = {}>
       this.formStore.setChangeState(true);
     }
     let err;
-    if (this.scheme) {
+    if (this.schema) {
       this.setValiding(true);
       const e:
         | {
             errors: ErrorList;
             fields: FieldErrorList;
           }
-        | undefined = yield this.scheme
-        .validate({ [this.key]: this.value })
+        | undefined = yield this.schema
+        .validate({ [this.key]: this.source })
         .catch(errs => errs);
       if (!this.isChange) {
         // fix reset bug(show err) when async validing
@@ -192,13 +194,21 @@ export class ComponentStore<U = any, T = {}>
     return err;
   });
 
-  @action
-  reset = () => {
-    this.isChange = false;
-    this.prevValue = undefined;
-    this.value = this.defaultValue;
-    this.err = undefined;
-    this.crossErr = {};
+  setRules = (rules: Rules | undefined) => {
+    this.rules = rules;
+    if (rules) this.schema = new Schema({ [this.key]: rules });
+    else this.schema = undefined;
+    if (this.isChange) {
+      this.valid();
+    }
+  };
+
+  setParse = (parse?: Parse<U>) => {
+    this.parse = parse;
+  };
+
+  setFormat = (format?: Format<U>) => {
+    this.format = format;
   };
 }
 
@@ -239,7 +249,7 @@ export class FormStore<T> implements FormStoreInstance<T> {
     for (const key in this.componentStores) {
       if (Object.prototype.hasOwnProperty.call(this.componentStores, key)) {
         // this.componentStores[key].valid();
-        values[key] = this.componentStores[key].value;
+        values[key] = this.componentStores[key].source;
       }
     }
     this.valid().then(errs => {
@@ -257,7 +267,7 @@ export class FormStore<T> implements FormStoreInstance<T> {
   };
 
   @action
-  addComponentStore = <U extends ComponentStoreInstance<T[keyof T], T>>(
+  addComponentStore = <U extends ComponentStoreInterface<T[keyof T], T>>(
     component: U,
   ) => {
     if (this.componentStores[component.key]) return false;
@@ -268,7 +278,7 @@ export class FormStore<T> implements FormStoreInstance<T> {
   };
 
   @action
-  removeComponentStore = <U extends ComponentStoreInstance<T[keyof T], T>>(
+  removeComponentStore = <U extends ComponentStoreInterface<T[keyof T], T>>(
     component: U,
   ) => {
     if (this.componentStores[component.key]) {
@@ -280,7 +290,7 @@ export class FormStore<T> implements FormStoreInstance<T> {
   };
 
   getValue = <U extends T[keyof T]>(key: keyof T) => {
-    if (this.componentStores[key]) return this.componentStores[key].value as U | undefined;
+    if (this.componentStores[key]) return this.componentStores[key].source as U | undefined;
   };
 
   getValues = <U extends T = T>(keys?: (keyof T)[]) => {
@@ -288,11 +298,11 @@ export class FormStore<T> implements FormStoreInstance<T> {
 
     if (!Array.isArray(keys)) {
       for (const key in this.componentStores) {
-        if (this.componentStores[key]) values[key] = this.componentStores[key].value;
+        if (this.componentStores[key]) values[key] = this.componentStores[key].source;
       }
     } else {
       for (const key of keys) {
-        if (this.componentStores[key]) values[key] = this.componentStores[key].value;
+        if (this.componentStores[key]) values[key] = this.componentStores[key].source;
       }
     }
     return values as Partial<U>;

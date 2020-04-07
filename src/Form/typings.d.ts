@@ -1,4 +1,4 @@
-import Scheme, { RuleItem } from 'async-validator';
+import Schema, { RuleItem } from 'async-validator';
 import { CancellablePromise } from '../typings';
 
 export type ValidFormatterType<U> = any;
@@ -6,6 +6,9 @@ export interface ErrorMessage {
   message: string;
   field: string;
 }
+
+export type InputStatus = 'default' | 'focus' | 'blur';
+
 export type ErrorType = ErrorMessage[] | undefined;
 
 export type ErrorsType<T> = {
@@ -13,7 +16,7 @@ export type ErrorsType<T> = {
 };
 
 export type ComponentStoresType<T> = {
-  [P in keyof T]: ComponentStoreInstance<T[P], T>;
+  [P in keyof T]: ComponentStoreInterface<T[P], T>;
 };
 
 export type Rules = RuleItem | RuleItem[];
@@ -30,24 +33,78 @@ export type Format<U> = (value?: U) => any;
 
 export type CheckResult = 'loading' | 'error' | 'success' | 'default';
 
-export interface ComponentStoreInstance<U = any, T = {}> {
+export interface ComponentStoreInterface<U = any, T = {}> {
+  /**
+   * 字段
+   */
   key: keyof T;
+  /**
+   * 错误信息
+   */
   err: ErrorType;
+  /**
+   * 字段交联错误信息
+   */
   crossErr: {
     [key: string]: ErrorMessage;
   };
+  /**
+   * 对外数据的错误信息(err and crossErr)
+   */
   errors: ErrorType;
+  /**
+   * 父组件实例
+   */
   formStore: FormStoreInstance<T>;
+  /**
+   * 前一次输入后的值
+   */
   prevValue: U | undefined;
+  /**
+   * 格式化输出的值
+   */
   value: U | undefined;
-  formatValue: U | undefined;
+
+  /**
+   * 当前输入后的值
+   */
+  source: U | undefined;
+  /**
+   * 默认值
+   */
   defaultValue: U | undefined;
+  /**
+   * 是否输入过
+   */
   isChange: boolean;
+  /**
+   * 是否正在验证
+   */
   validing: boolean;
+  /**
+   * 输入状态
+   */
+  inputStatus: InputStatus;
+  /**
+   * 检测结果
+   */
   checkResult: CheckResult;
-  scheme?: Scheme;
+
+  /**
+   * 验证规则
+   */
   rules?: Rules;
+  /**
+   * 验证规则实例
+   */
+  schema?: Schema;
+  /**
+   * 输入的值格式化
+   */
   parse?: Parse<U>;
+  /**
+   * 输出的值格式化
+   */
   format?: Format<U>;
   setValiding: (validing: boolean) => void;
   setParse: (parse?: Parse<U>) => void;
@@ -57,6 +114,7 @@ export interface ComponentStoreInstance<U = any, T = {}> {
   onChange: (value: U | undefined) => void;
   setDefaultValue: (value: U | undefined) => void;
   setRules: (rules: Rules | undefined) => void;
+  setInputStatus: (inputStatus: InputStatus) => void;
   valid: () => CancellablePromise<any>;
   reset: () => void;
 }
@@ -70,7 +128,7 @@ export interface ComponentStoreProps<U = any, T = {}> {
 }
 
 export interface ComponentStoreConstructor<U = any, T = {}> {
-  new (props: ComponentStoreProps): ComponentStoreInstance<U, T>;
+  new (props: ComponentStoreProps): ComponentStoreInterface<U, T>;
 }
 
 export interface SubmitCallBackProps<T> {
