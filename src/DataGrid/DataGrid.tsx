@@ -349,4 +349,7 @@ DataGrid.defaultProps = {
   silence: false,
 };
 
+// 向后兼容
+export { DataGridRef };
+
 export default DataGrid;
