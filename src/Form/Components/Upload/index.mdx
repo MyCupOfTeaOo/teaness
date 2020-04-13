@@ -19,6 +19,10 @@ import Upload, { UploadContext, Registry } from '.';
 
 继承了 antd upload 的所有属性
 
+> 对于 maxSize 与 accept 的显示错误信息,控制台可能会打印error,
+这是由于在更改状态期间调用的ui组件渲染(此处为message.error),
+但是这个控制台错误是可以忽略的
+
 <Playground>
   限制大小
   <Upload maxSize={1} />
@@ -26,8 +30,9 @@ import Upload, { UploadContext, Registry } from '.';
   <Upload max={1} multiple />
   展示样式
   <Upload listType="picture" />
-  友好的文件提示
-  <Upload accept="image/*" />
+  友好的文件提示 
+  {/* (.pdf使用后缀,image/*使用文件类型,.XLS忽略大小写)*/}
+  <Upload accept=".pdf,image/*,.XLS" />
 </Playground>
 
 <Playground>

@@ -60,6 +60,14 @@ const Upload: React.FC<UploadProps> & { create: typeof bind } = props => {
   const isLoading = useMemo(() => Object.keys(loadings).length > 0, [loadings]);
   const getFileInfo = useMemo(() => g || Registry.getFileInfo, [g]);
   const [fileList, setFileList] = useState<UploadFile[]>();
+  const validRegex = useMemo(() => {
+    if (props.accept) {
+      return new RegExp(
+        props.accept.replace(/\*|^\.|(?<=,)./g, '.*').replace(/,/g, '|'),
+        'i',
+      );
+    }
+  }, [props.accept]);
   const handle = useCallback(
     (info: UploadChangeParam) => {
       const target = info.fileList.find(item => item.uid === info.file.uid);
@@ -92,6 +100,14 @@ const Upload: React.FC<UploadProps> & { create: typeof bind } = props => {
             return prevFileList;
           }
         }
+        // 文件类型判断或者文件后缀
+        if (
+          validRegex &&
+          !(validRegex.test(target.type) || validRegex.test(target.name))
+        ) {
+          message.error('文件类型错误');
+          return prevFileList;
+        }
         // 增加
         if (prevFileList) {
           if (max && prevFileList.length === max) {
@@ -114,7 +130,7 @@ const Upload: React.FC<UploadProps> & { create: typeof bind } = props => {
       });
       if (onSelect) onSelect(info);
     },
-    [onChange, value],
+    [onChange, value, validRegex],
   );
 
   useEffect(() => {
