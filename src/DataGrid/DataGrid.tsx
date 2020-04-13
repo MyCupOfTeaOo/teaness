@@ -273,15 +273,10 @@ const DataGridCom: React.ForwardRefRenderFunction<
   useImperativeHandle(
     ref,
     () => ({
-      gridRef: gridRef.current,
+      gridRef: gridRef.current as AgGridReact,
       fetch: <
         T extends { [key: string]: any } = { [key: string]: any }
       >(data?: {
-        /**
-         * 废弃的参数,向后兼容类型
-         * @deprecated
-         */
-        queryData?: T;
         page?: number;
         pageSize?: number;
         sorters?: Sorter[];

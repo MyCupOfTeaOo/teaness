@@ -42,10 +42,15 @@ export type RequestMethod<
 export type Fetch<T> = CancellablePromise<ResponseData<T>>;
 
 export type DataGridRef = {
-  gridRef?: AgGridReact | null;
+  gridRef: AgGridReact;
   fetch: <
     T extends { [key: string]: any } = { [key: string]: any }
   >(searchProps?: {
+    /**
+     * 废弃的参数,向后兼容类型
+     * @deprecated
+     */
+    queryData?: T;
     page?: number;
     pageSize?: number;
     sorters?: Sorter[];
