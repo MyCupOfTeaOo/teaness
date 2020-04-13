@@ -18,9 +18,9 @@ export function useDataGrid<T extends { [key: string]: any }>(
     if (location && historyId) {
       return getLocationGridInit<Partial<T>>(
         'queryData',
+        defaultQueryData,
         'grid',
         location,
-        defaultQueryData,
       );
     }
     return defaultQueryData;
