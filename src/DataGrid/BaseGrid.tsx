@@ -22,7 +22,7 @@ export interface BaseGridProps extends AgGridReactProps {
 }
 
 const BaseGridCom: React.ForwardRefRenderFunction<
-  AgGridReact | null,
+  AgGridReact | undefined,
   BaseGridProps
 > = ({ className, style, ...gridProps }, ref) => {
   const gridRef = useRef<AgGridReact>(null);

@@ -114,7 +114,7 @@ export const showTotal = (item: number, range: [number, number]) =>
   (range[1] !== 0 ? `${range[0]}-${range[1]} 共 ${item} 条数据` : '暂无数据');
 
 const DataGridCom: React.ForwardRefRenderFunction<
-  DataGridRef,
+  DataGridRef | undefined,
   DataGridProps
 > = (props, ref) => {
   const [count, setCount] = useState(0);
@@ -277,6 +277,11 @@ const DataGridCom: React.ForwardRefRenderFunction<
       fetch: <
         T extends { [key: string]: any } = { [key: string]: any }
       >(data?: {
+        /**
+         * 废弃的参数,向后兼容类型
+         * @deprecated
+         */
+        queryData?: T;
         page?: number;
         pageSize?: number;
         sorters?: Sorter[];
