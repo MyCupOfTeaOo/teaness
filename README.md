@@ -15,12 +15,12 @@ https://blissful-blackwell-0e6e7c.netlify.com/
 - [x] 删除原有的 useForm
 - [x] 新增 Form,Item,useForm 组件
 - [x] 新增 Autowired 组件(处理数据装配)
-- [ ] 增加错误定位
+~~- [ ] 增加错误定位~~v3
 - [x] label 嵌入 Item
 - [x] upload 上传方式优化,增加了 `UploadGroup`,每个局部的 upload 还可以替换全局 Upload.create 对自身的调用的 onUpload
-- [ ] 测试用例
-- [ ] 表单验证去抖
-- [ ] 研究下form布局问题
+~~- [ ] 测试用例~~
+~~- [ ] 表单验证去抖~~
+~~- [ ] 研究下form布局问题~~
 
 ## 安装
 

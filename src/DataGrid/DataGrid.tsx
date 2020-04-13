@@ -1,5 +1,4 @@
 import React, {
-  memo,
   useState,
   useEffect,
   useCallback,
@@ -18,8 +17,14 @@ import { isObject } from 'lodash-es';
 import BaseGrid, { BaseGridProps } from './BaseGrid';
 import Modal from '../Modal';
 import locale from './locale';
-import { Location, Sorter, RequestData } from './typings';
-import DataGridRegister, { ReqResponse } from './DataGridRegister';
+import {
+  Location,
+  Sorter,
+  RequestData,
+  DataGridRef,
+  ResponseData,
+} from './typings';
+import DataGridRegister from './DataGridRegister';
 
 export interface DataGridProps
   extends Omit<
@@ -30,23 +35,52 @@ export interface DataGridProps
    * 请求地址,相对或绝对路径
    */
   fetchUrl: string;
-  fetchErrorCallback?: (resp: ReqResponse | any) => void;
-  queryData: any;
+  /**
+   * 请求失败回调
+   */
+  fetchErrorCallback?: (resp: Error) => void;
+  /**
+   * 请求成功回调
+   */
+  fetchSuccessCallback?: (
+    resp: ResponseData<{
+      [key: string]: any;
+    }>,
+  ) => void;
+  /**
+   * 查询参数
+   */
+  queryData?: any;
+  /**
+   * 默认单页显示条数
+   */
   defaultPageSize?: number;
+  /**
+   * 默认页数
+   */
   defaultPage?: number;
+  /**
+   * 单页显示条数候选项
+   */
   pageSizeOptions?: string[];
   className?: string;
   gridClassName?: string;
+  /**
+   * 默认列参数,由于ag-grid server模式下的排序bug这个参数做了fix
+   */
   defaultColDef?: ColDef;
+  /**
+   * 默认的排序列
+   */
   defaultSorters?: Sorter[];
+  /**
+   * 启用浏览器记忆查询参数功能需要传递react-router的location
+   */
   location?: Location;
+  /**
+   * 启用浏览器记忆查询参数功能需要传递一个gridid
+   */
   historyId?: string;
-  // page?: number;
-  // setPage?: React.Dispatch<React.SetStateAction<number>>;
-  // pageSize?: number;
-  // setPageSize?: React.Dispatch<React.SetStateAction<number>>;
-  // sorters?: Sorter[];
-  // setSorters?: React.Dispatch<React.SetStateAction<Sorter[]>>;
   /**
    * 第一次不请求
    */
@@ -55,9 +89,9 @@ export interface DataGridProps
 
 export function getLocationGridInit<T>(
   key: string,
-  defaultValue: T,
   historyId: string | undefined,
   location: Location | undefined,
+  defaultValue: T,
 ): T {
   if (!historyId) return defaultValue;
   if (!location) return defaultValue;
@@ -79,7 +113,10 @@ export function getLocationGridInit<T>(
 export const showTotal = (item: number, range: [number, number]) =>
   (range[1] !== 0 ? `${range[0]}-${range[1]} 共 ${item} 条数据` : '暂无数据');
 
-const DataGrid: React.FC<DataGridProps> = (props, ref) => {
+const DataGridCom: React.ForwardRefRenderFunction<
+  DataGridRef,
+  DataGridProps
+> = (props, ref) => {
   const [count, setCount] = useState(0);
   // 解决 loading 与 nodata 同时显示bug
   const loadCount = useRef(0);
@@ -90,30 +127,30 @@ const DataGrid: React.FC<DataGridProps> = (props, ref) => {
       ...props.defaultColDef,
     };
   }, [props.defaultColDef]);
-  const [rowData, setRowData] = useState<any[] | undefined>(undefined);
+  const [rowData, setRowData] = useState<any[] | undefined>([]);
 
   const [search, setSearch] = useState<{
     page: number;
     pageSize: number;
-    sorters: Sorter[];
+    sorters?: Sorter[];
   }>(() => ({
     page: getLocationGridInit(
       'page',
-      props.defaultPage || DataGridRegister.defaultPage,
       props.historyId,
       props.location,
+      props.defaultPage || DataGridRegister.defaultPage,
     ),
     pageSize: getLocationGridInit(
       'pageSize',
-      props.defaultPageSize || DataGridRegister.defaultPageSize,
       props.historyId,
       props.location,
+      props.defaultPageSize || DataGridRegister.defaultPageSize,
     ),
     sorters: getLocationGridInit(
       'sorters',
-      props.defaultSorters || DataGridRegister.defaultSorters,
       props.historyId,
       props.location,
+      props.defaultSorters || DataGridRegister.defaultSorters,
     ),
   }));
   /* eslint-disable prefer-arrow-callback */
@@ -127,8 +164,8 @@ const DataGrid: React.FC<DataGridProps> = (props, ref) => {
     ) {
       if (gridRef.current) {
         if (gridRef.current.api) {
-          gridRef.current.api.showLoadingOverlay();
           gridRef.current.gridOptions.suppressNoRowsOverlay = true;
+          gridRef.current.api.showLoadingOverlay();
           // 同步grid sort
           gridRef.current.api.setSortModel(searchProps.sorters);
         }
@@ -152,6 +189,7 @@ const DataGrid: React.FC<DataGridProps> = (props, ref) => {
       const res = DataGridRegister.request(props.fetchUrl, searchProps);
       res
         .then(data => {
+          if (props.fetchSuccessCallback) props.fetchSuccessCallback(data);
           if (data.isCancel) {
             return undefined;
           } else {
@@ -178,7 +216,12 @@ const DataGrid: React.FC<DataGridProps> = (props, ref) => {
             if (gridRef.current.api) {
               gridRef.current.api.hideOverlay();
               gridRef.current.gridOptions.suppressNoRowsOverlay = false;
-              if (noData) gridRef.current.api.showNoRowsOverlay();
+              if (noData) {
+                setTimeout(() => {
+                  // fix 太快调用会导致 noRowsOverLay 与 loadingOverLay 同时显示bug
+                  gridRef.current?.api?.showNoRowsOverlay();
+                });
+              }
             }
           }
         });
@@ -210,7 +253,7 @@ const DataGrid: React.FC<DataGridProps> = (props, ref) => {
 
     setSearch(item => {
       const sortModal = api.getSortModel();
-      if (item.sorters.length === sortModal.length) {
+      if (item?.sorters?.length === sortModal.length) {
         if (item.sorters.length === 0) return item;
         if (
           item.sorters[0].colId === sortModal[0].colId &&
@@ -234,7 +277,6 @@ const DataGrid: React.FC<DataGridProps> = (props, ref) => {
       fetch: <
         T extends { [key: string]: any } = { [key: string]: any }
       >(data?: {
-        queryData?: T;
         page?: number;
         pageSize?: number;
         sorters?: Sorter[];
@@ -297,8 +339,9 @@ const DataGrid: React.FC<DataGridProps> = (props, ref) => {
   );
 };
 
-const DataGridRef = forwardRef(DataGrid);
-DataGridRef.defaultProps = {
+const DataGrid = forwardRef(DataGridCom);
+
+DataGrid.defaultProps = {
   pageSizeOptions: ['5', '10', '30', '50', '100'],
   defaultPageSize: DataGridRegister.defaultPageSize,
   defaultPage: DataGridRegister.defaultPage,
@@ -306,34 +349,4 @@ DataGridRef.defaultProps = {
   silence: false,
 };
 
-export type SetState<T> = (state: T | ((prevState: T) => T)) => void;
-
-export type DataGridRef = {
-  gridRef: AgGridReact;
-  fetch: <
-    T extends { [key: string]: any } = { [key: string]: any }
-  >(searchProps?: {
-    queryData?: Partial<T>;
-    page?: number;
-    pageSize?: number;
-    sorters?: Sorter[];
-  }) => void;
-  getSearch: () => {
-    page?: number;
-    pageSize?: number;
-    sorters?: Sorter[];
-  };
-  setSearch: SetState<{
-    page?: number;
-    pageSize?: number;
-    sorters?: Sorter[];
-  }>;
-  setRowData: (rowData: any[] | ((prevRowData: any[]) => any[])) => void;
-  getDefaultValue: () => {
-    page: number;
-    pageSize: number;
-    sorters: Sorter[];
-  };
-};
-
-export default memo(DataGridRef);
+export default DataGrid;
