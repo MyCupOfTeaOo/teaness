@@ -82,7 +82,7 @@ export interface ComponentStoreInterface<U = any, T = {}> {
    */
   validing: boolean;
   /**
-   * 输入错误信息的时机,默认 "default"
+   * 输出错误信息的时机,默认 "default"
    */
   errorOutputTrigger: InputStatus;
   /**
@@ -95,7 +95,8 @@ export interface ComponentStoreInterface<U = any, T = {}> {
   checkResult: CheckResult;
 
   /**
-   * 验证规则
+   * 验证规则,详情请查看相关链接
+   * @see {@link https://github.com/yiminghe/async-validator}
    */
   rules?: Rules;
   /**
@@ -103,7 +104,11 @@ export interface ComponentStoreInterface<U = any, T = {}> {
    */
   schema?: Schema;
   /**
-   * 输入的值格式化
+   * 注:在使用 parse 属性的时候会有一个陷阱问题,parse 是在触发 onChange 的时候会自动调用来转化值的,
+   * 一般来说只会在输入时使用该属性,但是 setValue setValues 也是直接调用的 onChange 来改变值的,此时可能 parse 参数会出现不同类型的情况;
+   * 例如:Input 输入时 parse 的参数是 `value?: React.ChangeEvent<HTMLInputElement>`,但是如果使用 `store.setValue('xxx',"123")`,
+   * 这个时候 parse 的参数是 `value?: string`
+   * @summary 输入的值格式化
    */
   parse?: Parse<U>;
   /**
@@ -129,10 +134,30 @@ export interface ComponentStoreInterface<U = any, T = {}> {
 export interface ComponentStoreProps<U = any, T = {}> {
   key: keyof T;
   formStore: FormStoreInstance<T>;
+  /**
+   * 默认值
+   */
   defaultValue?: U;
+  /**
+   * 验证规则,详情请查看相关链接
+   * @see {@link https://github.com/yiminghe/async-validator}
+   */
   rules?: Rules;
+  /**
+   * 注:在使用 parse 属性的时候会有一个陷阱问题,parse 是在触发 onChange 的时候会自动调用来转化值的,
+   * 一般来说只会在输入时使用该属性,但是 setValue setValues 也是直接调用的 onChange 来改变值的,此时可能 parse 参数会出现不同类型的情况;
+   * 例如:Input 输入时 parse 的参数是 `value?: React.ChangeEvent<HTMLInputElement>`,但是如果使用 `store.setValue('xxx',"123")`,
+   * 这个时候 parse 的参数是 `value?: string`
+   * @summary 输入的值格式化
+   */
   parse?: Parse<U>;
+  /**
+   * 输出的值格式化
+   */
   format?: Format<U>;
+  /**
+   * 输出错误信息的时机,默认 "default"
+   */
   errorOutputTrigger?: InputStatus;
 }
 
