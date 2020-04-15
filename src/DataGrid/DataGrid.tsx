@@ -82,7 +82,7 @@ export interface DataGridProps
    */
   historyId?: string;
   /**
-   * 首次渲染是否请求
+   * 首次渲染是否请求,默认为true
    */
   firstLoad?: boolean;
 }
@@ -342,7 +342,7 @@ const DataGrid = forwardRef(DataGridCom);
 
 DataGrid.defaultProps = {
   pageSizeOptions: ['5', '10', '30', '50', '100'],
-  firstLoad: false,
+  firstLoad: true,
 };
 
 export default DataGrid;

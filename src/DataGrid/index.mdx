@@ -49,7 +49,7 @@ import { DataGrid, BaseGrid, useDataGrid } from './';
     return (
       <div style={{ height: 500 }}>
         <DataGrid
-          silence
+          firstLoad={false}
           columnDefs={columnDefs}
           fetchUrl="/api/user/personManage/"
         />
@@ -70,21 +70,56 @@ interface DataGridProps
    * 请求地址,相对或绝对路径
    */
   fetchUrl: string;
-  fetchErrorCallback?: (resp: ReqResponse | any) => void;
-  queryData: any;
+  /**
+   * 请求失败回调
+   */
+  fetchErrorCallback?: (resp: Error) => void;
+  /**
+   * 请求成功回调
+   */
+  fetchSuccessCallback?: (
+    resp: ResponseData<{
+      [key: string]: any;
+    }>,
+  ) => void;
+  /**
+   * 查询参数
+   */
+  queryData?: any;
+  /**
+   * 默认单页显示条数
+   */
   defaultPageSize?: number;
+  /**
+   * 默认页数
+   */
   defaultPage?: number;
+  /**
+   * 单页显示条数候选项
+   */
   pageSizeOptions?: string[];
   className?: string;
   gridClassName?: string;
+  /**
+   * 默认列参数,由于ag-grid server模式下的排序bug这个参数做了fix
+   */
   defaultColDef?: ColDef;
+  /**
+   * 默认的排序列
+   */
   defaultSorters?: Sorter[];
+  /**
+   * 启用浏览器记忆查询参数功能需要传递react-router的location
+   */
   location?: Location;
+  /**
+   * 启用浏览器记忆查询参数功能需要传递一个gridid
+   */
   historyId?: string;
   /**
-   * 第一次不请求
+   * 首次渲染是否请求,默认为true
    */
-  silence?: boolean;
+  firstLoad?: boolean;
 }
 interface Sorter {
   colId: string;
