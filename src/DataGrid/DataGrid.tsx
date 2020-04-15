@@ -316,7 +316,6 @@ const DataGridCom: React.ForwardRefRenderFunction<
         ref={gridRef}
         className={props.gridClassName}
         rowData={rowData}
-        suppressMultiSort
         enableServerSideSorting
         onSortChanged={handleSortChange}
       />
