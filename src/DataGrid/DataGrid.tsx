@@ -82,9 +82,9 @@ export interface DataGridProps
    */
   historyId?: string;
   /**
-   * 第一次不请求
+   * 首次渲染是否请求
    */
-  silence?: boolean;
+  firstLoad?: boolean;
 }
 
 export function getLocationGridInit<T>(
@@ -231,7 +231,7 @@ const DataGridCom: React.ForwardRefRenderFunction<
   );
 
   useEffect(() => {
-    if (!props.silence || count > 0) {
+    if (!props.firstLoad || count > 0) {
       return fetch({
         ...search,
         queryData: props.queryData,
@@ -316,7 +316,6 @@ const DataGridCom: React.ForwardRefRenderFunction<
         ref={gridRef}
         className={props.gridClassName}
         rowData={rowData}
-        suppressMultiSort
         enableServerSideSorting
         onSortChanged={handleSortChange}
       />
@@ -343,10 +342,7 @@ const DataGrid = forwardRef(DataGridCom);
 
 DataGrid.defaultProps = {
   pageSizeOptions: ['5', '10', '30', '50', '100'],
-  defaultPageSize: DataGridRegister.defaultPageSize,
-  defaultPage: DataGridRegister.defaultPage,
-  defaultSorters: DataGridRegister.defaultSorters,
-  silence: false,
+  firstLoad: false,
 };
 
 export default DataGrid;
