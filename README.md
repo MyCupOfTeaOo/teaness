@@ -15,6 +15,7 @@ https://blissful-blackwell-0e6e7c.netlify.com/
 - [ ] 重构api与不合理的组件结构
   - [x] DataGrid
   - [ ] Form
+    - [ ] Item 或 AutoWired 增加`显示中间件`的接口,类似于 props.middleware: `[component,props,options][]`,按顺序利用`compoent`一层层包裹`children`
   - [x] Label
   - [x] Modal
   - [x] PictureView
