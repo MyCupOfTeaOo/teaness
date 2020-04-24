@@ -1,5 +1,5 @@
 ---
-name: 概括
+name: Getting Started
 route: /
 menu: 'Getting Started'
 ---

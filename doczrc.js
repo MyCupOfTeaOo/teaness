@@ -14,7 +14,7 @@ export default {
   dest: 'docs',
   typescript: true,
   codeSandbox: false,
-  menu: ['Getting Started', 'Display', 'components', 'Form Component', 'hooks'],
+  menu: ['Getting Started', 'Form Component', 'components', 'Display', 'hooks'],
   files: '**/*.{md,mdx}',
   ignore: [
     'changelog.md',
