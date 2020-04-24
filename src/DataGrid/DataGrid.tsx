@@ -7,7 +7,7 @@ import React, {
   forwardRef,
   useImperativeHandle,
 } from 'react';
-import { Pagination } from 'antd';
+import { Pagination, Modal } from 'antd';
 import { AgGridReact } from 'ag-grid-react/lib/agGridReact';
 import classNames from 'classnames';
 import { ColDef, GridApi } from 'ag-grid-community';
@@ -15,7 +15,6 @@ import { stringify } from 'querystring';
 
 import { isObject } from 'lodash-es';
 import BaseGrid, { BaseGridProps } from './BaseGrid';
-import Modal from '../Modal';
 import locale from './locale';
 import {
   Location,
@@ -231,7 +230,7 @@ const DataGridCom: React.ForwardRefRenderFunction<
   );
 
   useEffect(() => {
-    if (!props.firstLoad || count > 0) {
+    if (props.firstLoad || count > 0) {
       return fetch({
         ...search,
         queryData: props.queryData,

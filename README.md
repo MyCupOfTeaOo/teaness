@@ -41,7 +41,7 @@ https://teaness.org/
   - [ ] Form
     - [ ] Item 或 AutoWired 增加`显示中间件`的接口,类似于 props.middleware: `[component,props,options][]`,按顺序利用`compoent`一层层包裹`children`
   - [x] Label
-  - [x] Modal
+  - [x] ~~Modal~~删除该组件
   - [x] PictureView
   - [x] Show
 - [x] 增加错误定位方法

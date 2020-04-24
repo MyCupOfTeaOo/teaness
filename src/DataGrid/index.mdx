@@ -12,6 +12,11 @@ import { DataGrid, BaseGrid, useDataGrid } from './';
 
 # DataGrid(数据表格)
 
+支持 url 保存查询参数(方便 goback 保留查询条件)
+
+> 该 Gird 是对 [ag-grid](https://www.ag-grid.com/documentation-main/documentation.php) 开源版的封装
+> ,具体的 api 请去 [ag-grid](https://www.ag-grid.com/documentation-main/documentation.php) 查看文档
+
 ## 基本用法(Basic usage)
 
 <Playground>
@@ -234,6 +239,5 @@ type Location<S = any> = H.Location<S> & {
 
 ## 属性(Properties)
 
-> 该 Gird 是对 [ag-grid](https://www.ag-grid.com/documentation-main/documentation.php) 开源版的封装
 
 <Props of={BaseGrid} />

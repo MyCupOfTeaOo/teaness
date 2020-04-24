@@ -15,7 +15,13 @@ export default {
   typescript: true,
   codeSandbox: false,
   menu: ['Getting Started', 'Display', 'components', 'Form Component', 'hooks'],
-
+  files: '**/*.{md,mdx}',
+  ignore: [
+    'changelog.md',
+    'code_of_conduct.md',
+    'contributing.md',
+    'license.md',
+  ],
   theme: 'docz-theme-ztopia',
   themeConfig: {
     colors: {

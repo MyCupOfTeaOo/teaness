@@ -1,7 +1,6 @@
 import 'antd/dist/antd.less';
 import FoldCard from './FoldCard';
 import GlobalFooter from './GlobalFooter';
-import Modal from './Modal';
 import Label from './Label';
 import Form from './Form';
 import Img from './Img';
@@ -18,14 +17,4 @@ export * from './Transfer';
 export * from './Show';
 export * from './PictureView';
 export * from './Label';
-export * from './Modal';
-export {
-  FooterToolbar,
-  PictureView,
-  FoldCard,
-  GlobalFooter,
-  Modal,
-  Label,
-  Form,
-  Img,
-};
+export { FooterToolbar, PictureView, FoldCard, GlobalFooter, Label, Form, Img };

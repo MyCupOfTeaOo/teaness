@@ -1,7 +1,7 @@
 import React from 'react';
-import { Progress } from 'antd';
+import { Progress, Modal } from 'antd';
+import { ModalProps } from 'antd/lib/modal';
 import Img from '../../../Img';
-import Modal, { ModalProps } from '../../../Modal';
 import './styles.scss';
 import { UploadFile } from './typings';
 

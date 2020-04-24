@@ -1,14 +1,13 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import classnames from 'classnames';
 import Draggable from 'react-draggable';
-import { Button } from 'antd';
+import { Button, Modal } from 'antd';
 import {
   PlusOutlined,
   UndoOutlined,
   RedoOutlined,
   MinusOutlined,
 } from '@ant-design/icons';
-import Modal from '../Modal';
 import Img, { ImgProps } from '../Img';
 import './styles.scss';
 

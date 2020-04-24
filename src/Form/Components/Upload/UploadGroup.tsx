@@ -1,7 +1,6 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import lodash from 'lodash-es';
-import { message } from 'antd';
-import Modal from '../../../Modal';
+import { message, Modal } from 'antd';
 import { UploadContext } from './context';
 import { UploadRefType, UploadFile, UploadGroupProps } from './typings';
 import Registry from './Registry';
