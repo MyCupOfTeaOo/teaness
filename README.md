@@ -8,7 +8,7 @@
 
 ## 文档
 
-https://blissful-blackwell-0e6e7c.netlify.com/
+https://teaness.org/
 
 ## todo
 - [x] 升级到antd 4.0
