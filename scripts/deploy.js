@@ -16,12 +16,13 @@ inquirer
 
     const package = JSON.parse(fs.readFileSync('./package.json'));
     const version = package.version.split('.');
-    version[2] = parseInt(version[2]) + 1;
+    version[2] =
+      process.env.INC === '0' ? parseInt(version[2]) : parseInt(version[2]) + 1;
     package.version = version.join('.');
     fs.writeFileSync('./package.json', JSON.stringify(package, null, 2), {
       encoding: 'utf8',
     });
-    
+
     console.log('clean tgz');
     execSync('rimraf ./*tgz', { stdio: 'inherit' });
 

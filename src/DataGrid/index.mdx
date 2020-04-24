@@ -6,9 +6,10 @@ menu: 'components'
 
 import { Playground, Props } from 'docz';
 import 'antd/dist/antd.css';
-
-import { Button } from 'antd';
+import { useState } from 'react'
+import { Button,Input} from 'antd';
 import { DataGrid, BaseGrid, useDataGrid } from './';
+import Decision from '../Show/Decision.tsx'
 
 # DataGrid(数据表格)
 
@@ -196,6 +197,7 @@ type Location<S = any> = H.Location<S> & {
 
 <Playground>
   {() => {
+    
     const columnDefs = [
       {
         headerName: '姓名',
@@ -220,6 +222,19 @@ type Location<S = any> = H.Location<S> & {
       {
         headerName: '电话',
         field: 'tel',
+        cellRendererFramework: ({ value }) => {
+          // 测试是否支持上下文
+          const [tel,setTel] = useState(value)
+          console.log(tel)
+          return <div>
+            <Decision.Case expect={(v) => v!==tel}>
+              <Input size="small" value={tel} onChange={(e) => setTel(e.target.value)}/>
+            </Decision.Case>
+            <Decision.Case expect={tel}>
+              {tel}
+            </Decision.Case>
+          </div>
+        }
       },
       {
         headerName: '性别',
@@ -229,7 +244,9 @@ type Location<S = any> = H.Location<S> & {
 
     return (
       <div style={{ height: 500 }}>
-        <BaseGrid columnDefs={columnDefs} rowData={[{"realName":"schoolAdmin","userStatusCode":1,"roleValue":"校级管理员","gender":0,"userAccount":"schoolAdmin","mobile":null,"userDesc":null,"tel":null,"userId":"b6897cd7-356f-42c7-abd2-ea0ece366f97","userStatusValue":"可用","email":null},{"realName":"admin","userStatusCode":1,"roleValue":"admin","gender":0,"userAccount":"admin","mobile":null,"userDesc":null,"tel":null,"userId":"admin","userStatusValue":"可用","email":"xxx@qq.com"},{"realName":"联调老师（勿动）","userStatusCode":1,"roleValue":"校长","gender":1,"userAccount":"xz","mobile":null,"userDesc":null,"tel":null,"userId":"xld","userStatusValue":"可用","email":"xxx@qq.com"}]} />
+        <Decision actual="123">
+          <BaseGrid columnDefs={columnDefs} rowData={[{"realName":"schoolAdmin","userStatusCode":1,"roleValue":"校级管理员","gender":0,"userAccount":"schoolAdmin","mobile":null,"userDesc":null,"tel":"123","userId":"b6897cd7-356f-42c7-abd2-ea0ece366f97","userStatusValue":"可用","email":null},{"realName":"admin","userStatusCode":1,"roleValue":"admin","gender":0,"userAccount":"admin","mobile":null,"userDesc":null,"tel":null,"userId":"admin","userStatusValue":"可用","email":"xxx@qq.com"},{"realName":"联调老师（勿动）","userStatusCode":1,"roleValue":"校长","gender":1,"userAccount":"xz","mobile":null,"userDesc":null,"tel":null,"userId":"xld","userStatusValue":"可用","email":"xxx@qq.com"}]} />
+        </Decision>
       </div>
     );
 

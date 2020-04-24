@@ -1,16 +1,12 @@
 import React, { useMemo, useEffect } from 'react';
 import { Select as AntSelect } from 'antd';
-import {
-  SelectProps as AntSelectProps,
-  OptionProps,
-  OptGroupProps,
-} from 'antd/lib/select';
+import { SelectProps as AntSelectProps } from 'antd/lib/select';
 import classnames from 'classnames';
 import './styles/select.scss';
 import { useEffectState } from '../../hooks/index';
 import { CancellablePromise } from '../../typings';
 
-export interface SelectProps extends AntSelectProps {
+export interface SelectProps extends AntSelectProps<any> {
   requestMethod?: () => CancellablePromise<{ label: string; value: any }[]>;
   errorCallback?: (error: any) => void;
   /**
@@ -20,8 +16,8 @@ export interface SelectProps extends AntSelectProps {
 }
 
 const Select: React.FC<SelectProps> & {
-  Option: React.ClassicComponentClass<OptionProps>;
-  OptGroup: React.ClassicComponentClass<OptGroupProps>;
+  Option: import('rc-select/lib/Option').OptionFC;
+  OptGroup: import('rc-select/lib/OptGroup').OptionGroupFC;
 } = props => {
   const {
     onChange,
@@ -89,7 +85,7 @@ Select.defaultProps = {
   showSearch: true,
   allowClear: true,
   filterOption: (input, option) =>
-    (option.props.children as string)
+    (option?.props.children as string)
       .toLowerCase()
       .indexOf(input.toLowerCase()) >= 0,
 };

@@ -8,11 +8,12 @@ menu: 'Getting Started'
 
 [![NPM version](https://img.shields.io/npm/v/teaness.svg)](https://img.shields.io/npm/v/teaness.svg)
 [![Dependency Status](https://img.shields.io/david/MyCupOfTeaOo/teaness)](https://img.shields.io/david/MyCupOfTeaOo/teaness)
-[![react-^16.10.2](https://img.shields.io/badge/react-^16.10.2-066da5)](https://img.shields.io/badge/react-^16.10.2-066da5)
-[![antd-^4.1.0](https://img.shields.io/badge/antd-^4.1.0-066da5)](https://img.shields.io/badge/antd-^4.1.0-066da5)
-[![mobx-^5.14.2](https://img.shields.io/badge/mobx-^5.14.2-066da5)](https://img.shields.io/badge/mobx-^5.14.2-066da5)
-[![async-validator-^3.2.4](https://img.shields.io/badge/async--validator-^3.2.4-066da5)](https://img.shields.io/badge/async--validator-^3.2.4-066da5)
-[![ag-grid-react-^21.2.2](https://img.shields.io/badge/ag--grid--react-^21.2.2-066da5)](https://img.shields.io/badge/ag--grid--react-^21.2.2-066da5)
+[![react-version](https://img.shields.io/npm/dependency-version/teaness/react)](https://img.shields.io/npm/dependency-version/teaness/react)
+[![antd-version](https://img.shields.io/npm/dependency-version/teaness/antd)](https://img.shields.io/npm/dependency-version/teaness/antd)
+[![mobx-version](https://img.shields.io/npm/dependency-version/teaness/mobx)](https://img.shields.io/npm/dependency-version/teaness/mobx)
+[![async-validator-version](https://img.shields.io/npm/dependency-version/teaness/async-validator)](https://img.shields.io/npm/dependency-version/teaness/async-validator)
+[![ag-grid-community-version](https://img.shields.io/npm/dependency-version/teaness/ag-grid-community)](https://img.shields.io/npm/dependency-version/teaness/ag-grid-community)
+[![ag-grid-react-version](https://img.shields.io/npm/dependency-version/teaness/ag-grid-react)](https://img.shields.io/npm/dependency-version/teaness/ag-grid-react)
 
 ---
 
