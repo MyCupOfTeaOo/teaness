@@ -135,6 +135,54 @@ type Location<S = any> = H.Location<S> & {
 
 ### useDataGrid
 
+<Playground>
+  {() => {
+    const columnDefs = [
+      {
+        headerName: '姓名',
+        field: 'realName',
+      },
+      {
+        headerName: '电话',
+        field: 'mobile',
+      },
+      {
+        headerName: '邮箱',
+        field: 'email',
+      },
+      {
+        headerName: '角色',
+        field: 'roleValue',
+      },
+      {
+        headerName: '用户id',
+        field: 'userId',
+      },
+      {
+        headerName: '电话',
+        field: 'tel',
+      },
+      {
+        headerName: '性别',
+        field: 'gender',
+      },
+    ];
+    const {gridRef, gridProps} = useDataGrid()
+    
+    return (
+      <div style={{ height: 500 }}>
+        <Button onClick={() => gridRef.current.fetch()}>查询</Button>
+        <DataGrid
+          {...gridProps}
+          firstLoad={false}
+          columnDefs={columnDefs}
+          fetchUrl="/api/user/personManage/"
+        />
+      </div>
+    );
+  }}
+</Playground>
+
 <Props of={useDataGrid}/>
 
 # BaseGrid
