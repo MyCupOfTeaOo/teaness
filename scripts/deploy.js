@@ -1,13 +1,12 @@
 const { execSync } = require('child_process');
 const inquirer = require('inquirer');
 const fs = require('fs');
-const signale = require("signale");
+const signale = require('signale');
+
 signale.config({
   displayFilename: true,
-  displayTimestamp: true
+  displayTimestamp: true,
 });
-
-
 
 inquirer
   .prompt({
@@ -42,4 +41,9 @@ inquirer
     execSync('git push', { stdio: 'inherit' });
 
     signale.success('发布成功');
+    const path = require('path');
+    if (fs.existsSync(path.resolve(__dirname, './pushDoc.local.js'))) {
+      signale.debug('发现本地脚本,执行');
+      require('./pushDoc.local');
+    }
   });
