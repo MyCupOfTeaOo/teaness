@@ -63,7 +63,7 @@ export const vertical: {
         span: 24,
         style: {
           padding: 0,
-          marginBottom: 16,
+          marginBottom: 24,
         },
       },
     },
@@ -91,7 +91,9 @@ export const horizontal: {
         xl: { span: 3 },
       },
       children: {
-        xs: { span: 15 },
+        xs: {
+          span: 15,
+        },
         md: { span: 7 },
         lg: { span: 6 },
         xl: { span: 5 },

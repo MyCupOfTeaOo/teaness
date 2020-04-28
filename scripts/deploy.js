@@ -43,7 +43,7 @@ inquirer
     signale.success('发布成功');
     const path = require('path');
     if (fs.existsSync(path.resolve(__dirname, './pushDoc.local.js'))) {
-      signale.debug('发现本地脚本,执行');
+      signale.pending('发现本地脚本,执行');
       require('./pushDoc.local');
     }
   });
