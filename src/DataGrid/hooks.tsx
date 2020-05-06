@@ -13,7 +13,7 @@ export function useDataGrid<T extends { [key: string]: any }>(
   } = {},
 ) {
   const { location, historyId, defaultQueryData = {} } = options;
-  const gridRef = useRef<DataGridRef>();
+  const gridRef = useRef<DataGridRef>(null);
   const queryData = useMemo<Partial<T>>(() => {
     if (location && historyId) {
       return getLocationGridInit<Partial<T>>(
