@@ -135,27 +135,29 @@ export class ComponentStore<U = any, T = {}>
 
   @action
   onChange = (value: U | Event | SyntheticEvent | undefined) => {
-    let realValue: U | undefined;
+    let parseValue: U | undefined;
     if (this.parse) {
-      realValue = this.parse(value);
+      parseValue = this.parse(value);
     } else if (!isEmpty(value)) {
       if (value instanceof Event) {
-        realValue = (value.target as { value?: U }).value;
+        parseValue = (value.target as { value?: U }).value;
       } else if ((value as SyntheticEvent).nativeEvent instanceof Event) {
-        realValue = ((value as SyntheticEvent).target as { value?: U }).value;
+        parseValue = ((value as SyntheticEvent).target as { value?: U }).value;
       } else {
-        realValue = value as U;
+        parseValue = value as U;
       }
     } else {
-      realValue = value as U | undefined;
+      parseValue = value as U | undefined;
     }
 
     if (!this.isChange) {
       this.isChange = true;
       this.formStore.setChangeState(true);
     }
+    this.formStore.onChange?.(this.key, parseValue, value, this);
+
     this.prevValue = this.source;
-    this.source = realValue;
+    this.source = parseValue;
     this.valid();
   };
 
@@ -254,6 +256,13 @@ export class FormStore<T> implements FormStoreInstance<T> {
 
   @observable
   isChange = false;
+
+  onChange?(
+    key: keyof T,
+    value: any,
+    source: any,
+    subStore: ComponentStoreInterface<any, T>,
+  ): void;
 
   validFirst = false;
 

@@ -203,6 +203,19 @@ export interface FormStoreInstance<T extends {}> {
    */
   isChange: boolean;
   /**
+   * 表单变化触发
+   * @param key 触发的key
+   * @param value 触发的值(格式化过的)
+   * @param source 触发的原始值
+   * @param subStore 触发的子store
+   */
+  onChange?(
+    key: keyof T,
+    value: any,
+    source: any,
+    subStore: ComponentStoreInterface<any, T>,
+  ): void;
+  /**
    * 重置
    */
   setChangeState: (isChange: boolean) => void;
