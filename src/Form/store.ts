@@ -154,10 +154,12 @@ export class ComponentStore<U = any, T = {}>
       this.isChange = true;
       this.formStore.setChangeState(true);
     }
-    this.formStore.onChange?.(this.key, parseValue, value, this);
 
     this.prevValue = this.source;
     this.source = parseValue;
+    // 在值改变后在调用 方便实现自动保存等功能
+    this.formStore.onChange?.(this.key, parseValue, value, this);
+
     this.valid();
   };
 
