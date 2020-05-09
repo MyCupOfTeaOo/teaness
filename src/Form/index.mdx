@@ -199,12 +199,7 @@ type Format<U> = (value?: U) => any;
     console.log('reload')
     {/* store.validFirst = true */}
     return (
-      <Form store={store} layout={{
-        row: {
-            align:"middle",
-            gutter: 12
-        },
-      }}>
+      <Form store={store}>
         <Item text="名称(错误toolTip)" id="name" showErrorProps={{ mode: "tooltip"}}>
           <Input onChange={(e) => console.log(e.target.value)}/>
         </Item>
@@ -226,8 +221,10 @@ type Format<U> = (value?: U) => any;
         <Item id={['startDate', 'endDate']} text="日期">
           <DatePicker.RangePicker />
         </Item>
-        <Button onClick={() => { store.submit(data => console.log(data)) }}>提交</Button>
-        <Button onClick={() => { store.reset() }}>重置</Button>
+        <Col span={24}>
+          <Button onClick={() => { store.submit(data => console.log(data)) }}>提交</Button>
+          <Button onClick={() => { store.reset() }}>重置</Button>
+        </Col>
       </Form>
     );
   }}
@@ -357,6 +354,155 @@ type Format<U> = (value?: U) => any;
     {/* store.validFirst = true */}
     return (
       <Form store={store} layout={Form.horizontal}>
+        <Item text="名称(错误toolTip)" id="name" showErrorProps={{ mode: "tooltip"}}>
+          <Input onChange={(e) => console.log(e.target.value)}/>
+        </Item>
+        <Item text="名称" id="name">
+          {(p) => <Input {...p}/>}
+        </Item>
+        <Item text="描述" id="desc">
+          {(p) => <Input {...p}/>}
+        </Item>
+        <Item id="gender" text="性别" >
+          <Radio.Group>
+            <Radio value>男</Radio>
+            <Radio value={false}>女</Radio>
+          </Radio.Group>
+        </Item>
+        <Item text="是否成年" id="adult" valueName="checked">
+          <Switch />
+        </Item>
+        <Col span={24} style={{display: "flex", justifyContent: "center"}}>
+          <Button onClick={() => { store.submit(data => console.log(data)) }}>提交</Button>
+          <Button onClick={() => { store.reset() }}>重置</Button>
+        </Col>
+      </Form>
+    );
+  }}
+</Playground>
+
+##### inline
+
+<Playground>
+  {() => {
+    const store = useStore({
+      name: {
+        rules: [{
+          required: true,
+          message: "名称必填"
+        }]
+      },
+      desc: {
+        rules: [{
+          required: true,
+          message: "描述必填"
+        }]
+      },
+      gender: {
+        defaultValue: true,
+      },
+      adult: {
+        defaultValue: true,
+      },
+      startDate: {
+        parse(value){
+          return value ? value.format(DateFormat.day) : value;
+        },
+        format(value){
+          console.log(value)
+          if (value) return moment(value);
+          return value;
+        }
+      },
+      endDate: {
+        parse(value){
+          return value ? value.format(DateFormat.day) : value;
+        },
+        format(value){
+          if (value) return moment(value);
+          return value;
+        }
+      },
+    });
+    console.log('reload')
+    {/* store.validFirst = true */}
+    return (
+      <Form store={store} layout={Form.inline}>
+        <Item text="名称(错误toolTip)" id="name" showErrorProps={{ mode: "tooltip"}}>
+          <Input onChange={(e) => console.log(e.target.value)}/>
+        </Item>
+        <Item text="名称" id="name">
+          {(p) => <Input {...p}/>}
+        </Item>
+        <Item text="描述" id="desc">
+          {(p) => <Input {...p}/>}
+        </Item>
+        <Item id="gender" text="性别" >
+          <Radio.Group>
+            <Radio value>男</Radio>
+            <Radio value={false}>女</Radio>
+          </Radio.Group>
+        </Item>
+        <Item text="是否成年" id="adult" valueName="checked">
+          <Switch />
+        </Item>
+        <Col span={24} style={{display: "flex", justifyContent: "center"}}>
+          <Button onClick={() => { store.submit(data => console.log(data)) }}>提交</Button>
+          <Button onClick={() => { store.reset() }}>重置</Button>
+        </Col>
+      </Form>
+    );
+  }}
+</Playground>
+
+
+##### oneline
+
+<Playground>
+  {() => {
+    const store = useStore({
+      name: {
+        rules: [{
+          required: true,
+          message: "名称必填"
+        }]
+      },
+      desc: {
+        rules: [{
+          required: true,
+          message: "描述必填"
+        }]
+      },
+      gender: {
+        defaultValue: true,
+      },
+      adult: {
+        defaultValue: true,
+      },
+      startDate: {
+        parse(value){
+          return value ? value.format(DateFormat.day) : value;
+        },
+        format(value){
+          console.log(value)
+          if (value) return moment(value);
+          return value;
+        }
+      },
+      endDate: {
+        parse(value){
+          return value ? value.format(DateFormat.day) : value;
+        },
+        format(value){
+          if (value) return moment(value);
+          return value;
+        }
+      },
+    });
+    console.log('reload')
+    {/* store.validFirst = true */}
+    return (
+      <Form store={store} layout={Form.oneline}>
         <Item text="名称(错误toolTip)" id="name" showErrorProps={{ mode: "tooltip"}}>
           <Input onChange={(e) => console.log(e.target.value)}/>
         </Item>

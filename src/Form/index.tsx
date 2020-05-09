@@ -42,30 +42,27 @@ function Form<T>(props: FormProps<T>) {
   );
 }
 
+(Form as React.FC<FormProps<any>>).defaultProps = {
+  layout: {
+    row: {
+      align: 'middle',
+      gutter: [12, 18],
+    },
+  },
+};
+
 export const vertical: {
   row?: RowProps;
   label?: LabelProps;
 } = {
   row: {
     align: 'middle',
-    gutter: [6, 0],
+    gutter: [6, 24],
   },
   label: {
     float: 'left',
     colProps: {
-      label: {
-        span: 24,
-        style: {
-          padding: 0,
-        },
-      },
-      children: {
-        span: 24,
-        style: {
-          padding: 0,
-          marginBottom: 24,
-        },
-      },
+      span: 24,
     },
   },
 };
@@ -76,27 +73,74 @@ export const horizontal: {
 } = {
   row: {
     align: 'middle',
-    gutter: [6, 0],
+    gutter: [6, 24],
   },
   label: {
-    float: {
-      xs: 'right',
-      md: 'right',
+    float: 'right',
+    labelStyle: {
+      minWidth: '40%',
+      width: 'fit-content',
+      paddingRight: 8,
     },
     colProps: {
-      label: {
-        xs: { span: 7 },
-        md: { span: 5 },
-        lg: { span: 2 },
-        xl: { span: 3 },
+      style: {
+        display: 'flex',
+        alignItems: 'center',
       },
-      children: {
-        xs: {
-          span: 15,
-        },
-        md: { span: 7 },
-        lg: { span: 6 },
-        xl: { span: 5 },
+      xs: { span: 24 },
+      md: { span: 12 },
+      lg: { span: 8 },
+      xl: { span: 8 },
+    },
+  },
+};
+
+export const oneline: {
+  row?: RowProps;
+  label?: LabelProps;
+} = {
+  row: {
+    align: 'middle',
+    gutter: [6, 24],
+  },
+  label: {
+    float: 'right',
+    labelStyle: {
+      minWidth: '40%',
+      width: 'fit-content',
+      paddingRight: 8,
+    },
+    childStyle: {
+      maxWidth: 300,
+    },
+    colProps: {
+      style: {
+        display: 'flex',
+        alignItems: 'center',
+      },
+      xs: { span: 24 },
+    },
+  },
+};
+
+export const inline: {
+  row?: RowProps;
+  label?: LabelProps;
+} = {
+  row: {
+    align: 'middle',
+    gutter: [6, 24],
+  },
+
+  label: {
+    labelStyle: {
+      paddingRight: 8,
+    },
+    float: 'right',
+    colProps: {
+      style: {
+        display: 'flex',
+        alignItems: 'center',
       },
     },
   },
@@ -104,6 +148,8 @@ export const horizontal: {
 
 Form.vertical = vertical;
 Form.horizontal = horizontal;
+Form.inline = inline;
+Form.oneline = oneline;
 
 export { Autowired, Item };
 export * from './hooks';

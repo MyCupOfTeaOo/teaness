@@ -30,9 +30,9 @@ export interface LabelProps {
    */
   float?: FloatSize | Float;
   /**
-   * 参考 grid col
+   * 参考 label的colProps与 内容的 Colprops  grid col
    */
-  colProps?: ColProps;
+  colProps?: { label?: ColProps; children?: ColProps };
   /**
    * label classname
    */
@@ -42,6 +42,15 @@ export interface LabelProps {
    */
   labelStyle?: React.CSSProperties;
   /**
+   * 内容样式
+   */
+  childrenStyle?: React.CSSProperties;
+  /**
+   * 内容classname
+   */
+  childrenClassName?: string;
+  children?: React.ReactNode;
+  /**
    * 是否展示冒号,默认true
    */
   colon?: boolean;
@@ -49,7 +58,4 @@ export interface LabelProps {
    * 绑定的表单id
    */
   id?: string;
-  childClassName?: string;
-  childStyle?: React.CSSProperties;
-  children?: React.ReactNode;
 }

@@ -14,7 +14,7 @@ const Label: React.FC<LabelProps> = sourceProps => {
     }),
     [sourceProps, labelContext],
   );
-  const text = useMemo(() => {
+  const labelClass = useMemo(() => {
     const sizeClass: {
       [key: string]: any;
     } = {};
@@ -26,55 +26,33 @@ const Label: React.FC<LabelProps> = sourceProps => {
     } else {
       sizeClass[`label-${props.float}`] = props.float;
     }
-
-    return props.text !== undefined ? (
-      <Col
-        style={{
-          display: 'flex',
-          ...props.labelStyle,
-        }}
-        {...(props.colProps ? props.colProps.label : {})}
-      >
-        <label
-          title={props.text}
-          htmlFor={props.id}
-          className={classnames(
-            'tea-label',
-            props.labelClassName,
-            {
-              'label-required': props.required,
-            },
-            sizeClass,
-          )}
-        >
-          {props.renderText ?? props.text} {props.colon ? ':' : undefined}
-        </label>
-      </Col>
-    ) : (
-      undefined
-    );
-  }, [
-    props.text,
-    props.labelClassName,
-    props.required,
-    props.float,
-    props.colProps,
-    props.labelStyle,
-  ]);
+    return sizeClass;
+  }, [props.float]);
 
   return (
-    <React.Fragment>
-      {text}
-      <Col
-        style={{
-          ...props.childrenStyle,
-        }}
-        {...(props.colProps ? props.colProps.children : {})}
-        className={classnames(props.childrenClassName, 'label-children')}
+    <Col {...props.colProps}>
+      <label
+        title={props.text}
+        htmlFor={props.id}
+        style={props.labelStyle}
+        className={classnames(
+          'tea-label',
+          props.labelClassName,
+          {
+            'label-required': props.required,
+          },
+          labelClass,
+        )}
+      >
+        {props.renderText ?? props.text} {props.colon ? ':' : undefined}
+      </label>
+      <div
+        className={classnames('label-children', props.childClassName)}
+        style={props.childStyle}
       >
         {props.children}
-      </Col>
-    </React.Fragment>
+      </div>
+    </Col>
   );
 };
 

@@ -13,6 +13,7 @@ $floatList: ('left', 'right', 'center');
   font-size: 14px;
   font-weight: 500;
   color: $black-6;
+  width: 100%;
   display: inline-block;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -51,6 +52,6 @@ $floatList: ('left', 'right', 'center');
 }
 
 .label-children {
-  line-height: 32px;
-  flex: auto;
+  padding-top: 12px;
+  padding-bottom: 12px;
 }
