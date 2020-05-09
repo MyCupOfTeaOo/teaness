@@ -24,8 +24,18 @@ export interface BaseGridProps extends AgGridReactProps {
 const BaseGridCom: React.ForwardRefRenderFunction<
   AgGridReact,
   BaseGridProps
-> = ({ className, style, ...gridProps }, ref) => {
+> = ({ className, style, defaultColDef, ...gridProps }, ref) => {
   const gridRef = useRef<AgGridReact>(null);
+  const mergeDefaultColDef = useMemo<AgGridReactProps['defaultColDef']>(() => {
+    return Object.assign<
+      {},
+      AgGridReactProps['defaultColDef'],
+      AgGridReactProps['defaultColDef']
+    >({}, defaultColDef, {
+      sortable: true,
+      resizable: true,
+    });
+  }, [defaultColDef]);
   useImperativeHandle(ref, () => gridRef.current as AgGridReact, []);
   const gridClassName = useMemo(
     () => classNames('ag-theme-material', 'tea-grid', className),
@@ -34,15 +44,17 @@ const BaseGridCom: React.ForwardRefRenderFunction<
   const gridStyle = useMemo(() => style, [style]);
   return (
     <div className={gridClassName} style={gridStyle}>
-      <AgGridReact ref={gridRef} {...gridProps} />
+      <AgGridReact
+        ref={gridRef}
+        defaultColDef={mergeDefaultColDef}
+        {...gridProps}
+      />
     </div>
   );
 };
 
 const BaseGridRef = forwardRef(BaseGridCom);
 BaseGridRef.defaultProps = {
-  enableColResize: true,
-  enableSorting: true,
   enableFilter: false,
   suppressDragLeaveHidesColumns: true,
   overlayNoRowsTemplate: '无数据',

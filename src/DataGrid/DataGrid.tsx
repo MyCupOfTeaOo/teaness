@@ -26,10 +26,7 @@ import {
 import DataGridRegister from './DataGridRegister';
 
 export interface DataGridProps
-  extends Omit<
-    BaseGridProps,
-    'rowData' | 'suppressMultiSort' | 'enableServerSideSorting' | 'className'
-  > {
+  extends Omit<BaseGridProps, 'rowData' | 'suppressMultiSort' | 'className'> {
   /**
    * 请求地址,相对或绝对路径
    */
@@ -315,7 +312,6 @@ const DataGridCom: React.ForwardRefRenderFunction<
         ref={gridRef}
         className={props.gridClassName}
         rowData={rowData}
-        enableServerSideSorting
         onSortChanged={handleSortChange}
       />
       <div className="tea-grid-bottom">
