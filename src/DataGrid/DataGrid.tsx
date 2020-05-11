@@ -22,6 +22,7 @@ import {
   RequestData,
   DataGridRef,
   ResponseData,
+  RequestMethod,
 } from './typings';
 import DataGridRegister from './DataGridRegister';
 
@@ -43,6 +44,10 @@ export interface DataGridProps
       [key: string]: any;
     }>,
   ) => void;
+  /**
+   * 查询方法,默认使用 DataGridRegister 注册的全局请求方法
+   */
+  request?: RequestMethod;
   /**
    * 查询参数
    */
@@ -182,7 +187,10 @@ const DataGridCom: React.ForwardRefRenderFunction<
       }
 
       loadCount.current += 1;
-      const res = DataGridRegister.request(props.fetchUrl, searchProps);
+      const res = (props.request || DataGridRegister.request)(
+        props.fetchUrl,
+        searchProps,
+      );
       res
         .then(data => {
           if (props.fetchSuccessCallback) props.fetchSuccessCallback(data);
