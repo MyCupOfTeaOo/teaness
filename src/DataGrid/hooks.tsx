@@ -34,7 +34,7 @@ export function useDataGrid<T extends { [key: string]: any }>(
       ref: gridRef,
       historyId,
       location,
-      queryData: queryDataRef.current,
+      queryDataRef,
     },
     gridRef,
     queryDataRef,

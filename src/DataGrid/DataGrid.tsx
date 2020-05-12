@@ -45,8 +45,15 @@ export interface DataGridProps
   ) => void;
   /**
    * 查询参数
+   * @deprecated 请使用 queryDataRef
    */
   queryData?: any;
+  /**
+   * 查询参数
+   */
+  queryDataRef?: {
+    current?: any;
+  };
   /**
    * 默认单页显示条数
    */
