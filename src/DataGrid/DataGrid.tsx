@@ -52,7 +52,7 @@ export interface DataGridProps
   /**
    * 查询参数
    */
-  queryData?: {
+  queryDataRef?: {
     current?: any;
   };
   /**
@@ -241,7 +241,7 @@ const DataGridCom: React.ForwardRefRenderFunction<
     if (props.firstLoad || count > 0) {
       return fetch({
         ...search.current,
-        queryData: props.queryData?.current,
+        queryData: props.queryDataRef?.current,
       });
     }
   }, [count]);
