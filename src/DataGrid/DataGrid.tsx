@@ -52,7 +52,9 @@ export interface DataGridProps
   /**
    * 查询参数
    */
-  queryData?: any;
+  queryData?: {
+    current?: any;
+  };
   /**
    * 默认单页显示条数
    */
@@ -239,7 +241,7 @@ const DataGridCom: React.ForwardRefRenderFunction<
     if (props.firstLoad || count > 0) {
       return fetch({
         ...search.current,
-        queryData: props.queryData,
+        queryData: props.queryData?.current,
       });
     }
   }, [count]);
