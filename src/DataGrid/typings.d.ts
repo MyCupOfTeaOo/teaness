@@ -43,27 +43,23 @@ export type Fetch<T> = CancellablePromise<ResponseData<T>>;
 
 export type DataGridRef = {
   gridRef?: AgGridReact | null;
-  fetch: <
-    T extends { [key: string]: any } = { [key: string]: any }
-  >(searchProps?: {
+  fetch(searchProps?: {
     page?: number;
     pageSize?: number;
     sorters?: Sorter[];
-  }) => void;
-  getSearch: () => {
+  }): void;
+  getSearch(): {
     page?: number;
     pageSize?: number;
     sorters?: Sorter[];
   };
-  setSearch: Dispatch<
-    SetStateAction<{
-      page: number;
-      pageSize: number;
-      sorters?: Sorter[];
-    }>
-  >;
+  setSearch(search: {
+    page: number;
+    pageSize: number;
+    sorters?: Sorter[];
+  }): void;
   setRowData: Dispatch<SetStateAction<any[] | undefined>>;
-  getDefaultValue: () => {
+  getDefaultValue(): {
     page: number;
     pageSize: number;
     sorters: Sorter[];

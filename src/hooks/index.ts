@@ -6,6 +6,7 @@ import {
   DependencyList,
   EffectCallback,
   useRef,
+  useMemo,
 } from 'react';
 
 export function useEffectState<T>(
@@ -37,4 +38,37 @@ export function useEffectExcludeFirst(
   deps?: DependencyList,
 ): void {
   return useEffectExcludeNum(effect, deps, 1);
+}
+
+export function useValue<S>(
+  initialState: S | (() => S),
+): {
+  current: S;
+};
+
+export function useValue<S = undefined>(): {
+  current: S | undefined;
+};
+
+export function useValue(initialState?: any) {
+  const [value, setValue] = useState(initialState);
+  const proxyTarget = useMemo(() => {
+    return new Proxy(
+      {
+        current: value,
+      },
+      {
+        set(target, __, v) {
+          // eslint-disable-next-line
+          target.current = v;
+          setValue(v);
+          return true;
+        },
+        get(target) {
+          return target.current;
+        },
+      },
+    );
+  }, []);
+  return proxyTarget;
 }

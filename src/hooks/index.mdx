@@ -8,6 +8,12 @@ import { Playground, Props } from 'docz';
 
 # hooks
 
+## useValue
+
+| Property     | Type           | Required | Default   | return                                  | Description                                         |
+| ------------ | -------------- | -------- | --------- | --------------------------------------- | --------------------------------------------------- |
+| initialState | S \| (() => S) | false    | undefined | S extends undefined ? undefined \|S : S | 无闭包陷阱的 value,相当于 useRef 与 useState 的结合 |
+
 ## useEffectState
 
 | Property | Type                        | Required | Default | return | Description                         |

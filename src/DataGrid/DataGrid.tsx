@@ -25,6 +25,7 @@ import {
   RequestMethod,
 } from './typings';
 import DataGridRegister from './DataGridRegister';
+import { useValue } from '../hooks';
 
 export interface DataGridProps
   extends Omit<BaseGridProps, 'rowData' | 'suppressMultiSort' | 'className'> {
@@ -130,7 +131,7 @@ const DataGridCom: React.ForwardRefRenderFunction<
   }, [props.defaultColDef]);
   const [rowData, setRowData] = useState<any[] | undefined>([]);
 
-  const [search, setSearch] = useState<{
+  const search = useValue<{
     page: number;
     pageSize: number;
     sorters?: Sorter[];
@@ -237,75 +238,72 @@ const DataGridCom: React.ForwardRefRenderFunction<
   useEffect(() => {
     if (props.firstLoad || count > 0) {
       return fetch({
-        ...search,
+        ...search.current,
         queryData: props.queryData,
       });
     }
   }, [count]);
   const handlePageChange = useCallback((page, pageSize) => {
-    setSearch(item => ({
-      ...item,
+    search.current = {
+      ...search.current,
       page,
       pageSize,
-    }));
+    };
 
     // 查询
     setCount(prevCount => prevCount + 1);
   }, []);
   const handleSortChange = useCallback(({ api }: { api: GridApi }) => {
-    let isChange = false;
-
-    setSearch(item => {
-      const sortModal = api.getSortModel();
-      if (item?.sorters?.length === sortModal.length) {
-        if (item.sorters.length === 0) return item;
-        if (
-          item.sorters[0].colId === sortModal[0].colId &&
-          item.sorters[0].sort === sortModal[0].sort
-        ) return item;
+    const sortModal = api.getSortModel();
+    if (search.current.sorters?.length === sortModal.length) {
+      // 浅对比
+      if (search.current.sorters.length === 0) {
+        return;
       }
-      isChange = true;
-      return {
-        ...item,
-        sorters: sortModal,
-      };
-    });
+      // 深对比
+      if (
+        search.current.sorters.every(sorter =>
+          sortModal.some(
+            item => item.colId === sorter.colId && item.sort === sorter.sort,
+          ),
+        )
+      ) {
+        return;
+      }
+    }
+    search.current = {
+      ...search.current,
+      sorters: sortModal,
+    };
     // 查询
-    if (isChange) setCount(prevCount => prevCount + 1);
+    setCount(prevCount => prevCount + 1);
   }, []);
 
   useImperativeHandle(
     ref,
     () => ({
       gridRef: gridRef.current,
-      fetch: <
-        T extends { [key: string]: any } = { [key: string]: any }
-      >(data?: {
-        page?: number;
-        pageSize?: number;
-        sorters?: Sorter[];
-      }) => {
-        setSearch(item => ({
-          ...item,
+      fetch(data?: { page?: number; pageSize?: number; sorters?: Sorter[] }) {
+        search.current = {
+          ...search.current,
           ...data,
-        }));
+        };
         setCount(prevCount => prevCount + 1);
       },
-      getSearch: () => {
-        let temp = search;
-        setSearch(prevSearch => {
-          temp = prevSearch;
-          return prevSearch;
-        });
-        return temp;
+      getSearch() {
+        return search.current;
       },
-      setSearch,
+      setSearch(v: { page: number; pageSize: number; sorters?: Sorter[] }) {
+        search.current = v;
+      },
       setRowData,
-      getDefaultValue: () => ({
-        page: props.defaultPage || DataGridRegister.defaultPage,
-        pageSize: props.defaultPageSize || DataGridRegister.defaultPageSize,
-        sorters: props.defaultSorters || DataGridRegister.defaultSorters,
-      }),
+      getDefaultValue() {
+        return {
+          page: props.defaultPage || DataGridRegister.defaultPage,
+          pageSize: props.defaultPageSize || DataGridRegister.defaultPageSize,
+          sorters: props.defaultSorters || DataGridRegister.defaultSorters,
+        };
+      },
     }),
     [fetch],
   );
@@ -333,8 +331,8 @@ const DataGridCom: React.ForwardRefRenderFunction<
           showSizeChanger
           showQuickJumper
           showTotal={showTotal}
-          current={search.page}
-          pageSize={search.pageSize}
+          current={search.current.page}
+          pageSize={search.current.pageSize}
         />
       </div>
     </div>
