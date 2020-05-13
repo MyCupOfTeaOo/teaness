@@ -123,7 +123,7 @@ export interface ComponentStoreInterface<U = any, T = {}> {
   setFormat: (format?: Format<U>) => void;
   setCrossErr: (props: { [key: string]: ErrorMessage }) => void;
   delCrossErr: (keys: string[]) => void;
-  onChange: (value: U | undefined) => void;
+  onChange: (value: U | undefined, ...args: any) => void;
   setDefaultValue: (value: U | undefined) => void;
   setRules: (rules: Rules | undefined) => void;
   setInputStatus: (inputStatus: InputStatus) => void;

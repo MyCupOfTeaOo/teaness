@@ -87,7 +87,7 @@ const Autowired: React.FC<AutowiredProps> = props => {
           store?.componentStores[key]?.setInputStatus('focus');
         });
       },
-      [trigger]: (value: any) => {
+      [trigger]: (value: any, ...args: any) => {
         if (trigger === 'onBlur') {
           id.forEach(key => {
             store?.componentStores[key]?.setInputStatus('blur');
@@ -98,7 +98,7 @@ const Autowired: React.FC<AutowiredProps> = props => {
           });
         }
         id.forEach((key, index) => {
-          store?.componentStores[key]?.onChange(value?.[index]);
+          store?.componentStores[key]?.onChange(value?.[index], ...args);
         });
       },
       disabled: store?.disabled,
@@ -130,13 +130,13 @@ const Autowired: React.FC<AutowiredProps> = props => {
         store?.componentStores[id]?.setInputStatus('focus');
       },
       [valueName]: store?.componentStores[id]?.value,
-      [trigger]: (value: any) => {
+      [trigger]: (value: any, ...args: any) => {
         if (trigger === 'onBlur') {
           store?.componentStores[id]?.setInputStatus('blur');
         } else if (trigger === 'onFocus') {
           store?.componentStores[id]?.setInputStatus('focus');
         }
-        store?.componentStores[id]?.onChange(value);
+        store?.componentStores[id]?.onChange(value, ...args);
       },
       errors:
         suppressErrorOnValiding &&
