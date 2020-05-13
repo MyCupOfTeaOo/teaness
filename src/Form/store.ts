@@ -134,10 +134,13 @@ export class ComponentStore<U = any, T = {}>
   };
 
   @action
-  onChange = (value: U | Event | SyntheticEvent | undefined) => {
+  onChange = (
+    value: U | Event | SyntheticEvent | undefined,
+    ...restValue: any
+  ) => {
     let parseValue: U | undefined;
     if (this.parse) {
-      parseValue = this.parse(value);
+      parseValue = this.parse(value, ...restValue);
     } else if (!isEmpty(value)) {
       if (value instanceof Event) {
         parseValue = (value.target as { value?: U }).value;
@@ -158,7 +161,7 @@ export class ComponentStore<U = any, T = {}>
     this.prevValue = this.source;
     this.source = parseValue;
     // 在值改变后在调用 方便实现自动保存等功能
-    this.formStore.onChange?.(this.key, parseValue, value, this);
+    this.formStore.onChange?.(this.key, parseValue, value, restValue, this);
 
     this.valid();
   };
@@ -263,6 +266,7 @@ export class FormStore<T> implements FormStoreInstance<T> {
     key: keyof T,
     value: any,
     source: any,
+    sourceOther: any,
     subStore: ComponentStoreInterface<any, T>,
   ): void;
 
