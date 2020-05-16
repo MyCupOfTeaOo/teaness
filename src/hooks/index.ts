@@ -43,11 +43,11 @@ export function useEffectExcludeFirst(
 export function useValue<S>(
   initialState: S | (() => S),
 ): {
-  current: S;
+  value: S;
 };
 
 export function useValue<S = undefined>(): {
-  current: S | undefined;
+  value: S | undefined;
 };
 
 export function useValue(initialState?: any) {
@@ -55,17 +55,17 @@ export function useValue(initialState?: any) {
   const proxyTarget = useMemo(() => {
     return new Proxy(
       {
-        current: value,
+        value,
       },
       {
         set(target, __, v) {
           // eslint-disable-next-line
-          target.current = v;
+          target.value = v;
           setValue(v);
           return true;
         },
         get(target) {
-          return target.current;
+          return target.value;
         },
       },
     );

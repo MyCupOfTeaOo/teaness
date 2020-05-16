@@ -131,7 +131,9 @@ const DataGridCom: React.ForwardRefRenderFunction<
       ...props.defaultColDef,
     };
   }, [props.defaultColDef]);
-  const [rowData, setRowData] = useState<any[] | undefined>([]);
+  const [rowData, setRowData] = useState<any[] | undefined>(
+    props.firstLoad ? undefined : [],
+  );
 
   const search = useValue<{
     page: number;
@@ -240,14 +242,14 @@ const DataGridCom: React.ForwardRefRenderFunction<
   useEffect(() => {
     if (props.firstLoad || count > 0) {
       return fetch({
-        ...search.current,
+        ...search.value,
         queryData: props.queryDataRef?.current,
       });
     }
   }, [count]);
   const handlePageChange = useCallback((page, pageSize) => {
-    search.current = {
-      ...search.current,
+    search.value = {
+      ...search.value,
       page,
       pageSize,
     };
@@ -257,14 +259,14 @@ const DataGridCom: React.ForwardRefRenderFunction<
   }, []);
   const handleSortChange = useCallback(({ api }: { api: GridApi }) => {
     const sortModal = api.getSortModel();
-    if (search.current.sorters?.length === sortModal.length) {
+    if (search.value.sorters?.length === sortModal.length) {
       // 浅对比
-      if (search.current.sorters.length === 0) {
+      if (search.value.sorters.length === 0) {
         return;
       }
       // 深对比
       if (
-        search.current.sorters.every(sorter =>
+        search.value.sorters.every(sorter =>
           sortModal.some(
             item => item.colId === sorter.colId && item.sort === sorter.sort,
           ),
@@ -273,8 +275,8 @@ const DataGridCom: React.ForwardRefRenderFunction<
         return;
       }
     }
-    search.current = {
-      ...search.current,
+    search.value = {
+      ...search.value,
       sorters: sortModal,
     };
     // 查询
@@ -286,17 +288,17 @@ const DataGridCom: React.ForwardRefRenderFunction<
     () => ({
       gridRef: gridRef.current,
       fetch(data?: { page?: number; pageSize?: number; sorters?: Sorter[] }) {
-        search.current = {
-          ...search.current,
+        search.value = {
+          ...search.value,
           ...data,
         };
         setCount(prevCount => prevCount + 1);
       },
       getSearch() {
-        return search.current;
+        return search.value;
       },
       setSearch(v: { page: number; pageSize: number; sorters?: Sorter[] }) {
-        search.current = v;
+        search.value = v;
       },
       setRowData,
       getDefaultValue() {
@@ -333,8 +335,8 @@ const DataGridCom: React.ForwardRefRenderFunction<
           showSizeChanger
           showQuickJumper
           showTotal={showTotal}
-          current={search.current.page}
-          pageSize={search.current.pageSize}
+          current={search.value.page}
+          pageSize={search.value.pageSize}
         />
       </div>
     </div>
