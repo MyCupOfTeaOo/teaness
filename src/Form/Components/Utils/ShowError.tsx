@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { Tooltip } from 'antd';
 import classnames from 'classnames';
+import { AbstractTooltipProps } from 'antd/es/tooltip';
 import { ErrorMessage } from '../../typings';
 import './ShowError.scss';
 
@@ -25,7 +26,7 @@ export interface ShowErrorProps {
   /**
    * getPopupContainer,当 isToolTip 为 true 生效,默认  e => e.parentElement ?? document.body
    */
-  getPopupContainer?: Tooltip['props']['getPopupContainer'];
+  getPopupContainer?: AbstractTooltipProps['getPopupContainer'];
   /**
    * toolTip的overlayClassName,当 isToolTip 为 true 生效
    */
@@ -33,7 +34,7 @@ export interface ShowErrorProps {
   /**
    * toolTip的props,当 isToolTip 为 true 生效,如无特殊需要不要传递 overlayClassName,title,getPopupContainer,visible
    */
-  toolTipProps?: Tooltip['props'];
+  toolTipProps?: AbstractTooltipProps;
   /**
    * 输入组件外层不包裹div
    */
@@ -57,9 +58,7 @@ export const BottomText: React.FC<BottomTextProps> = props => {
 const ShowError: React.FC<ShowErrorProps> = props => {
   const errMessage = useMemo(
     () =>
-      (props.error
-        ? props.error.map(item => item.message).join(';')
-        : props.error),
+      (props.error ? props.error.map(item => item.message).join(';') : undefined),
     [props.error],
   );
 

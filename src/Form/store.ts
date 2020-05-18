@@ -199,11 +199,11 @@ export class ComponentStore<U = any, T = {}>
     if (this.schema) {
       this.setValiding(true);
       const e:
+        | undefined
         | {
             errors: ErrorList;
             fields: FieldErrorList;
-          }
-        | undefined = yield this.schema
+          } = yield this.schema
         .validate({ [this.key]: this.source })
         .catch(errs => errs);
       if (!this.isChange) {
@@ -211,13 +211,13 @@ export class ComponentStore<U = any, T = {}>
         return err;
       }
       if (e) {
-        err = (e as {
-          errors: ErrorList;
-          fields: FieldErrorList;
-        }).errors.map(item => ({ message: item.message, field: item.field }));
+        err = e.errors.map(item => ({
+          message: item.message,
+          field: item.field,
+        }));
         this.err = err;
       } else {
-        this.err = e;
+        this.err = undefined;
       }
     }
     this.setValiding(false);
