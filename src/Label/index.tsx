@@ -1,6 +1,7 @@
 import React, { useMemo, useContext } from 'react';
 import classnames from 'classnames';
 import './index.scss';
+import Show from '../Show';
 import { Col } from '../Grid';
 import { LabelProps, FloatSize } from './typings';
 import { LabelContext } from './Context';
@@ -14,6 +15,7 @@ const Label: React.FC<LabelProps> = sourceProps => {
     }),
     [sourceProps, labelContext],
   );
+  const { colon = true } = props;
   const labelClass = useMemo(() => {
     const sizeClass: {
       [key: string]: any;
@@ -31,21 +33,23 @@ const Label: React.FC<LabelProps> = sourceProps => {
 
   return (
     <Col {...props.colProps}>
-      <label
-        title={props.text}
-        htmlFor={props.id}
-        style={props.labelStyle}
-        className={classnames(
-          'tea-label',
-          props.labelClassName,
-          {
-            'label-required': props.required,
-          },
-          labelClass,
-        )}
-      >
-        {props.renderText ?? props.text} {props.colon ? ':' : undefined}
-      </label>
+      <Show actual={!!(props.renderText ?? props.text)} expect>
+        <label
+          title={props.text}
+          htmlFor={props.id}
+          style={props.labelStyle}
+          className={classnames(
+            'tea-label',
+            props.labelClassName,
+            {
+              'label-required': props.required,
+            },
+            labelClass,
+          )}
+        >
+          {props.renderText ?? props.text} {colon ? ':' : undefined}
+        </label>
+      </Show>
       <div
         className={classnames('label-children', props.childClassName)}
         style={props.childStyle}
@@ -54,10 +58,6 @@ const Label: React.FC<LabelProps> = sourceProps => {
       </div>
     </Col>
   );
-};
-
-Label.defaultProps = {
-  colon: true,
 };
 
 export { LabelContext };

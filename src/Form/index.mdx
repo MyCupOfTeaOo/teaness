@@ -8,12 +8,14 @@ import { Playground, Props } from 'docz';
 import { useMemo, useState } from 'react';
 import moment from 'moment';
 import 'antd/dist/antd.css';
+import { UserOutlined , LockOutlined  } from '@ant-design/icons'
 import { Radio, Button, Input, InputNumber, Switch, DatePicker } from 'antd';
 import Select from './Components/Select';
 import Upload, { UploadContext } from './Components/Upload';
 import Form,{ useStore, useForm, Item } from '.';
 import { DateFormat } from '../utils'
-import { Col } from '../Grid'
+import { Col, Row } from '../Grid'
+import Label from '../Label'
 
 # Form(表单)
 
@@ -525,6 +527,100 @@ type Format<U> = (value?: U) => any;
           <Button onClick={() => { store.submit(data => console.log(data)) }}>提交</Button>
           <Button onClick={() => { store.reset() }}>重置</Button>
         </Col>
+      </Form>
+    );
+  }}
+</Playground>
+
+##### login
+
+<Playground>
+  {() => {
+     const store = useStore({
+      username: {
+        rules: [
+          {
+            required: true,
+            message: '请输入用户名!',
+          },
+        ],
+        parse(value) {
+          if (value) return value.target.value.trim();
+        },
+      },
+      password: {
+        rules: [
+          {
+            required: true,
+            message: '请输入密码!',
+          },
+        ],
+        parse(value) {
+          if (value) return value.target.value.trim();
+        },
+      },
+      captcha: {
+        rules: [
+          {
+            required: true,
+            message: '验证码必填!',
+          },
+          {
+            len: 4,
+            message: '验证码为4位!',
+          },
+        ],
+      },
+    });
+    return (
+      <Form
+        layout={Form.login}
+      >
+        <Item id="username">
+          <Input
+            placeholder="账户"
+            size="large"
+            prefix={<UserOutlined />}
+          />
+        </Item>
+        <Item id="password">
+          <Input
+            placeholder="密码"
+            type="password"
+            size="large"
+            prefix={<LockOutlined />}
+          />
+        </Item>
+        <Item id="captcha">
+          {params => (
+            <Row gutter={8}>
+              <Col span={16} style={{ paddingRight: 0}}>
+                <Input
+                  {...params}
+                  size="large"
+                />
+              </Col>
+              <Col span={8} style={{ paddingLeft: 0}}>
+                <Button
+                  block
+                  size="large"
+                >
+                  验证码
+                </Button>
+              </Col>
+            </Row>
+          )}
+        </Item>
+        <Label>
+          <Button
+            size="large"
+            type="primary"
+            htmlType="submit"
+            block
+          >
+            登录
+          </Button>
+        </Label>
       </Form>
     );
   }}

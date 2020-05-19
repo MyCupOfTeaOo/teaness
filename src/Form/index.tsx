@@ -146,10 +146,30 @@ export const inline: {
   },
 };
 
+export const login: {
+  row?: RowProps;
+  label?: LabelProps;
+} = {
+  row: {
+    align: 'middle',
+    gutter: [6, 24],
+  },
+  label: {
+    colProps: {
+      span: 24,
+      style: {
+        display: 'flex',
+        width: '100%',
+      },
+    },
+  },
+};
+
 Form.vertical = vertical;
 Form.horizontal = horizontal;
 Form.inline = inline;
 Form.oneline = oneline;
+Form.login = login;
 
 export { Autowired, Item };
 export * from './hooks';
