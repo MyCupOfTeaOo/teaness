@@ -47,6 +47,9 @@ function Form<T>(props: FormProps<T>) {
     row: {
       align: 'middle',
       gutter: [12, 18],
+      style: {
+        marginBottom: -9,
+      },
     },
   },
 };
@@ -58,6 +61,9 @@ export const vertical: {
   row: {
     align: 'middle',
     gutter: [6, 24],
+    style: {
+      marginBottom: -12,
+    },
   },
   label: {
     float: 'left',
@@ -74,6 +80,9 @@ export const horizontal: {
   row: {
     align: 'middle',
     gutter: [6, 24],
+    style: {
+      marginBottom: -12,
+    },
   },
   label: {
     float: 'right',
@@ -130,6 +139,9 @@ export const inline: {
   row: {
     align: 'middle',
     gutter: [6, 24],
+    style: {
+      marginBottom: -12,
+    },
   },
 
   label: {
@@ -153,6 +165,9 @@ export const login: {
   row: {
     align: 'middle',
     gutter: [6, 24],
+    style: {
+      marginBottom: -12,
+    },
   },
   label: {
     colProps: {

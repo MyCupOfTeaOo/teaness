@@ -302,8 +302,10 @@ type Format<U> = (value?: U) => any;
         <Item id={['startDate', 'endDate']} text="日期">
           <DatePicker.RangePicker />
         </Item>
-        <Button onClick={() => { store.submit(data => console.log(data)) }}>提交</Button>
-        <Button onClick={() => { store.reset() }}>重置</Button>
+        <Col span={24} style={{display: "flex"}}>
+            <Button onClick={() => { store.submit(data => console.log(data)) }}>提交</Button>
+            <Button onClick={() => { store.reset() }}>重置</Button>
+        </Col>
       </Form>
     );
   }}
