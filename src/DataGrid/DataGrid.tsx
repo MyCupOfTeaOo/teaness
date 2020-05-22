@@ -237,7 +237,7 @@ const DataGridCom: React.ForwardRefRenderFunction<
     if (props.firstLoad || count > 0) {
       return fetch({
         ...search,
-        queryData: props.queryData,
+        queryData: props.queryDataRef?.current || props.queryData,
       });
     }
   }, [count]);
