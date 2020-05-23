@@ -25,7 +25,12 @@ export interface FormProps<T>
 function Form<T>(props: FormProps<T>) {
   const { layout, store, children, showError, ...rest } = props;
   return (
-    <form {...rest}>
+    <form
+      onSubmit={e => {
+        e.preventDefault();
+      }}
+      {...rest}
+    >
       <LabelContext.Provider value={layout?.label}>
         <Row {...layout?.row}>
           <FormContext.Provider
