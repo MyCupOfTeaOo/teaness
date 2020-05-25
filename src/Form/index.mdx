@@ -765,3 +765,17 @@ export interface ComponentStoreInstance<U = any, T = {}> {
 ```
 
 
+## 高级用法
+
+### AutoWired
+
+如果不需要item样式,但是需要数据注入可以直接使用 AutoWired
+
+### FormContext
+
+如果需要下级组件获取 store 可以不传递, 直接使用`useContext(FormContext)`
+
+
+### 配合mobx
+
+待补充,反正基本上所有必要的属性都`observable`,可以自己看看文档,observable的属性可以直接配合`mobx`使用
