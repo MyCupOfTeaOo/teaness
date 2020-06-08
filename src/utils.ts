@@ -15,25 +15,29 @@ export enum DateFormat {
 /**
  * 跳转到表单字段处,如果可以focus则自动focus
  * @param fieldKey 字典id
+ * @param options scrollIntoView的配置透传
  * @returns 是否跳转成功
  */
-export const scrollToField = (fieldKey?: string) => {
+export const scrollToField = (
+  fieldKey: string,
+  options: boolean | ScrollIntoViewOptions = {
+    block: 'center',
+  },
+) => {
   try {
     const inputNode = document.querySelector(
       `#${fieldKey?.replace(/\./g, '-')}`,
     );
     if (inputNode) {
       (inputNode as Element & { focus?: () => {} }).focus?.();
-      inputNode.scrollIntoView();
+      inputNode.scrollIntoView(options);
       return true;
     } else {
       const labelNode = document.querySelector(
         `label[for="${fieldKey?.replace(/\./g, '-')}"]`,
       );
       if (labelNode) {
-        labelNode.scrollIntoView({
-          block: 'center',
-        });
+        labelNode.scrollIntoView(options);
         return true;
       }
     }
@@ -50,7 +54,7 @@ export const scrollToField = (fieldKey?: string) => {
  */
 export function scrollByFormErrors(errs?: ErrorsType<any>) {
   if (errs) {
-    return scrollToField(errs[Object.keys(errs)[0]]?.[0].field);
+    return scrollToField(errs[Object.keys(errs)[0]]?.[0].field!);
   }
   return true;
 }
