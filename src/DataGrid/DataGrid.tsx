@@ -32,7 +32,7 @@ export interface DataGridProps
   /**
    * 请求地址,相对或绝对路径
    */
-  fetchUrl: string;
+  fetchUrl?: string;
   /**
    * 请求失败回调
    */
@@ -168,6 +168,9 @@ const DataGridCom: React.ForwardRefRenderFunction<
     function<T extends { [key: string]: any } = { [key: string]: any }>(
       searchProps: RequestData<T>,
     ) {
+      if (!props.fetchUrl) {
+        return;
+      }
       if (gridRef.current) {
         if (gridRef.current.api) {
           gridRef.current.gridOptions.suppressNoRowsOverlay = true;
@@ -246,7 +249,7 @@ const DataGridCom: React.ForwardRefRenderFunction<
         queryData: props.queryDataRef?.current,
       });
     }
-  }, [count]);
+  }, [count, props.fetchUrl]);
   const handlePageChange = useCallback((page, pageSize) => {
     search.value = {
       ...search.value,
