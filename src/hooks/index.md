@@ -12,13 +12,13 @@ import { Playground, Props } from 'docz';
 
 | Property     | Type           | Required | Default   | return                                  | Description                                         |
 | ------------ | -------------- | -------- | --------- | --------------------------------------- | --------------------------------------------------- |
-| initialState | S \| (() => S) | false    | undefined | S extends undefined ? undefined \|S : S | 无闭包陷阱的 value,相当于 useRef 与 useState 的结合 |
+| props | (initialState: S \| (() => S), options?: { storageKey?: string }) | false    | undefined | S extends undefined ? undefined \|S : S | 无闭包陷阱的 value,相当于 useRef 与 useState 的结合,配置 storageKey 时,则会在localStorage缓存数据 |
 
 ## useEffectState
 
 | Property | Type                        | Required | Default | return | Description                         |
 | -------- | --------------------------- | -------- | ------- | ------ | ----------------------------------- |
-| props    | (T \| () => T,deps?: any[]) | true     |         | T      | 可以 hook 依赖重复初始化的 useState |
+| props    | (initialState: T \| () => T,deps?: any[]) | true     |         | T      | 可以 hook 依赖重复初始化的 useState |
 
 ## useEffectExcludeFirst
 

@@ -42,30 +42,63 @@ export function useEffectExcludeFirst(
 
 export function useValue<S>(
   initialState: S | (() => S),
+  options?: { storageKey?: string },
 ): {
   value: S;
+  setValue(value: S): void;
 };
 
 export function useValue<S = undefined>(): {
   value: S | undefined;
+  setValue(value: S | undefined): void;
 };
 
-export function useValue(initialState?: any) {
-  const [value, setValue] = useState(initialState);
+/**
+ *
+ * @param initialState 初始值
+ * @param options storageKey只在创建时生效
+ */
+export function useValue(
+  initialState?: any,
+  options?: { storageKey?: string },
+) {
+  const myInitialState = useMemo(() => {
+    if (options?.storageKey) {
+      let seqValue = initialState;
+      try {
+        const v = localStorage.getItem(options?.storageKey as string);
+        if (v) seqValue = JSON.parse(v);
+      } catch (err) {
+        localStorage.removeItem(options?.storageKey as string);
+        console.error(err, `${options?.storageKey}数据解析失败,删除`);
+      }
+      return seqValue;
+    }
+    return initialState;
+  }, []);
+  const [value, setValue] = useState(myInitialState);
   const proxyTarget = useMemo(() => {
     return new Proxy(
       {
         value,
+        setValue(v: typeof value) {
+          this.value = v;
+        },
       },
       {
-        set(target, __, v) {
+        set(target, name, v) {
           // eslint-disable-next-line
-          target.value = v;
-          setValue(v);
+          target[name as keyof typeof target] = v;
+          if (name === 'value') {
+            if (options?.storageKey) {
+              localStorage.setItem(options.storageKey, JSON.stringify(v));
+            }
+            setValue(v);
+          }
           return true;
         },
-        get(target) {
-          return target.value;
+        get(target, name) {
+          return target[name as keyof typeof target];
         },
       },
     );
