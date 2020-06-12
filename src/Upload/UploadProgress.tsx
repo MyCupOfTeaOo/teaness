@@ -10,7 +10,7 @@ export interface UploadProgressProps {
 
 const UploadProgress: React.FC<UploadProgressProps> = ({ progresses }) => {
   return (
-    <Modal open={progresses.length > 0}>
+    <Modal open={progresses.length > 0} className="tea-progress-mask">
       <div className="tea-progress-layout">
         <div className="tea-progress-title">
           正在上传 {progresses.length} 个文件
