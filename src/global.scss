@@ -33,6 +33,17 @@ $black-7: mix($black-color, #fff, 70%);
 $black-8: mix($black-color, #fff, 80%);
 $black-9: mix($black-color, #fff, 90%);
 $black-10: mix($black-color, #fff, 100%);
+$blue-color: #1890ff;
+$blue-1: mix($blue-color, #fff, 10%);
+$blue-2: mix($blue-color, #fff, 20%);
+$blue-3: mix($blue-color, #fff, 30%);
+$blue-4: mix($blue-color, #fff, 40%);
+$blue-5: mix($blue-color, #fff, 50%);
+$blue-6: mix($blue-color, #fff, 60%);
+$blue-7: mix($blue-color, #fff, 70%);
+$blue-8: mix($blue-color, #fff, 80%);
+$blue-9: mix($blue-color, #fff, 90%);
+$blue-10: mix($blue-color, #fff, 100%);
 
 // Media queries breakpoints
 // Extra small screen / phone
@@ -86,6 +97,23 @@ $small-padding: 12px;
 $tiny-padding: 6px;
 $large-padding: 48px;
 $big-padding: 120px;
+$normal: $blue-color;
+$danger: $red-5;
+$warning: rgb(255, 102, 0);
+$success: $primary-5;
+
+.tea-success {
+  color: $success;
+}
+.tea-warning {
+  color: $warning;
+}
+.tea-danger {
+  color: $danger;
+}
+.tea-normal {
+  color: $normal;
+}
 
 .form-error {
   .ant-input {

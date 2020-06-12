@@ -6,6 +6,7 @@ import { Circle } from '../Spin';
 import { useValue, useMound } from '../hooks';
 import { UploadProps, ProgressStatus } from './typings';
 import UploadProgress from './UploadProgress';
+import MyFileRender from './FileRender';
 
 const Upload: React.FC<UploadProps> = props => {
   const {
@@ -18,6 +19,9 @@ const Upload: React.FC<UploadProps> = props => {
     max,
     onUpload,
     children,
+    listType,
+    FileRender = listType === 'file-info' ? MyFileRender : undefined,
+    showUploadList,
     ...rest
   } = props;
   // 所有的cancel
@@ -265,8 +269,29 @@ const Upload: React.FC<UploadProps> = props => {
         beforeUpload={beforeUpload}
         onChange={myChange}
         fileList={fileListValue.value}
+        listType={listType === 'file-info' ? undefined : listType}
         {...rest}
+        showUploadList={FileRender ? false : showUploadList}
       >
+        {FileRender &&
+          fileListValue.value?.map(file => (
+            <FileRender
+              file={file}
+              key={file.uid}
+              disabled={rest.disabled}
+              onDelete={() => {
+                // eslint-disable-next-line
+                file.status = 'removed';
+                myChange({
+                  file,
+                  fileList: fileListValue.value || [],
+                });
+              }}
+              onPreview={rest.onPreview}
+              onDownLoad={rest.onDownLoad}
+              showUploadList={showUploadList}
+            />
+          ))}
         {!max || max > (fileListValue.value?.length || 0)
           ? children
           : undefined}
@@ -290,6 +315,6 @@ Upload.defaultProps = {
   },
 };
 
-export { UploadProgress };
+export { UploadProgress, MyFileRender as FileRender };
 
 export default Upload;

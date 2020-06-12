@@ -1,5 +1,10 @@
 import { UploadProps as AntUploadProps } from 'antd/lib/upload';
-import { UploadFile, UploadChangeParam } from 'antd/lib/upload/interface';
+import {
+  UploadFile,
+  UploadChangeParam,
+  ShowUploadListInterface,
+  UploadListType,
+} from 'antd/lib/upload/interface';
 import { CancellablePromise } from '../typings';
 
 export interface ProgressStatus {
@@ -9,10 +14,20 @@ export interface ProgressStatus {
   percent: number;
 }
 
+export interface FileRenderProps {
+  file: UploadFile;
+  disabled?: boolean;
+  onDelete(): void;
+  onDownLoad?(file: UploadFile): void;
+  onPreview?(file: UploadFile): void;
+  showUploadList?: boolean | ShowUploadListInterface;
+}
+
 export interface UploadProps
-  extends Omit<AntUploadProps, 'onChange' | 'fileList'> {
+  extends Omit<AntUploadProps, 'onChange' | 'fileList' | 'listType'> {
   children?: React.ReactNode;
   value?: string;
+  listType?: UploadListType | 'file-info';
   onChange?: (value: string | undefined) => void;
   /**
    * 上传方法,覆盖默认的
@@ -68,4 +83,8 @@ export interface UploadProps
    * 文件最大数量 单位个
    */
   max?: number;
+  /**
+   *
+   */
+  FileRender?: React.ComponentType<FileRenderProps>;
 }
