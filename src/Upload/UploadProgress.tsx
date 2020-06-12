@@ -54,12 +54,12 @@ const UploadProgress: React.FC<UploadProgressProps> = ({ progresses }) => {
   const isSuccess = progresses.every(item => item.percent >= 100);
   return (
     <div
-      className={classnames('tea-progress-layout', {
+      className={classnames('tea-progress-layout', styles.percent, {
         'tea-progress-open': open,
       })}
     >
       <div
-        className={classnames(styles.percent, {
+        className={classnames({
           'tea-progress-back': !open,
         })}
       />
@@ -103,12 +103,7 @@ const UploadProgress: React.FC<UploadProgressProps> = ({ progresses }) => {
         </AnimatePresence>
       </div>
       {!isSuccess && !open && (
-        <div
-          className={classnames(
-            'tea-progress-progress-progress',
-            styles.percent,
-          )}
-        >
+        <div className="tea-progress-progress-progress">
           <div className="fill" />
         </div>
       )}
