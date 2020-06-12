@@ -7,6 +7,7 @@ import Form from './Form';
 import Img from './Img';
 import PictureView from './PictureView';
 import FooterToolbar from './FooterToolbar';
+import Upload from './Upload';
 
 export * from './Form';
 export * from './Grid';
@@ -28,4 +29,5 @@ export {
   Label,
   Form,
   Img,
+  Upload,
 };
