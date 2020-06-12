@@ -6,7 +6,7 @@ import { isObject } from 'lodash-es';
 import Show, { Decision } from '../Show';
 import { FileRenderProps } from './typings';
 
-function statusToType(status?: string): ButtonType | undefined {
+function statusToType(status?: string): ButtonType | 'danger' | undefined {
   switch (status) {
     case 'error':
       return 'danger';
@@ -145,7 +145,12 @@ const FileRender: React.FC<FileRenderProps> = ({
       >
         <Button
           disabled={disabled}
-          type={statusToType(file.status)}
+          type={
+            statusToType(file.status) === 'danger'
+              ? 'primary'
+              : (statusToType(file.status) as ButtonType)
+          }
+          danger={statusToType(file.status) === 'danger'}
           onClick={e => {
             if (file.status !== 'error') {
               if (showUploadList) {

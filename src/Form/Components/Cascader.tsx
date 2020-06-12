@@ -18,14 +18,14 @@ import { CancellablePromise } from '../../typings';
 export interface CascaderProps
   extends Omit<AntCascaderProps, 'options' | 'value' | 'onChange'> {
   requestMethod?: (
-    fatherCode?: string,
+    fatherCode?: string | number,
   ) => CancellablePromise<CascaderOptionType[]>;
   /** 可选项数据源 */
   options?: CascaderOptionType[];
   value?: string;
   errorCallback?: (error: any, target?: CascaderOptionType[] | string) => void;
   onChange?: (
-    value: string | undefined,
+    value: string | number | undefined,
     selectedOptions?: CascaderOptionType[],
   ) => void;
   separator?: string;
@@ -270,7 +270,7 @@ const Cascader: React.FC<CascaderProps> = props => {
   }, [options, value, maxDept]);
 
   const handle = useCallback(
-    (v: string[], selectedOptions?: CascaderOptionType[]) => {
+    (v: (string | number)[], selectedOptions?: CascaderOptionType[]) => {
       setIsChange(true);
       if (onChange) {
         if (v.length > 0) {
