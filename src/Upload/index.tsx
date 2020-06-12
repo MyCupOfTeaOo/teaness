@@ -1,5 +1,6 @@
 import React, { useCallback, useMemo, useRef, useEffect } from 'react';
 import AntUpload, { UploadChangeParam } from 'antd/lib/upload';
+import MaskModal from '@material-ui/core/Modal';
 import { UploadFile } from 'antd/lib/upload/interface';
 import { message, Modal } from 'antd';
 import { Circle } from '../Spin';
@@ -7,6 +8,7 @@ import { useValue, useMound } from '../hooks';
 import { UploadProps, ProgressStatus } from './typings';
 import UploadProgress from './UploadProgress';
 import MyFileRender from './FileRender';
+import './styles.scss';
 
 const Upload: React.FC<UploadProps> = props => {
   const {
@@ -296,7 +298,12 @@ const Upload: React.FC<UploadProps> = props => {
           ? children
           : undefined}
       </AntUpload>
-      <UploadProgress progresses={progresses.value} />
+      <MaskModal
+        open={progresses.value.length > 0}
+        className="tea-progress-mask"
+      >
+        <UploadProgress progresses={progresses.value} />
+      </MaskModal>
     </>
   );
 };

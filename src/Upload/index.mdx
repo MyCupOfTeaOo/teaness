@@ -4,9 +4,10 @@ route: /upload
 menu: Form Component
 ---
 
+import { useState, useEffect } from 'react';
 import { Playground, Props } from 'docz';
 import { Button } from 'antd';
-import Upload from '.';
+import Upload, { UploadProgress } from '.';
 import 'antd/dist/antd.css';
 
 # Upload(上传)
@@ -18,6 +19,82 @@ import 'antd/dist/antd.css';
       上传
     </Button>
   </Upload>
+  <Upload listType="picture">
+    <Button>
+      上传
+    </Button>
+  </Upload>
+  <Upload listType="file-info">
+    <Button>
+      上传
+    </Button>
+  </Upload>
+
+</Playground>
+
+## 上传动画
+
+<Playground>
+  {
+    () => {
+      const [count, setCount] = useState(0)
+      const [state, setState] = useState([{
+        name: "test.txt",
+        percent: 20,
+        uid: "1",
+        status: "updating"
+      },{
+        name: "test2.txt",
+        percent: 0,
+        uid: "2",
+        status: "updating"
+      }])
+      useEffect(() => {
+        setState([{
+          name: "test.txt",
+          percent: 0,
+          uid: "1",
+          status: "updating"
+        },{
+          name: "test2.txt",
+          percent: 0,
+          uid: "2",
+          status: "updating"
+        }])
+        let isCancel = false;
+        function go() {
+          setTimeout(() => {
+            setState(prev => {
+              if (isCancel) return
+              prev.forEach(item => {
+                Object.assign(item, {
+                  ...item,
+                  percent: item.percent + 1 > 100 ? 100 : item.percent + 1
+                })
+              })
+              if (prev.some(item => item.percent < 100)) {
+                go()
+              }
+              return [...prev]
+            })
+          },100)
+        }
+        go();
+        () => {
+          isCancel = true
+        }
+      },[count])
+      return (
+        <div style={{
+          padding: 24,
+          backgroundColor: "rgba(0, 0, 0, 0.5)"
+        }}>
+          <Button onClick={() => setCount(prev => prev + 1)}>refresh</Button>
+          <UploadProgress progresses={state}/>
+        </div>
+      )
+    }
+  }
 </Playground>
 
 ## 属性(Properties)

@@ -90,6 +90,7 @@
   "license": "MIT",
   "dependencies": {
     "@material-ui/core": "^4.10.1",
+    "@material-ui/icons": "^4.9.1",
     "@types/lodash-es": "^4.17.3",
     "@types/numeral": "0.0.28",
     "ag-grid-community": "^23.0.2",
@@ -97,6 +98,7 @@
     "antd": "^4.1.0",
     "async-validator": "^3.2.4",
     "classnames": "^2.2.6",
+    "framer-motion": "^1.11.0",
     "lodash-es": "^4.17.15",
     "mobx": "^5.14.2",
     "mobx-react": "^6.1.4",
