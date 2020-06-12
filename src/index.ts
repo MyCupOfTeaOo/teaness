@@ -18,6 +18,7 @@ export * from './Transfer';
 export * from './Show';
 export * from './PictureView';
 export * from './Label';
+export * from './Upload';
 export {
   Show,
   FooterToolbar,

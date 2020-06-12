@@ -81,6 +81,12 @@ $disabled-back-color: rgba(
   $alpha: 0.08,
 );
 
+$padding: 24px;
+$small-padding: 12px;
+$tiny-padding: 6px;
+$large-padding: 48px;
+$big-padding: 120px;
+
 .form-error {
   .ant-input {
     border-color: $red-9;

@@ -1,6 +1,6 @@
 {
   "name": "teaness",
-  "version": "4.0.17",
+  "version": "4.1.0",
   "main": "./es/index.js",
   "module": "./es/index.js",
   "authors": [
@@ -89,6 +89,7 @@
   ],
   "license": "MIT",
   "dependencies": {
+    "@material-ui/core": "^4.10.1",
     "@types/lodash-es": "^4.17.3",
     "ag-grid-community": "^23.0.2",
     "ag-grid-react": "^23.0.3",

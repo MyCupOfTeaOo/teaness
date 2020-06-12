@@ -9,6 +9,7 @@ menu: 'Getting Started'
 [![NPM version](https://img.shields.io/npm/v/teaness.svg)](https://img.shields.io/npm/v/teaness.svg)
 [![Dependency Status](https://img.shields.io/david/MyCupOfTeaOo/teaness)](https://img.shields.io/david/MyCupOfTeaOo/teaness)
 [![react-version](https://img.shields.io/npm/dependency-version/teaness/react)](https://img.shields.io/npm/dependency-version/teaness/react)
+[![antd-version](https://img.shields.io/npm/dependency-version/teaness/@material-ui/core)](https://img.shields.io/npm/dependency-version/teaness/@material-ui/core)
 [![antd-version](https://img.shields.io/npm/dependency-version/teaness/antd)](https://img.shields.io/npm/dependency-version/teaness/antd)
 [![mobx-version](https://img.shields.io/npm/dependency-version/teaness/mobx)](https://img.shields.io/npm/dependency-version/teaness/mobx)
 [![async-validator-version](https://img.shields.io/npm/dependency-version/teaness/async-validator)](https://img.shields.io/npm/dependency-version/teaness/async-validator)

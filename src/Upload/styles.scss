@@ -1,0 +1,54 @@
+@import '../global.scss';
+
+.tea-progress-layout {
+  max-width: 400px;
+  margin: auto;
+  margin-top: 50%;
+  transform: translateY(-100%);
+  display: flex;
+  flex-direction: column;
+  border-radius: 12px;
+  background-color: $component-background;
+  padding: 0 0 $padding;
+  .tea-progress-title {
+    padding: $small-padding $padding;
+    font-size: 18px;
+    font-weight: 600;
+  }
+  .tea-progress-progress-item {
+    flex: auto;
+    display: flex;
+    flex-direction: column;
+    padding: 0 $padding;
+    overflow: hidden;
+    margin-bottom: $small-padding;
+  }
+  .tea-progress-progress-header {
+    display: flex;
+    $line-height: 28px;
+    .tea-progress-progress-fileName {
+      font-weight: 500;
+      font-size: 18px;
+      flex: 1 1 auto;
+      display: inline-block;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      align-items: center;
+      display: block;
+      line-height: $line-height;
+      padding-right: $padding;
+    }
+    .tea-progress-progress-percent {
+      display: block;
+      flex: 0 0 auto;
+      line-height: $line-height;
+    }
+  }
+
+  .tea-progress-progress-progress {
+    margin-top: $small-padding;
+    height: 2px;
+    width: 100%;
+  }
+}

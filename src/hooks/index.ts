@@ -78,11 +78,11 @@ export function useValue(
   }, []);
   const [value, setValue] = useState(myInitialState);
   const proxyTarget = useMemo(() => {
-    return new Proxy(
+    const proxy = new Proxy(
       {
         value,
         setValue(v: typeof value) {
-          this.value = v;
+          proxy.value = v;
         },
       },
       {
@@ -102,6 +102,17 @@ export function useValue(
         },
       },
     );
+    return proxy;
   }, []);
   return proxyTarget;
+}
+
+export function useMound() {
+  const mound = useRef(true);
+  useEffect(() => {
+    return () => {
+      mound.current = false;
+    };
+  }, []);
+  return mound;
 }
