@@ -267,7 +267,9 @@ const Upload: React.FC<UploadProps> = props => {
         fileList={fileListValue.value}
         {...rest}
       >
-        {children}
+        {!max || max > (fileListValue.value?.length || 0)
+          ? children
+          : undefined}
       </AntUpload>
       <UploadProgress progresses={progresses.value} />
     </>
