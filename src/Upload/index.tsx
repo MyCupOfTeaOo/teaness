@@ -4,10 +4,10 @@ import { UploadFile } from 'antd/lib/upload/interface';
 import { message, Modal } from 'antd';
 import { Circle } from '../Spin';
 import { useValue, useMound } from '../hooks';
-import { MyUploadProps, ProgressStatus } from './typings';
+import { UploadProps, ProgressStatus } from './typings';
 import UploadProgress from './UploadProgress';
 
-const Myupload: React.FC<MyUploadProps> = props => {
+const Upload: React.FC<UploadProps> = props => {
   const {
     value,
     onChange,
@@ -274,7 +274,7 @@ const Myupload: React.FC<MyUploadProps> = props => {
   );
 };
 
-Myupload.defaultProps = {
+Upload.defaultProps = {
   loading: (
     <div style={{ display: 'flex', alignItems: 'center' }}>
       <Circle style={{ width: 24 }} />
@@ -290,4 +290,4 @@ Myupload.defaultProps = {
 
 export { UploadProgress };
 
-export default Myupload;
+export default Upload;

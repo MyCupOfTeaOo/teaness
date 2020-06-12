@@ -1,4 +1,4 @@
-import { UploadProps } from 'antd/lib/upload';
+import { UploadProps as AntUploadProps } from 'antd/lib/upload';
 import { UploadFile, UploadChangeParam } from 'antd/lib/upload/interface';
 import { CancellablePromise } from '../typings';
 
@@ -9,8 +9,8 @@ export interface ProgressStatus {
   percent: number;
 }
 
-export interface MyUploadProps
-  extends Omit<UploadProps, 'onChange' | 'fileList'> {
+export interface UploadProps
+  extends Omit<AntUploadProps, 'onChange' | 'fileList'> {
   children?: React.ReactNode;
   value?: string;
   onChange?: (value: string | undefined) => void;
