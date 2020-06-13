@@ -51,10 +51,10 @@ import 'antd/dist/antd.css';
 
 ## file-info模式
 
->该模式下开启重新上传需要传入id
+>该模式下 重新上传直接点击选择文件 需要传入id
 
 <Playground>
-  <Upload listType="file-info" id="fileInfo" onUpload={() => Promise.reject(new Error("test"))}>
+  <Upload max={1} listType="file-info" id="fileInfo" onUpload={() => Promise.reject(new Error("test"))}>
     <Button>
       上传
     </Button>

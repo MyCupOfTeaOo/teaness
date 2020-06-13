@@ -269,6 +269,7 @@ const Upload: React.FC<UploadProps> = props => {
       <AntUpload
         beforeUpload={beforeUpload}
         onChange={myChange}
+        data-id={rest.id}
         fileList={fileListValue.value}
         listType={listType === 'file-info' ? undefined : listType}
         {...rest}
