@@ -32,6 +32,33 @@ import 'antd/dist/antd.css';
 
 </Playground>
 
+## 控制上传数量
+<Playground>
+  <Upload max={1} listType="picture-card">
+    <Button>
+      上传
+    </Button>
+  </Upload>
+</Playground>
+
+## 控制上传文件大小
+<Playground>
+  <Upload maxSize={1} listType="picture-card">
+    <Button>
+      上传
+    </Button>
+  </Upload>
+</Playground>
+
+## 自定义文件列表渲染
+<Playground>
+  <Upload onUpload={(file) => Promise.resolve(file)} FileRender={({file}) => (<div><strong>{file.name}</strong></div>)}>
+    <Button>
+      上传
+    </Button>
+  </Upload>
+</Playground>
+
 ## 上传动画
 
 <Playground>
@@ -67,9 +94,10 @@ import 'antd/dist/antd.css';
             setState(prev => {
               if (isCancel) return
               prev.forEach(item => {
+                const diff = Math.floor(Math.random() * 10)
                 Object.assign(item, {
                   ...item,
-                  percent: item.percent + 2 > 100 ? 100 : item.percent + 2
+                  percent: Math.min(item.percent + diff,100)
                 })
               })
               if (prev.some(item => item.percent < 100)) {
@@ -77,11 +105,12 @@ import 'antd/dist/antd.css';
               }
               return [...prev]
             })
-          },144)
+          },Math.floor(Math.random() * 1000))
         }
-        go();
+        const time = setTimeout(go,200);
         () => {
-          isCancel = true
+          clearTimeout(time);
+          isCancel = true;
         }
       },[count])
       return (

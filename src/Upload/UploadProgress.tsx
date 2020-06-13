@@ -14,6 +14,8 @@ export interface UploadProgressProps {
   progresses: ProgressStatus[];
 }
 
+export interface UploadProgressRef extends HTMLDivElement {}
+
 const useStyles = makeStyles({
   percent: (percent: number) => ({
     '--percent': percent,
@@ -42,7 +44,10 @@ const variant: Variants = {
   },
 };
 
-const UploadProgress: React.FC<UploadProgressProps> = ({ progresses }) => {
+const UploadProgress: React.ForwardRefRenderFunction<
+  UploadProgressRef,
+  UploadProgressProps
+> = ({ progresses }, ref) => {
   const [open, setOpen] = useState(false);
   const avgPercent =
     Math.floor(
@@ -54,6 +59,8 @@ const UploadProgress: React.FC<UploadProgressProps> = ({ progresses }) => {
   const isSuccess = progresses.every(item => item.percent >= 100);
   return (
     <div
+      ref={ref}
+      tabIndex={-1}
       className={classnames('tea-progress-layout', styles.percent, {
         'tea-progress-open': open,
       })}
@@ -140,4 +147,4 @@ const UploadProgress: React.FC<UploadProgressProps> = ({ progresses }) => {
   );
 };
 
-export default UploadProgress;
+export default React.forwardRef(UploadProgress);

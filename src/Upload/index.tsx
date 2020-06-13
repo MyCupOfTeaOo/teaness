@@ -264,7 +264,6 @@ const Upload: React.FC<UploadProps> = props => {
   if (loadingValue.value) {
     return <>{loading}</>;
   }
-
   return (
     <>
       <AntUpload
@@ -275,29 +274,27 @@ const Upload: React.FC<UploadProps> = props => {
         {...rest}
         showUploadList={FileRender ? false : showUploadList}
       >
-        {FileRender &&
-          fileListValue.value?.map(file => (
-            <FileRender
-              file={file}
-              key={file.uid}
-              disabled={rest.disabled}
-              onDelete={() => {
-                // eslint-disable-next-line
-                file.status = 'removed';
-                myChange({
-                  file,
-                  fileList: fileListValue.value || [],
-                });
-              }}
-              onPreview={rest.onPreview}
-              onDownLoad={rest.onDownLoad}
-              showUploadList={showUploadList}
-            />
-          ))}
-        {!max || max > (fileListValue.value?.length || 0)
-          ? children
-          : undefined}
+        {!max || max > (fileListValue.value?.length || 0) ? children : null}
       </AntUpload>
+      {FileRender &&
+        fileListValue.value?.map(file => (
+          <FileRender
+            file={file}
+            key={file.uid}
+            disabled={rest.disabled}
+            onDelete={() => {
+              // eslint-disable-next-line
+              file.status = 'removed';
+              myChange({
+                file,
+                fileList: fileListValue.value || [],
+              });
+            }}
+            onPreview={rest.onPreview}
+            onDownLoad={rest.onDownLoad}
+            showUploadList={showUploadList}
+          />
+        ))}
       <MaskModal
         open={progresses.value.length > 0}
         className="tea-progress-mask"

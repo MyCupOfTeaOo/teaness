@@ -27,13 +27,7 @@ const FileRender: React.FC<FileRenderProps> = ({
   showUploadList,
 }) => {
   return (
-    <div
-      onClick={e => {
-        if (((e.target as any)?.type as string) !== 'button') {
-          e.stopPropagation();
-        }
-      }}
-    >
+    <div>
       <Popover
         trigger="hover"
         title={
@@ -52,9 +46,8 @@ const FileRender: React.FC<FileRenderProps> = ({
                   size="small"
                   type="primary"
                   ghost
-                  onClick={e => {
+                  onClick={() => {
                     onPreview?.(file);
-                    e.stopPropagation();
                   }}
                 >
                   预览
@@ -71,9 +64,8 @@ const FileRender: React.FC<FileRenderProps> = ({
                 <Button
                   type="primary"
                   size="small"
-                  onClick={e => {
+                  onClick={() => {
                     onDownLoad?.(file);
-                    e.stopPropagation();
                   }}
                 >
                   下载
@@ -92,11 +84,10 @@ const FileRender: React.FC<FileRenderProps> = ({
                   type="primary"
                   danger
                   size="small"
-                  onClick={e => {
+                  onClick={() => {
                     // eslint-disable-next-line
                     file.status = 'removed';
                     onDelete();
-                    e.stopPropagation();
                   }}
                 >
                   删除
@@ -151,7 +142,7 @@ const FileRender: React.FC<FileRenderProps> = ({
               : (statusToType(file.status) as ButtonType)
           }
           danger={statusToType(file.status) === 'danger'}
-          onClick={e => {
+          onClick={() => {
             if (file.status !== 'error') {
               if (showUploadList) {
                 if (isObject(showUploadList)) {
@@ -164,7 +155,6 @@ const FileRender: React.FC<FileRenderProps> = ({
                   onPreview?.(file);
                 }
               }
-              e.stopPropagation();
             }
           }}
         >
