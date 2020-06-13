@@ -29,7 +29,6 @@ import 'antd/dist/antd.css';
       上传
     </Button>
   </Upload>
-
 </Playground>
 
 ## 控制上传数量
@@ -44,6 +43,18 @@ import 'antd/dist/antd.css';
 ## 控制上传文件大小
 <Playground>
   <Upload maxSize={1} listType="picture-card">
+    <Button>
+      上传
+    </Button>
+  </Upload>
+</Playground>
+
+## file-info模式
+
+>该模式下开启重新上传需要传入id
+
+<Playground>
+  <Upload listType="file-info" id="fileInfo" onUpload={() => Promise.reject(new Error("test"))}>
     <Button>
       上传
     </Button>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Button, Popover } from 'antd';
 import numeral from 'numeral';
 import { ButtonType } from 'antd/lib/button';
@@ -19,6 +19,7 @@ function statusToType(status?: string): ButtonType | 'danger' | undefined {
 }
 
 const FileRender: React.FC<FileRenderProps> = ({
+  id,
   disabled,
   onDelete,
   file,
@@ -26,6 +27,16 @@ const FileRender: React.FC<FileRenderProps> = ({
   onPreview,
   showUploadList,
 }) => {
+  useEffect(() => {
+    const target = document.querySelector(`#${id}`) as HTMLElement | undefined;
+    function change() {
+      onDelete();
+    }
+    if (target) {
+      target.addEventListener('change', change);
+      return () => target.removeEventListener('change', change);
+    }
+  }, [id]);
   return (
     <div>
       <Popover
@@ -155,6 +166,11 @@ const FileRender: React.FC<FileRenderProps> = ({
                   onPreview?.(file);
                 }
               }
+            } else if (id) {
+              const target = document.querySelector(`#${id}`) as
+                | HTMLElement
+                | undefined;
+              target?.click();
             }
           }}
         >

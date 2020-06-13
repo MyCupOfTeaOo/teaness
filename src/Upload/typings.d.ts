@@ -15,6 +15,7 @@ export interface ProgressStatus {
 }
 
 export interface FileRenderProps {
+  id?: string;
   file: UploadFile;
   disabled?: boolean;
   onDelete(): void;

@@ -279,6 +279,7 @@ const Upload: React.FC<UploadProps> = props => {
       {FileRender &&
         fileListValue.value?.map(file => (
           <FileRender
+            id={props.id}
             file={file}
             key={file.uid}
             disabled={rest.disabled}

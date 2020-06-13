@@ -1,6 +1,6 @@
 {
   "name": "teaness",
-  "version": "4.1.7",
+  "version": "4.1.8",
   "main": "./es/index.js",
   "module": "./es/index.js",
   "authors": [
@@ -59,7 +59,7 @@
     "gulp-typescript": "^6.0.0-alpha.1",
     "husky": "^3.0.9",
     "inquirer": "^7.0.0",
-    "lint-staged": "^9.4.2",
+    "lint-staged": "^9.5.0",
     "node-sass": "^4.14.1",
     "prettier": "^1.19.1",
     "prettier-eslint": "^9.0.0",
