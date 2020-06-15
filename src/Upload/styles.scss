@@ -28,6 +28,7 @@ $line-height: 28px;
   & > * {
     z-index: 1;
   }
+  $progress-transition: background 0.6s ease, transform 0.16s linear;
   .tea-progress-back {
     z-index: 0;
     background: #f5f9ff;
@@ -38,8 +39,7 @@ $line-height: 28px;
     right: 0;
     transform-origin: 0 50%;
     overflow: hidden;
-    transition: background 0.6s ease, transform 0.16s ease;
-    transform: scaleX(calc(var(--percent) / 100));
+    transition: $progress-transition;
   }
   .tea-progress-title {
     padding: 0 $padding;
@@ -101,8 +101,7 @@ $line-height: 28px;
       width: 100%;
       background-color: #5628ee;
       transform-origin: 0 50%;
-      transform: scaleX(calc(var(--percent) / 100));
-      transition: background 0.6s ease, transform 0.16s ease;
+      transition: $progress-transition;
     }
   }
 }

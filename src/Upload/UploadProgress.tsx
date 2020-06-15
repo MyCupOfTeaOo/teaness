@@ -3,7 +3,6 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import IconButton from '@material-ui/core/IconButton';
 import UnfoldLessIcon from '@material-ui/icons/UnfoldLess';
 import UnfoldMoreIcon from '@material-ui/icons/UnfoldMore';
-import { makeStyles } from '@material-ui/core';
 import DoneIcon from '@material-ui/icons/Done';
 import { motion, AnimatePresence, Variants } from 'framer-motion';
 import classnames from 'classnames';
@@ -15,12 +14,6 @@ export interface UploadProgressProps {
 }
 
 export interface UploadProgressRef extends HTMLDivElement {}
-
-const useStyles = makeStyles({
-  percent: (percent: number) => ({
-    '--percent': percent,
-  }),
-});
 
 const variant: Variants = {
   enter: {
@@ -55,13 +48,12 @@ const UploadProgress: React.ForwardRefRenderFunction<
         progresses.length) *
         10,
     ) / 10;
-  const styles = useStyles(avgPercent);
   const isSuccess = progresses.every(item => item.percent >= 100);
   return (
     <div
       ref={ref}
       tabIndex={-1}
-      className={classnames('tea-progress-layout', styles.percent, {
+      className={classnames('tea-progress-layout', {
         'tea-progress-open': open,
       })}
     >
@@ -69,6 +61,9 @@ const UploadProgress: React.ForwardRefRenderFunction<
         className={classnames({
           'tea-progress-back': !open,
         })}
+        style={{
+          transform: `scaleX(${avgPercent / 100})`,
+        }}
       />
 
       <div className="tea-progress-title">
@@ -111,7 +106,12 @@ const UploadProgress: React.ForwardRefRenderFunction<
       </div>
       {!isSuccess && !open && (
         <div className="tea-progress-progress-progress">
-          <div className="fill" />
+          <div
+            className="fill"
+            style={{
+              transform: `scaleX(${avgPercent / 100})`,
+            }}
+          />
         </div>
       )}
       <AnimatePresence>
