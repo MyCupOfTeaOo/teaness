@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useRef } from 'react';
 import { Button, Popover } from 'antd';
 import numeral from 'numeral';
 import { ButtonType } from 'antd/lib/button';
@@ -27,16 +27,7 @@ const FileRender: React.FC<FileRenderProps> = ({
   onPreview,
   showUploadList,
 }) => {
-  useEffect(() => {
-    const target = document.querySelector(`#${id}`) as HTMLElement | undefined;
-    function change() {
-      onDelete();
-    }
-    if (target) {
-      target.addEventListener('change', change);
-      return () => target.removeEventListener('change', change);
-    }
-  }, [id]);
+  const ref = useRef<HTMLButtonElement>(null);
   return (
     <div>
       <Popover
@@ -146,6 +137,7 @@ const FileRender: React.FC<FileRenderProps> = ({
         }
       >
         <Button
+          ref={ref}
           disabled={disabled}
           type={
             statusToType(file.status) === 'danger'
@@ -166,11 +158,16 @@ const FileRender: React.FC<FileRenderProps> = ({
                   onPreview?.(file);
                 }
               }
-            } else if (id) {
-              const target = document.querySelector(`#${id}`) as
-                | HTMLElement
-                | undefined;
-              target?.click();
+            } else {
+              if (id) {
+                const target = document.querySelector(
+                  `input[data-id=${id}]`,
+                ) as HTMLElement | undefined;
+                if (target) {
+                  target.click();
+                }
+              }
+              onDelete();
             }
           }}
         >
