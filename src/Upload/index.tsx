@@ -36,10 +36,14 @@ const Upload: React.FC<UploadProps> = props => {
   const fileListValue = useValue<UploadFile[]>();
   const checkRegexp = useMemo(() => {
     if (props.accept) {
-      return new RegExp(
-        props.accept.replace(/\*|^\.|(?<=,)./g, '.*').replace(/,/g, '|'),
-        'i',
-      );
+      try {
+        return new RegExp(
+          props.accept.replace(/\*|^\.|(?<=,)./g, '.*').replace(/,/g, '|'),
+          'i',
+        );
+      } catch (err) {
+        console.warn(err);
+      }
     }
   }, [props.accept]);
   const myChange = useCallback(
