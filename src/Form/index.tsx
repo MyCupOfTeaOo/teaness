@@ -1,12 +1,17 @@
 import React from 'react';
-import { Row } from '../Grid';
 import { RowProps } from '../Grid/typings';
 import { FormStore } from './store';
 import Autowired from './Context/Autowired';
 import FormContext from './Context/FormContext';
 import Item from './Item';
 import { LabelProps } from '../Label/typings';
-import { LabelContext } from '../Label/Context';
+import Layout, {
+  vertical,
+  horizontal,
+  oneline,
+  login,
+  inline,
+} from './Components/Utils/Layout';
 
 export interface FormProps<T>
   extends React.DetailedHTMLProps<
@@ -31,18 +36,16 @@ function Form<T>(props: FormProps<T>) {
       }}
       {...rest}
     >
-      <LabelContext.Provider value={layout?.label}>
-        <Row {...layout?.row}>
-          <FormContext.Provider
-            value={{
-              store,
-              showError,
-            }}
-          >
-            {children}
-          </FormContext.Provider>
-        </Row>
-      </LabelContext.Provider>
+      <Layout layout={layout}>
+        <FormContext.Provider
+          value={{
+            store,
+            showError,
+          }}
+        >
+          {children}
+        </FormContext.Provider>
+      </Layout>
     </form>
   );
 }
@@ -59,139 +62,13 @@ function Form<T>(props: FormProps<T>) {
   },
 };
 
-export const vertical: {
-  row?: RowProps;
-  label?: LabelProps;
-} = {
-  row: {
-    align: 'middle',
-    gutter: [6, 24],
-    style: {
-      marginBottom: -12,
-    },
-  },
-  label: {
-    float: 'left',
-    colProps: {
-      span: 24,
-    },
-  },
-};
-
-export const horizontal: {
-  row?: RowProps;
-  label?: LabelProps;
-} = {
-  row: {
-    align: 'middle',
-    gutter: [6, 24],
-    style: {
-      marginBottom: -12,
-    },
-  },
-  label: {
-    float: 'right',
-    labelStyle: {
-      minWidth: '40%',
-      width: 'fit-content',
-      paddingRight: 8,
-    },
-    colProps: {
-      style: {
-        display: 'flex',
-        alignItems: 'center',
-      },
-      xs: { span: 24 },
-      md: { span: 12 },
-      lg: { span: 8 },
-      xl: { span: 8 },
-    },
-  },
-};
-
-export const oneline: {
-  row?: RowProps;
-  label?: LabelProps;
-} = {
-  row: {
-    align: 'middle',
-    gutter: [6, 24],
-  },
-  label: {
-    float: 'right',
-    labelStyle: {
-      minWidth: '40%',
-      width: 'fit-content',
-      paddingRight: 8,
-    },
-    childStyle: {
-      maxWidth: 300,
-    },
-    colProps: {
-      style: {
-        display: 'flex',
-        alignItems: 'center',
-      },
-      xs: { span: 24 },
-    },
-  },
-};
-
-export const inline: {
-  row?: RowProps;
-  label?: LabelProps;
-} = {
-  row: {
-    align: 'middle',
-    gutter: [6, 24],
-    style: {
-      marginBottom: -12,
-    },
-  },
-
-  label: {
-    labelStyle: {
-      paddingRight: 8,
-    },
-    float: 'right',
-    colProps: {
-      style: {
-        display: 'flex',
-        alignItems: 'center',
-      },
-    },
-  },
-};
-
-export const login: {
-  row?: RowProps;
-  label?: LabelProps;
-} = {
-  row: {
-    align: 'middle',
-    gutter: [6, 24],
-    style: {
-      marginBottom: -12,
-    },
-  },
-  label: {
-    colProps: {
-      span: 24,
-      style: {
-        display: 'flex',
-        width: '100%',
-      },
-    },
-  },
-};
-
 Form.vertical = vertical;
 Form.horizontal = horizontal;
 Form.inline = inline;
 Form.oneline = oneline;
 Form.login = login;
 
-export { Autowired, Item };
+export { Autowired, Item, Layout };
 export * from './hooks';
 
 export default Form;

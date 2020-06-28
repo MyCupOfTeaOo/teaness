@@ -1,0 +1,215 @@
+---
+name: Layout(表单布局)
+route: /Layout
+menu: Form Component
+---
+
+import { useMemo, useState } from 'react';
+import { Playground, Props } from 'docz';
+import 'antd/dist/antd.css';
+import { Input, Radio } from 'antd';
+import Layout, {
+  maskLayout,
+  vertical,
+  horizontal,
+  oneline,
+  login,
+  inline,
+} from './Layout';
+import Label from '../../../Label';
+
+# Layout(表单布局)
+
+## 基本用法(Basic usage)
+
+<Playground>
+  <h3>default: </h3>
+  <Layout>
+    <Label text="姓名1">
+      <Input />
+    </Label>
+    <Label text="姓名2">
+      <Input />
+    </Label>
+    <Label text="姓名3">
+      <Input />
+    </Label>
+  </Layout>
+  <h3>vertical: </h3>
+  <Layout layout={vertical}>
+    <Label text="姓名1">
+      <Input />
+    </Label>
+    <Label text="姓名2">
+      <Input />
+    </Label>
+    <Label text="姓名3">
+      <Input />
+    </Label>
+  </Layout>
+  <h3>horizontal: </h3>
+  <Layout layout={horizontal}>
+    <Label text="姓名1">
+      <Input />
+    </Label>
+    <Label text="姓名2">
+      <Input />
+    </Label>
+    <Label text="姓名3">
+      <Input />
+    </Label>
+  </Layout>
+  <h3>oneline: </h3>
+  <Layout layout={oneline}>
+    <Label text="姓名1">
+      <Input />
+    </Label>
+    <Label text="姓名2">
+      <Input />
+    </Label>
+    <Label text="姓名3">
+      <Input />
+    </Label>
+  </Layout>
+  <h3>login: </h3>
+  <Layout layout={login}>
+    <Label text="姓名1">
+      <Input />
+    </Label>
+    <Label text="姓名2">
+      <Input />
+    </Label>
+    <Label text="姓名3">
+      <Input />
+    </Label>
+  </Layout>
+  <h3>inline: </h3>
+  <Layout layout={inline}>
+    <Label text="姓名1">
+      <Input />
+    </Label>
+    <Label text="姓名2">
+      <Input />
+    </Label>
+    <Label text="姓名3">
+      <Input />
+    </Label>
+  </Layout>
+</Playground>
+
+## 属性(Properties)
+
+<Props of={Layout} />
+
+# maskLayout
+
+> 一个布局工具类,帮助简单合并布局
+
+## 基本用法(Basic usage)
+
+export const layout = maskLayout(
+  horizontal,
+  {
+    label: {
+      float: 'left',
+      labelStyle: {
+        minWidth: 100,
+        paddingRight: 24,
+      },
+    },
+  },
+  { depth: true },
+);
+
+<div style={{ padding: 24 }}>
+  <Layout layout={layout}>
+    <Label text="姓名1">
+      <Input />
+    </Label>
+    <Label text="姓名2">
+      <Input />
+    </Label>
+    <Label text="姓名3">
+      <Input />
+    </Label>
+  </Layout>
+</div>
+
+```tsx
+export const layout = maskLayout(
+  horizontal,
+  {
+    label: {
+      float: 'left',
+      labelStyle: {
+        minWidth: 100,
+        paddingRight: 24,
+      },
+    },
+  },
+  { depth: true },
+);
+
+<Layout layout={layout}>
+  <Label text="姓名1">
+    <Input />
+  </Label>
+  <Label text="姓名2">
+    <Input />
+  </Label>
+  <Label text="姓名3">
+    <Input />
+  </Label>
+</Layout>;
+```
+
+## 参数模版
+
+<Playground>
+  {() => {
+    // 该代码应该定义在外面,此处只是为了演示把该步骤放在了useMemo里
+    const useLayout = useMemo(() =>  maskLayout(
+      horizontal,
+      (float) => ({
+        label: {
+          float,
+          labelStyle: {
+            minWidth: 100,
+            paddingRight: 24,
+          },
+        },
+      }),
+      { depth: true },
+    ))
+    const [float, setFloat] = useState("left")
+
+    const layout = useLayout(float);
+    return (
+      <div>
+        <Radio.Group buttonStyle="solid" value={float} onChange={(e) => setFloat(e.target.value)}>
+          <Radio.Button value="left">
+            left
+          </Radio.Button>
+          <Radio.Button value="right">
+            right
+          </Radio.Button>
+        </Radio.Group>
+        <Layout layout={layout}>
+          <Label text="姓名1">
+            <Input />
+          </Label>
+          <Label text="姓名2">
+            <Input />
+          </Label>
+          <Label text="姓名3">
+            <Input />
+          </Label>
+        </Layout>
+      </div>
+    );
+  }}
+</Playground>
+
+## 属性(Properties)
+
+<Props of={maskLayout} />
