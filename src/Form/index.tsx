@@ -69,6 +69,7 @@ Form.inline = inline;
 Form.oneline = oneline;
 Form.login = login;
 
+export { vertical, horizontal, inline, oneline, login };
 export { Autowired, Item, Layout, maskLayout };
 export * from './hooks';
 
