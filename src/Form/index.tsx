@@ -11,6 +11,7 @@ import Layout, {
   oneline,
   login,
   inline,
+  maskLayout,
 } from './Components/Utils/Layout';
 
 export interface FormProps<T>
@@ -68,7 +69,7 @@ Form.inline = inline;
 Form.oneline = oneline;
 Form.login = login;
 
-export { Autowired, Item, Layout };
+export { Autowired, Item, Layout, maskLayout };
 export * from './hooks';
 
 export default Form;
