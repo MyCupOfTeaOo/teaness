@@ -65,7 +65,7 @@ export default {
     }),
   ],
   filterComponents: files =>
-    files.filter(filepath => /[w-]*.(js|jsx|ts|tsx)$/.test(filepath)),
+    files.filter(filepath => /[\w-]*.(js|jsx|ts|tsx)$/.test(filepath)),
   modifyBabelRc: babelrc => {
     // 需放 class-properties 前面
     babelrc.plugins.unshift([
