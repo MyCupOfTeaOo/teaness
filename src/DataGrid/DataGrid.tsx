@@ -89,6 +89,10 @@ export interface DataGridProps
    * 首次渲染是否请求,默认为true
    */
   firstLoad?: boolean;
+  /**
+   * 附带的请求头
+   */
+  headers?: any;
 }
 
 export function getLocationGridInit<T>(
@@ -198,6 +202,9 @@ const DataGridCom: React.ForwardRefRenderFunction<
       const res = (props.request || DataGridRegister.request)(
         props.fetchUrl,
         searchProps,
+        {
+          headers: props.headers,
+        },
       );
       res
         .then(data => {
@@ -239,7 +246,7 @@ const DataGridCom: React.ForwardRefRenderFunction<
         });
       return res.cancel;
     },
-    [props.fetchUrl],
+    [props.fetchUrl, props.headers],
   );
 
   useEffect(() => {

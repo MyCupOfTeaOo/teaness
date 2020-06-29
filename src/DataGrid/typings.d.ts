@@ -37,6 +37,9 @@ export type RequestMethod<
 > = (
   url: string,
   payload: RequestData<T>,
+  options?: {
+    headers: any;
+  },
 ) => CancellablePromise<ResponseData<T>>;
 
 export type Fetch<T> = CancellablePromise<ResponseData<T>>;
