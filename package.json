@@ -17,7 +17,7 @@
   "description": "a react business component library,example: https://blissful-blackwell-0e6e7c.netlify.com/",
   "scripts": {
     "dev": "docz dev",
-    "build:doc": "docz build",
+    "build:doc": "rimraf .docz && rimraf docs && docz build",
     "build": "father build",
     "build:all": "father build && docz build",
     "deploy": "node ./scripts/deploy.js",
