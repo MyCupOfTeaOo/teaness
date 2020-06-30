@@ -185,7 +185,9 @@ export function useForm<T = { [key: string]: any }>(store: FormStore<T>) {
     const FormHelp = (
       props: Omit<FormProps<T>, 'store'> & { store?: FormStore<T> },
     ) => <Form store={store} {...props} />;
-    const FormItemHelp = (props: ItemProps<T>) => <Item {...props} />;
+    const FormItemHelp = (props: ItemProps<T>) => (
+      <Item store={store} {...props} />
+    );
     return {
       Form: FormHelp,
       Item: FormItemHelp,
