@@ -23,7 +23,7 @@ const FileRender: React.FC<FileRenderProps> = ({
   disabled,
   onDelete,
   file,
-  onDownLoad,
+  onDownload,
   onPreview,
   showUploadList,
 }) => {
@@ -67,7 +67,7 @@ const FileRender: React.FC<FileRenderProps> = ({
                   type="primary"
                   size="small"
                   onClick={() => {
-                    onDownLoad?.(file);
+                    onDownload?.(file);
                   }}
                 >
                   下载
@@ -152,7 +152,7 @@ const FileRender: React.FC<FileRenderProps> = ({
                   if (showUploadList.showPreviewIcon) {
                     onPreview?.(file);
                   } else {
-                    onDownLoad?.(file);
+                    onDownload?.(file);
                   }
                 } else {
                   onPreview?.(file);

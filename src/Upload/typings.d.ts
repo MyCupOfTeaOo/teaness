@@ -19,7 +19,7 @@ export interface FileRenderProps {
   file: UploadFile;
   disabled?: boolean;
   onDelete(): void;
-  onDownLoad?(file: UploadFile): void;
+  onDownload?(file: UploadFile): void;
   onPreview?(file: UploadFile): void;
   showUploadList?: boolean | ShowUploadListInterface;
 }
@@ -66,7 +66,7 @@ export interface UploadProps
    * 下载文件的方法,覆盖默认的
    * @param file 文件
    */
-  onDownLoad?(file: UploadFile): void;
+  onDownload?(file: UploadFile): void;
   /**
    * 选择文件后触发
    * @param info 上传change信息

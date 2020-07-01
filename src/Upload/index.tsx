@@ -297,7 +297,7 @@ const Upload: React.FC<UploadProps> = props => {
               });
             }}
             onPreview={rest.onPreview}
-            onDownLoad={rest.onDownLoad}
+            onDownload={rest.onDownload}
             showUploadList={showUploadList}
           />
         ))}
