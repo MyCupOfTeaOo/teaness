@@ -1,6 +1,6 @@
 {
   "name": "teaness",
-  "version": "4.1.18",
+  "version": "4.1.19",
   "main": "./es/index.js",
   "module": "./es/index.js",
   "authors": [
@@ -93,6 +93,7 @@
     "@material-ui/icons": "^4.9.1",
     "@types/lodash-es": "^4.17.3",
     "@types/numeral": "0.0.28",
+    "@types/qs": "^6.9.3",
     "ag-grid-community": "^23.0.2",
     "ag-grid-react": "^23.0.3",
     "antd": "^4.1.0",
@@ -104,6 +105,7 @@
     "mobx-react": "^6.1.4",
     "moment": "^2.24.0",
     "numeral": "^2.0.6",
+    "qs": "^6.9.4",
     "querystring": "^0.2.0",
     "rc-queue-anim": "^1.8.2",
     "react": "^16.10.2",

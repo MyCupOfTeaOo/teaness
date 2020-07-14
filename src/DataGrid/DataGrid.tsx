@@ -11,8 +11,7 @@ import { Pagination, Modal } from 'antd';
 import { AgGridReact } from 'ag-grid-react/lib/agGridReact';
 import classNames from 'classnames';
 import { ColDef, GridApi } from 'ag-grid-community';
-import { stringify } from 'querystring';
-
+import { stringify } from 'qs';
 import { isObject } from 'lodash-es';
 import BaseGrid, { BaseGridProps } from './BaseGrid';
 import locale from './locale';

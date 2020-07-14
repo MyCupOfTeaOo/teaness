@@ -9,10 +9,7 @@ export interface RouteData {
 }
 
 export type Router = {
-  push: (path: string | RouteData) => void;
   replace: (path: string | RouteData) => void;
-  go: (count: number) => void;
-  goBack: () => void;
 };
 
 export interface ReqResponse {
