@@ -52,8 +52,8 @@ export type DataGridRef = {
     sorters?: Sorter[];
   }): void;
   getSearch(): {
-    page?: number;
-    pageSize?: number;
+    page: number;
+    pageSize: number;
     sorters?: Sorter[];
   };
   setSearch(search: {
