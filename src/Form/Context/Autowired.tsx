@@ -33,7 +33,7 @@ export interface AutowiredProps<
    * 注入的字段 Key,可以是字符串 或 字符串数组
    */
   id: P;
-  children?: React.ReactNode | AutowiredFuncChild;
+  children?: React.ReactElement | AutowiredFuncChild;
   /**
    * 数据注入props的名称 默认 value
    */
