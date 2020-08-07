@@ -10,10 +10,18 @@ export function useDataGrid<T extends { [key: string]: any }>(
     historyId?: string;
     // 默认查询参数
     defaultQueryData?: Partial<T>;
+    // 强制查询参数
+    defaultForceQueryData?: Partial<T>;
   } = {},
 ) {
-  const { location, historyId, defaultQueryData = {} } = options;
+  const {
+    location,
+    historyId,
+    defaultQueryData = {},
+    defaultForceQueryData = {},
+  } = options;
   const gridRef = useRef<DataGridRef>(null);
+  const forceQueryDataRef = useRef<Partial<T>>(defaultForceQueryData);
   const queryData = useMemo<Partial<T>>(() => {
     if (location && historyId) {
       return getLocationGridInit<Partial<T>>(
@@ -27,7 +35,10 @@ export function useDataGrid<T extends { [key: string]: any }>(
   }, []);
   const queryDataRef = useRef<Partial<T>>(queryData);
   const setQueryData = useCallback((data: Partial<T>) => {
-    queryDataRef.current = data;
+    queryDataRef.current = {
+      ...data,
+      ...forceQueryDataRef.current,
+    };
   }, []);
   return {
     gridProps: {
@@ -39,5 +50,6 @@ export function useDataGrid<T extends { [key: string]: any }>(
     gridRef,
     queryDataRef,
     setQueryData,
+    forceQueryDataRef,
   };
 }
