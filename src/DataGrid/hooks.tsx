@@ -40,6 +40,13 @@ export function useDataGrid<T extends { [key: string]: any }>(
       ...forceQueryDataRef.current,
     };
   }, []);
+  const setForceQueryData = useCallback((data: Partial<T>) => {
+    forceQueryDataRef.current = data;
+    queryDataRef.current = {
+      ...queryDataRef.current,
+      ...forceQueryDataRef.current,
+    };
+  }, []);
   return {
     gridProps: {
       ref: gridRef,
@@ -51,5 +58,6 @@ export function useDataGrid<T extends { [key: string]: any }>(
     queryDataRef,
     setQueryData,
     forceQueryDataRef,
+    setForceQueryData,
   };
 }
