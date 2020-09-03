@@ -35,10 +35,15 @@ export function useDataGrid<T extends { [key: string]: any }>(
   }, []);
   const queryDataRef = useRef<Partial<T>>(queryData);
   const setQueryData = useCallback((data: Partial<T>) => {
-    queryDataRef.current = {
-      ...data,
-      ...forceQueryDataRef.current,
-    };
+    // 防止queryData使用其他类型
+    if (forceQueryDataRef.current) {
+      queryDataRef.current = {
+        ...data,
+        ...forceQueryDataRef.current,
+      };
+    } else {
+      queryDataRef.current = data;
+    }
   }, []);
   const setForceQueryData = useCallback((data: Partial<T>) => {
     forceQueryDataRef.current = data;
