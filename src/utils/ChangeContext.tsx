@@ -15,14 +15,18 @@ export interface ChangeContextProps<T> {
    * @default true
    */
   depth?: boolean;
+  /**
+   * children
+   */
+  children?: React.ReactNode;
 }
 
-const ChangeContext: React.FC<ChangeContextProps<any>> = ({
+function ChangeContext<T extends any>({
   children,
   context,
   data,
   depth,
-}) => {
+}: ChangeContextProps<T>) {
   const ctx = useContext(context);
   const nextCtx = useMemo(() => {
     if (depth) {
@@ -31,7 +35,7 @@ const ChangeContext: React.FC<ChangeContextProps<any>> = ({
     return Object.assign({}, ctx, data);
   }, [ctx, data, depth]);
   return <context.Provider value={nextCtx}>{children}</context.Provider>;
-};
+}
 
 ChangeContext.defaultProps = {
   depth: true,
