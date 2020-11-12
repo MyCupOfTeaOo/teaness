@@ -142,7 +142,7 @@ const Upload: React.FC<UploadProps> = props => {
                     status: 'success',
                   });
                   fileListValue.setValue(
-                    fileListValue.value ? [...fileListValue.value] : undefined,
+                    fileListValue.value ? [...fileListValue.value] : [],
                   );
                   onChange?.(
                     fileListValue.value
@@ -167,7 +167,7 @@ const Upload: React.FC<UploadProps> = props => {
                     status: 'error',
                   });
                   fileListValue.setValue(
-                    fileListValue.value ? [...fileListValue.value] : undefined,
+                    fileListValue.value ? [...fileListValue.value] : [],
                   );
                 }
               })
@@ -254,7 +254,7 @@ const Upload: React.FC<UploadProps> = props => {
       // 需要停止加载的文件,删除全部交给 getFIle与onUpload回调处理
       cancelsRef.current.forEach(cancel => cancel());
 
-      fileListValue.setValue(undefined);
+      fileListValue.setValue([]);
     }
   }, [value]);
 
