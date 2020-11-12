@@ -33,7 +33,7 @@ const Upload: React.FC<UploadProps> = props => {
   const mound = useMound();
   const loadingValue = useValue(false);
   const beforeUpload = useCallback(() => false, []);
-  const fileListValue = useValue<UploadFile[]>();
+  const fileListValue = useValue<UploadFile[]>([]);
   const checkRegexp = useMemo(() => {
     if (props.accept) {
       try {
