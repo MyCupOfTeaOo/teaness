@@ -9,7 +9,7 @@ export interface FoldCardProps {
   /**
    * 标题
    */
-  title?: string;
+  title?: React.ReactNode;
   /**
    * 默认状态是否折叠
    */
