@@ -92,6 +92,11 @@ export interface DataGridProps
    * 附带的请求头
    */
   headers?: any;
+  /**
+   * 支持分页
+   * @default true
+   */
+  supportPagination?: boolean;
 }
 
 export function getLocationGridInit<T>(
@@ -333,21 +338,23 @@ const DataGridCom: React.ForwardRefRenderFunction<
         rowData={rowData}
         onSortChanged={handleSortChange}
       />
-      <div className="tea-grid-bottom">
-        <Pagination
-          className="tea-grid-pagination"
-          onChange={handlePageChange}
-          onShowSizeChange={handlePageChange}
-          pageSizeOptions={props.pageSizeOptions}
-          total={total}
-          size="small"
-          showSizeChanger
-          showQuickJumper
-          showTotal={showTotal}
-          current={search.value.page}
-          pageSize={search.value.pageSize}
-        />
-      </div>
+      {props.supportPagination && (
+        <div className="tea-grid-bottom">
+          <Pagination
+            className="tea-grid-pagination"
+            onChange={handlePageChange}
+            onShowSizeChange={handlePageChange}
+            pageSizeOptions={props.pageSizeOptions}
+            total={total}
+            size="small"
+            showSizeChanger
+            showQuickJumper
+            showTotal={showTotal}
+            current={search.value.page}
+            pageSize={search.value.pageSize}
+          />
+        </div>
+      )}
     </div>
   );
 };
@@ -357,6 +364,7 @@ const DataGrid = forwardRef(DataGridCom);
 DataGrid.defaultProps = {
   pageSizeOptions: ['5', '10', '30', '50', '100'],
   firstLoad: true,
+  supportPagination: true,
 };
 
 export default DataGrid;
