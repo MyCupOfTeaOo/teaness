@@ -171,11 +171,14 @@ export class ComponentStore<U = any, T = {}>
 
   @action
   reset = () => {
-    this.isChange = false;
-    this.prevValue = undefined;
-    this.source = this.defaultValue;
-    this.err = undefined;
-    this.crossErr = {};
+    // 没有变更不需要reset
+    if (this.isChange) {
+      this.isChange = false;
+      this.prevValue = undefined;
+      this.source = this.defaultValue;
+      this.err = undefined;
+      this.crossErr = {};
+    }
   };
 
   @action
@@ -328,7 +331,9 @@ export class FormStore<T> implements FormStoreInstance<T> {
   };
 
   getValue = <U extends T[keyof T]>(key: keyof T) => {
-    if (this.componentStores[key]) return this.componentStores[key].source as U | undefined;
+    if (this.componentStores[key]) {
+      return this.componentStores[key].source as U | undefined;
+    }
   };
 
   getValues = <U extends T = T>(keys?: (keyof T)[]) => {
@@ -336,11 +341,15 @@ export class FormStore<T> implements FormStoreInstance<T> {
 
     if (!Array.isArray(keys)) {
       for (const key in this.componentStores) {
-        if (this.componentStores[key]) values[key] = this.componentStores[key].source;
+        if (this.componentStores[key]) {
+          values[key] = this.componentStores[key].source;
+        }
       }
     } else {
       for (const key of keys) {
-        if (this.componentStores[key]) values[key] = this.componentStores[key].source;
+        if (this.componentStores[key]) {
+          values[key] = this.componentStores[key].source;
+        }
       }
     }
     return values as Partial<U>;
@@ -353,7 +362,9 @@ export class FormStore<T> implements FormStoreInstance<T> {
   setValues = (props: Partial<T>) => {
     for (const key in props) {
       if (Reflect.has(props, key)) {
-        if (this.componentStores[key]) this.componentStores[key].onChange(props[key]);
+        if (this.componentStores[key]) {
+          this.componentStores[key].onChange(props[key]);
+        }
       }
     }
   };
