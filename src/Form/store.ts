@@ -262,8 +262,8 @@ export class FormStore<T> implements FormStoreInstance<T> {
   onChange?(
     key: keyof T,
     value: any,
-    source: any,
-    sourceOther: any,
+    original: any,
+    originalOtherArgs: any,
     subStore: ComponentStoreInterface<any, T>,
   ): void;
 

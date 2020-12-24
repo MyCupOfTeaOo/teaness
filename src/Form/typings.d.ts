@@ -206,14 +206,15 @@ export interface FormStoreInstance<T extends {}> {
    * 表单变化触发
    * @param key 触发的key
    * @param value 触发的值(格式化过的)
-   * @param source 触发的原始值
+   * @param original 触发的原始值
+   * @param originalArgs 触发的原始值的其他参数
    * @param subStore 触发的子store
    */
   onChange?(
     key: keyof T,
     value: any,
-    source: any,
-    sourceOther: any,
+    original: any,
+    originalOtherArgs: any,
     subStore: ComponentStoreInterface<any, T>,
   ): void;
   /**
