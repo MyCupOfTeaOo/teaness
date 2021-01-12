@@ -1,6 +1,6 @@
 {
   "name": "teaness",
-  "version": "4.1.34",
+  "version": "4.1.35",
   "main": "./es/index.js",
   "module": "./es/index.js",
   "authors": [
