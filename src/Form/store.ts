@@ -424,12 +424,16 @@ export class FormStore<T> implements FormStoreInstance<T> {
         }
       }
     } else {
-      Object.assign(
-        errs,
-        await this.validValue(
-          (Object.keys(this.componentStores) as any) as keyof T,
-        ),
-      );
+      const keys = Object.keys(this.componentStores as any) as (keyof T)[];
+      const errList = await Promise.all(keys.map(key => this.validValue(key)));
+      keys.forEach((key, i) => {
+        const errMessages = errList[i];
+        if (errMessages) {
+          Object.assign(errs, {
+            [key]: errMessages,
+          });
+        }
+      });
     }
     if (isEmpty(errs)) return undefined;
     return errs;
