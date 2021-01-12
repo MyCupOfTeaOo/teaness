@@ -110,14 +110,12 @@ export class ComponentStore<U = any, T = {}>
       parse,
       format,
       errorOutputTrigger = 'default',
-      subStore,
     } = props;
     this.setDefaultValue(defaultValue);
     this.setRules(rules);
     this.setParse(parse);
     this.setFormat(format);
     this.setErrorOutputTrigger(errorOutputTrigger);
-    this.setSubStore(subStore);
   };
 
   @action
