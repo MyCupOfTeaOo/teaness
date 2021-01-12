@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Input, DatePicker } from 'antd';
 import { useStore, useForm } from '../hooks';
 
@@ -11,7 +11,7 @@ interface Person {
   endDate?: string;
 }
 
-const Test: React.FC<TestProps> = () => {
+export const Test1: React.FC<TestProps> = () => {
   const store = useStore<Person>({
     name: {},
     gender: {},
@@ -22,7 +22,7 @@ const Test: React.FC<TestProps> = () => {
   return (
     <Form>
       <Item id="name">
-        <Input />;
+        <Input />
       </Item>
       <Item id={['startDate', 'endDate']}>
         <DatePicker.RangePicker />
@@ -31,4 +31,33 @@ const Test: React.FC<TestProps> = () => {
   );
 };
 
-export default Test;
+interface Members {
+  persons: Person[];
+  person: Person;
+}
+
+export const Test2: React.FC<TestProps> = () => {
+  const store = useStore<Members>({
+    persons: {},
+    person: {},
+  });
+
+  const personStore = useStore<Person>({
+    name: {},
+    gender: {},
+    startDate: {},
+    endDate: {},
+  });
+  useEffect(() => {
+    store.componentStores.persons.setSubStore([personStore]);
+    store.componentStores.person.setSubStore(personStore);
+  }, [store]);
+  const { Form, Item } = useForm(store);
+  return (
+    <Form>
+      <Item id="persons">
+        <Input />
+      </Item>
+    </Form>
+  );
+};

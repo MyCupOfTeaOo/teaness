@@ -33,6 +33,12 @@ export type Format<U> = (value?: U) => any;
 
 export type CheckResult = 'loading' | 'error' | 'success' | 'default';
 
+export type SubStore<U> = U extends object[]
+  ? FormStoreInstance<U[number]>[]
+  : U extends { [key: string]: any }
+  ? FormStoreInstance<U>
+  : undefined;
+
 export interface ComponentStoreInterface<U = any, T = {}> {
   /**
    * 字段
@@ -69,6 +75,10 @@ export interface ComponentStoreInterface<U = any, T = {}> {
    * 当前输入后的值
    */
   source: U | undefined;
+  /**
+   * 子sotre
+   */
+  subStore?: SubStore<U>;
   /**
    * 默认值
    */
@@ -115,9 +125,11 @@ export interface ComponentStoreInterface<U = any, T = {}> {
    * 输出的值格式化
    */
   format?: Format<U>;
+
   setProps: (
     props: Omit<ComponentStoreProps<U, T>, 'key' | 'formStore'>,
   ) => void;
+  setSubStore: (store?: SubStore<U>) => void;
   setValiding: (validing: boolean) => void;
   setParse: (parse?: Parse<U>) => void;
   setFormat: (format?: Format<U>) => void;
@@ -128,7 +140,7 @@ export interface ComponentStoreInterface<U = any, T = {}> {
   setRules: (rules: Rules | undefined) => void;
   setInputStatus: (inputStatus: InputStatus) => void;
   setErrorOutputTrigger: (inputStatus: InputStatus) => void;
-  valid: () => CancellablePromise<any>;
+  valid: () => CancellablePromise<ErrorType>;
   reset: () => void;
 }
 export interface ComponentStoreProps<U = any, T = {}> {
@@ -159,10 +171,10 @@ export interface ComponentStoreProps<U = any, T = {}> {
    * 输出错误信息的时机,默认 "default"
    */
   errorOutputTrigger?: InputStatus;
-}
-
-export interface ComponentStoreConstructor<U = any, T = {}> {
-  new (props: ComponentStoreProps): ComponentStoreInterface<U, T>;
+  /**
+   * 子sotre
+   */
+  subStore?: SubStore<U>;
 }
 
 export interface SubmitCallBackProps<T> {
@@ -176,7 +188,7 @@ export interface FormStoreProps<T> {
   getInstances: (formStore: FormStoreInstance<T>) => ComponentStoresType<T>;
 }
 
-export interface FormStoreInstance<T extends {}> {
+export interface FormStoreInstance<T extends { [key: string]: any }> {
   /**
    * 全局disabled
    */
@@ -202,6 +214,12 @@ export interface FormStoreInstance<T extends {}> {
    * 表单是否输入过
    */
   isChange: boolean;
+
+  /**
+   * 自动返回当前的所有错误
+   */
+  errors?: ErrorType;
+
   /**
    * 表单变化触发
    * @param key 触发的key

@@ -17,6 +17,7 @@ import {
   Format,
   CheckResult,
   InputStatus,
+  SubStore,
 } from './typings';
 
 export class ComponentStore<U = any, T = {}>
@@ -35,6 +36,9 @@ export class ComponentStore<U = any, T = {}>
 
   @observable
   source: U | undefined = undefined;
+
+  @observable
+  subStore?: SubStore<U> = undefined;
 
   @observable
   err: ErrorType;
@@ -63,6 +67,7 @@ export class ComponentStore<U = any, T = {}>
       default:
     }
     const errors = (this.err || []).concat(Object.values(this.crossErr));
+
     if (isEmpty(errors)) return undefined;
     return errors;
   }
@@ -105,12 +110,19 @@ export class ComponentStore<U = any, T = {}>
       parse,
       format,
       errorOutputTrigger = 'default',
+      subStore,
     } = props;
     this.setDefaultValue(defaultValue);
     this.setRules(rules);
     this.setParse(parse);
     this.setFormat(format);
     this.setErrorOutputTrigger(errorOutputTrigger);
+    this.setSubStore(subStore);
+  };
+
+  @action
+  setSubStore = (store?: SubStore<U>) => {
+    this.subStore = store;
   };
 
   @action
@@ -158,7 +170,7 @@ export class ComponentStore<U = any, T = {}>
     this.prevValue = this.source;
     this.source = parseValue;
     // 在值改变后在调用 方便实现自动保存等功能
-    this.formStore.onChange?.(this.key, parseValue, value, args, this);
+    this.formStore.onChange?.(this.key, parseValue, value, args, this as any);
 
     this.valid();
   };
@@ -191,9 +203,7 @@ export class ComponentStore<U = any, T = {}>
     this.errorOutputTrigger = errorOutputTrigger;
   };
 
-  valid = flow<Promise<ErrorType>, any[]>(function*(
-    this: ComponentStore<U, T>,
-  ): any {
+  valid = flow<ErrorType, any[]>(function*(this: ComponentStore<U, T>): any {
     if (!this.isChange) {
       this.isChange = true;
       this.formStore.setChangeState(true);
@@ -254,13 +264,15 @@ export class FormStore<T> implements FormStoreInstance<T> {
   @observable
   disabled = false;
 
+  @observable
+  isChange = false;
+
+  validFirst = false;
+
   @action
   setDisabled = (disabled: boolean) => {
     this.disabled = disabled;
   };
-
-  @observable
-  isChange = false;
 
   onChange?(
     key: keyof T,
@@ -270,8 +282,6 @@ export class FormStore<T> implements FormStoreInstance<T> {
     subStore: ComponentStoreInterface<any, T>,
   ): void;
 
-  validFirst = false;
-
   constructor(props: FormStoreProps<T>) {
     this.componentStores = props.getInstances(this);
   }
@@ -280,31 +290,22 @@ export class FormStore<T> implements FormStoreInstance<T> {
     [P in keyof T]?: (() => void)[];
   } = {};
 
+  @computed get errors(): ErrorType {
+    const errs = Object.keys(this.componentStores).reduce((list, key) => {
+      const errors = this.componentStores[key as keyof T]?.errors;
+      if (!errors) {
+        return list;
+      }
+      return list.concat(errors);
+    }, [] as ErrorMessage[]);
+
+    if (isEmpty(errs)) return undefined;
+    return errs;
+  }
+
   @action
   setChangeState = (isChange: boolean) => {
     this.isChange = isChange;
-  };
-
-  submit: SubmitType<T> = callback => {
-    const values: Partial<T> = {};
-    for (const key in this.componentStores) {
-      if (Reflect.has(this.componentStores, key)) {
-        // this.componentStores[key].valid();
-        values[key] = this.componentStores[key].source;
-      }
-    }
-    this.valid().then(errs => {
-      callback({ values, errs });
-    });
-  };
-
-  reset = () => {
-    for (const key in this.componentStores) {
-      if (Reflect.has(this.componentStores, key)) {
-        this.componentStores[key].reset();
-      }
-    }
-    this.setChangeState(false);
   };
 
   @action
@@ -330,8 +331,37 @@ export class FormStore<T> implements FormStoreInstance<T> {
     }
   };
 
+  submit: SubmitType<T> = callback => {
+    const values = this.getValues();
+    this.valid().then(errs => {
+      callback({ values, errs });
+    });
+  };
+
+  reset = () => {
+    for (const key in this.componentStores) {
+      if (Reflect.has(this.componentStores, key)) {
+        this.componentStores[key].reset();
+      }
+    }
+    this.setChangeState(false);
+  };
+
+  // @TODO subStore 只是临时方案
   getValue = <U extends T[keyof T]>(key: keyof T) => {
     if (this.componentStores[key]) {
+      const { subStore } = this.componentStores[key];
+      if (subStore) {
+        if (Array.isArray(subStore)) {
+          return ((subStore as FormStore<any>[]).map(store => {
+            return store.getValues() as any;
+          }) as any) as U | undefined;
+        } else {
+          return ((subStore as unknown) as FormStore<U>).getValues() as
+            | U
+            | undefined;
+        }
+      }
       return this.componentStores[key].source as U | undefined;
     }
   };
@@ -340,16 +370,12 @@ export class FormStore<T> implements FormStoreInstance<T> {
     const values: Partial<T> = {};
 
     if (!Array.isArray(keys)) {
-      for (const key in this.componentStores) {
-        if (this.componentStores[key]) {
-          values[key] = this.componentStores[key].source;
-        }
-      }
+      Object.keys(this.componentStores).forEach(key => {
+        values[key as keyof T] = this.getValue(key as keyof T);
+      });
     } else {
       for (const key of keys) {
-        if (this.componentStores[key]) {
-          values[key] = this.componentStores[key].source;
-        }
+        values[key] = this.getValue(key);
       }
     }
     return values as Partial<U>;
@@ -360,24 +386,21 @@ export class FormStore<T> implements FormStoreInstance<T> {
   };
 
   setValues = (props: Partial<T>) => {
-    for (const key in props) {
-      if (Reflect.has(props, key)) {
-        if (this.componentStores[key]) {
-          this.componentStores[key].onChange(props[key]);
-        }
-      }
-    }
+    Object.keys(props).forEach(key => {
+      this.setValue(key as keyof T, props[key as keyof T]);
+    });
   };
 
   setAllValues = (props: Partial<T>) => {
     for (const key in this.componentStores) {
       if (Reflect.has(this.componentStores, key)) {
-        if (props[key]) this.componentStores[key].onChange(props[key]);
-        else this.componentStores[key].onChange(undefined);
+        if (props[key]) this.setValue(key as keyof T, props[key as keyof T]);
+        else this.setValue(key as keyof T, undefined);
       }
     }
   };
 
+  // @TODO 因为 subStore 只是临时方案,所以暂时不支持 validFirst
   valid = async () => {
     const errs: Partial<ErrorsType<T>> = {};
     if (this.validFirst) {
@@ -403,31 +426,18 @@ export class FormStore<T> implements FormStoreInstance<T> {
         }
       }
     } else {
-      const promiseErrors = (Object.keys(
-        this.componentStores,
-      ) as (keyof T)[]).map(async key => {
-        return [key, await this.componentStores[key].valid()];
-      }) as Promise<[keyof T, ErrorType]>[];
-      await Promise.all(promiseErrors);
-
-      for (const key in this.componentStores) {
-        if (Reflect.has(this.componentStores, key)) {
-          const componentStore = this.componentStores[key];
-          const crossValidFuncs = this.crossValidFuncsDict[key];
-          if (Array.isArray(crossValidFuncs)) {
-            for (const crossValidFunc of crossValidFuncs) {
-              crossValidFunc();
-            }
-          }
-          const { errors } = componentStore;
-          if (errors) errs[componentStore.key] = errors;
-        }
-      }
+      Object.assign(
+        errs,
+        await this.validValue(
+          (Object.keys(this.componentStores) as any) as keyof T,
+        ),
+      );
     }
     if (isEmpty(errs)) return undefined;
     return errs;
   };
 
+  // @TODO subStore 只是临时方案
   validValue = async (key: keyof T) => {
     if (!this.componentStores[key]) return undefined;
     await this.componentStores[key].valid();
@@ -437,6 +447,40 @@ export class FormStore<T> implements FormStoreInstance<T> {
         crossValidFunc();
       }
     }
+    const subErrors: ErrorMessage[] = [];
+    const { subStore } = this.componentStores[key];
+    if (subStore) {
+      if (Array.isArray(subStore)) {
+        const subStoreValids = await Promise.all(
+          (subStore as FormStore<any>[]).map(store => {
+            return store.valid();
+          }),
+        );
+        subStoreValids.forEach(storeErrs => {
+          if (storeErrs) {
+            Object.values(storeErrs).forEach(item => {
+              if (item) {
+                subErrors.push(...item);
+              }
+            });
+          }
+        });
+      } else {
+        const subStoreValid = await ((subStore as any) as FormStore<
+          any
+        >).valid();
+        if (subStoreValid) {
+          Object.values(subStoreValid).forEach(item => {
+            if (item) {
+              subErrors.push(...item);
+            }
+          });
+        }
+      }
+    }
+    if (subErrors.length) {
+      return subErrors.concat(this.componentStores[key].errors || []);
+    }
     return this.componentStores[key].errors;
   };
 
@@ -444,22 +488,11 @@ export class FormStore<T> implements FormStoreInstance<T> {
     keys: (keyof T)[],
   ) => {
     const errs: Partial<ErrorsType<T>> = {};
-    const promiseErrors = keys
-      .filter(key => this.componentStores[key])
-      .map(async key => {
-        return [key, await this.componentStores[key].valid()];
-      }) as Promise<[keyof T, ErrorType]>[];
-    await Promise.all(promiseErrors);
-    for (const key of keys) {
-      const crossValidFuncs = this.crossValidFuncsDict[key];
-      if (Array.isArray(crossValidFuncs)) {
-        for (const crossValidFunc of crossValidFuncs) {
-          crossValidFunc();
-        }
-      }
-      errs[key] = this.componentStores[key].errors;
-    }
-
+    const promiseErrors = keys.map(this.validValue);
+    const errors = await Promise.all(promiseErrors);
+    keys.forEach((key, i) => {
+      errs[key] = errors[i];
+    });
     return errs as Partial<U>;
   };
 }
