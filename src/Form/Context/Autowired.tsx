@@ -33,6 +33,10 @@ export interface AutowiredProps<
    * 注入的字段 Key,可以是字符串 或 字符串数组
    */
   id: P;
+  /**
+   * 替换组件上 id
+   */
+  replaceId?: string;
   children?: React.ReactElement | AutowiredFuncChild;
   /**
    * 数据注入props的名称 默认 value
@@ -65,6 +69,7 @@ const Autowired: React.FC<AutowiredProps> = props => {
     trigger = 'onChange',
     suppressErrorOnValiding = false,
     showErrorProps,
+    replaceId,
   } = props;
   const context = useContext(FormContext);
   const store = props.store || context.store;
@@ -75,7 +80,7 @@ const Autowired: React.FC<AutowiredProps> = props => {
       checkresult: id.map(
         key => store?.componentStores[key]?.checkResult || 'default',
       ),
-      id: genFormId(id),
+      id: genFormId(id, replaceId),
       [valueName]: id.map(key => store?.componentStores[key]?.value),
       onBlur: () => {
         id.forEach(key => {
@@ -122,7 +127,7 @@ const Autowired: React.FC<AutowiredProps> = props => {
   } else {
     p = {
       checkresult: store?.componentStores[id]?.checkResult || 'default',
-      id: genFormId(id),
+      id: genFormId(id, replaceId),
       onBlur: () => {
         store?.componentStores[id]?.setInputStatus('blur');
       },

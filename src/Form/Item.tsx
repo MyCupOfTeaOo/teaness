@@ -29,7 +29,7 @@ const Item: React.FC<ItemProps> = props => {
   return (
     <Label
       required={searchRequired(id, store || context.store)}
-      id={genFormId(id)}
+      id={genFormId(id, rest.replaceId)}
       {...rest}
     >
       <Autowired

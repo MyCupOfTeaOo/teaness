@@ -171,10 +171,6 @@ export interface ComponentStoreProps<U = any, T = {}> {
    * 输出错误信息的时机,默认 "default"
    */
   errorOutputTrigger?: InputStatus;
-  /**
-   * 子sotre
-   */
-  subStore?: SubStore<U>;
 }
 
 export interface SubmitCallBackProps<T> {

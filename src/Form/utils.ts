@@ -118,7 +118,10 @@ export function parseFormConfigs<T = {}>(
   };
 }
 
-export function genFormId(id: string | string[]) {
+export function genFormId(id: string | string[], replaceId?: string) {
+  if (replaceId) {
+    return replaceId;
+  }
   if (Array.isArray(id)) {
     return id[0];
   }
