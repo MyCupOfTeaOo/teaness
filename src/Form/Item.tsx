@@ -23,16 +23,18 @@ const Item: React.FC<ItemProps> = props => {
     showError,
     showErrorProps,
     suppressErrorOnValiding,
+    replaceId,
     ...rest
   } = props;
   const context = useContext(FormContext);
   return (
     <Label
       required={searchRequired(id, store || context.store)}
-      id={genFormId(id, rest.replaceId)}
+      id={genFormId(id, replaceId)}
       {...rest}
     >
       <Autowired
+        replaceId={replaceId}
         suppressErrorOnValiding={suppressErrorOnValiding}
         store={store}
         id={id}

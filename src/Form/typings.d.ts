@@ -140,7 +140,10 @@ export interface ComponentStoreInterface<U = any, T = {}> {
   setRules: (rules: Rules | undefined) => void;
   setInputStatus: (inputStatus: InputStatus) => void;
   setErrorOutputTrigger: (inputStatus: InputStatus) => void;
-  valid: () => CancellablePromise<ErrorType>;
+  /**
+   * @param rootId 根id,用于生成errorkey
+   */
+  valid: (rootId?: string) => CancellablePromise<ErrorType>;
   reset: () => void;
 }
 export interface ComponentStoreProps<U = any, T = {}> {
@@ -251,19 +254,23 @@ export interface FormStoreInstance<T extends { [key: string]: any }> {
   setAllValues(props: Partial<T>): void;
   /**
    * 触发全局验证
+   * @param rootId 根id,用于生成errorkey
    */
-  valid: () => Promise<Partial<ErrorsType<T>> | undefined>;
+  valid: (rootId?: string) => Promise<Partial<ErrorsType<T>> | undefined>;
   /**
    * 触发key对应的字段验证
    * @param key
+   * @param rootId 用于生成errorkey
    */
-  validValue(key: keyof T): Promise<ErrorType>;
+  validValue(key: keyof T, rootId?: string): Promise<ErrorType>;
   /**
    *  触发keys对应的字段集验证
    * @param keys
+   * @param rootId 用于生成errorkey
    */
   validValues<U extends ErrorsType<T> = ErrorsType<T>>(
     keys: (keyof T)[],
+    rootId?: string,
   ): Promise<Partial<U>>;
 }
 

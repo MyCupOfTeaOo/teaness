@@ -201,7 +201,10 @@ export class ComponentStore<U = any, T = {}>
     this.errorOutputTrigger = errorOutputTrigger;
   };
 
-  valid = flow<ErrorType, any[]>(function*(this: ComponentStore<U, T>): any {
+  valid = flow<ErrorType, any[]>(function*(
+    this: ComponentStore<U, T>,
+    rootId?: string,
+  ): any {
     if (!this.isChange) {
       this.isChange = true;
       this.formStore.setChangeState(true);
@@ -224,7 +227,7 @@ export class ComponentStore<U = any, T = {}>
       if (e) {
         err = e.errors.map(item => ({
           message: item.message,
-          field: item.field,
+          field: `${rootId || ''}${rootId ? '.' : ''}${item.field}`,
         }));
         this.err = err;
       } else {
@@ -399,14 +402,14 @@ export class FormStore<T> implements FormStoreInstance<T> {
   };
 
   // @TODO 因为 subStore 只是临时方案,所以暂时不支持 validFirst
-  valid = async () => {
+  valid = async (rootId?: string) => {
     const errs: Partial<ErrorsType<T>> = {};
     if (this.validFirst) {
       for (const key in this.componentStores) {
         if (Reflect.has(this.componentStores, key)) {
           const componentStore = this.componentStores[key];
           // eslint-disable-next-line
-          const errors = await componentStore.valid();
+          const errors = await componentStore.valid(rootId);
           if (errors) {
             errs[componentStore.key] = componentStore.errors;
             return errs;
@@ -416,7 +419,10 @@ export class FormStore<T> implements FormStoreInstance<T> {
             for (const crossValidFunc of crossValidFuncs) {
               crossValidFunc();
               if (componentStore.errors) {
-                errs[componentStore.key] = componentStore.errors;
+                errs[componentStore.key] = componentStore.errors.map(item => ({
+                  ...item,
+                  field: `${rootId || ''}${rootId ? '.' : ''}${item.field}`,
+                }));
                 return errs;
               }
             }
@@ -425,7 +431,9 @@ export class FormStore<T> implements FormStoreInstance<T> {
       }
     } else {
       const keys = Object.keys(this.componentStores as any) as (keyof T)[];
-      const errList = await Promise.all(keys.map(key => this.validValue(key)));
+      const errList = await Promise.all(
+        keys.map(key => this.validValue(key, rootId)),
+      );
       keys.forEach((key, i) => {
         const errMessages = errList[i];
         if (errMessages) {
@@ -440,9 +448,9 @@ export class FormStore<T> implements FormStoreInstance<T> {
   };
 
   // @TODO subStore 只是临时方案
-  validValue = async (key: keyof T) => {
+  validValue = async (key: keyof T, rootId?: string) => {
     if (!this.componentStores[key]) return undefined;
-    await this.componentStores[key].valid();
+    await this.componentStores[key].valid(rootId);
     const crossValidFuncs = this.crossValidFuncsDict[key];
     if (Array.isArray(crossValidFuncs)) {
       for (const crossValidFunc of crossValidFuncs) {
@@ -454,8 +462,10 @@ export class FormStore<T> implements FormStoreInstance<T> {
     if (subStore) {
       if (Array.isArray(subStore)) {
         const subStoreValids = await Promise.all(
-          (subStore as FormStore<any>[]).map(store => {
-            return store.valid();
+          (subStore as FormStore<any>[]).map((store, i) => {
+            return store.valid(
+              `${rootId || ''}${rootId ? '.' : ''}${key}.[${i}]`,
+            );
           }),
         );
         subStoreValids.forEach(storeErrs => {
@@ -468,9 +478,9 @@ export class FormStore<T> implements FormStoreInstance<T> {
           }
         });
       } else {
-        const subStoreValid = await ((subStore as any) as FormStore<
-          any
-        >).valid();
+        const subStoreValid = await ((subStore as any) as FormStore<any>).valid(
+          `${rootId || ''}${rootId ? '.' : ''}${key}`,
+        );
         if (subStoreValid) {
           Object.values(subStoreValid).forEach(item => {
             if (item) {
@@ -483,14 +493,20 @@ export class FormStore<T> implements FormStoreInstance<T> {
     if (subErrors.length) {
       return subErrors.concat(this.componentStores[key].errors || []);
     }
-    return this.componentStores[key].errors;
+    return this.componentStores[key].errors?.map(item => ({
+      ...item,
+      field: `${rootId || ''}${rootId ? '.' : ''}${item.field}`,
+    }));
   };
 
   validValues = async <U extends ErrorsType<T> = ErrorsType<T>>(
     keys: (keyof T)[],
+    rootId?: string,
   ) => {
     const errs: Partial<ErrorsType<T>> = {};
-    const promiseErrors = keys.map(this.validValue);
+    const promiseErrors = keys.map(errMessages =>
+      this.validValue(errMessages, rootId),
+    );
     const errors = await Promise.all(promiseErrors);
     keys.forEach((key, i) => {
       errs[key] = errors[i];
