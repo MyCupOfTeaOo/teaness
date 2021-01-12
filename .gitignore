@@ -22,3 +22,6 @@
 *.tgz
 *.local.js
 report.*.json
+
+# env
+.env.local
