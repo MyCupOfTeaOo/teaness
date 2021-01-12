@@ -25,21 +25,29 @@ export const scrollToField = (
   },
 ) => {
   try {
-    const inputNode = document.querySelector(
-      `#${fieldKey?.replace(/\./g, '-')}`,
-    );
+    let inputNode = document.querySelector(`#${fieldKey?.replace(/\./g, '-')}`);
     if (inputNode) {
       (inputNode as Element & { focus?: () => {} }).focus?.();
       inputNode.scrollIntoView(options);
       return true;
-    } else {
-      const labelNode = document.querySelector(
-        `label[for="${fieldKey?.replace(/\./g, '-')}"]`,
-      );
-      if (labelNode) {
-        labelNode.scrollIntoView(options);
-        return true;
-      }
+    }
+    inputNode = document.getElementById(`${fieldKey}`);
+    if (inputNode) {
+      (inputNode as Element & { focus?: () => {} }).focus?.();
+      inputNode.scrollIntoView(options);
+      return true;
+    }
+    let labelNode = document.querySelector(`label[for="${fieldKey}"]`);
+    if (labelNode) {
+      labelNode.scrollIntoView(options);
+      return true;
+    }
+    labelNode = document.querySelector(
+      `label[for="${fieldKey?.replace(/\./g, '-')}"]`,
+    );
+    if (labelNode) {
+      labelNode.scrollIntoView(options);
+      return true;
     }
   } catch (err) {
     console.error(err);
