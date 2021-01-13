@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Input, DatePicker } from 'antd';
 import Button from 'antd/es/button';
-import { Col } from 'es';
+import { Col } from '../../Grid';
 import { useStore, useForm } from '../hooks';
 
 interface TestProps {}
