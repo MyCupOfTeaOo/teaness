@@ -26,7 +26,7 @@ export const scrollToField = (
 ) => {
   try {
     let inputNode = document.querySelector(
-      `#${fieldKey?.replace(/\.\[/g, '-')}`,
+      `#${fieldKey?.replace(/\.|\[|\]/g, '-')}`,
     );
     if (inputNode) {
       (inputNode as Element & { focus?: () => {} }).focus?.();
@@ -45,7 +45,7 @@ export const scrollToField = (
       return true;
     }
     labelNode = document.querySelector(
-      `label[for="${fieldKey?.replace(/\.\[/g, '-')}"]`,
+      `label[for="${fieldKey?.replace(/\.|\[|\]/g, '-')}"]`,
     );
     if (labelNode) {
       labelNode.scrollIntoView(options);
