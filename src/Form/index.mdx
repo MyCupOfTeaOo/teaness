@@ -11,6 +11,7 @@ import 'antd/dist/antd.css';
 import { UserOutlined , LockOutlined  } from '@ant-design/icons'
 import { Radio, Button, Input, InputNumber, Switch, DatePicker } from 'antd';
 import Select from './Components/Select';
+import { Test3 } from "./fixtures/TestAutoWired.test.tsx";
 import Form,{ useStore, useForm, Item } from '.';
 import { DateFormat } from '../utils'
 import { Col, Row } from '../Grid'
@@ -627,6 +628,13 @@ type Format<U> = (value?: U) => any;
     );
   }}
 </Playground>
+
+##### subStore
+
+<Playground>
+  <Test3 />
+</Playground>
+
 
 如果使用 TypeScript 如下
 

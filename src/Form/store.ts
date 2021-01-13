@@ -419,10 +419,7 @@ export class FormStore<T> implements FormStoreInstance<T> {
             for (const crossValidFunc of crossValidFuncs) {
               crossValidFunc();
               if (componentStore.errors) {
-                errs[componentStore.key] = componentStore.errors.map(item => ({
-                  ...item,
-                  field: `${rootId || ''}${rootId ? '.' : ''}${item.field}`,
-                }));
+                errs[componentStore.key] = componentStore.errors;
                 return errs;
               }
             }
@@ -464,7 +461,7 @@ export class FormStore<T> implements FormStoreInstance<T> {
         const subStoreValids = await Promise.all(
           (subStore as FormStore<any>[]).map((store, i) => {
             return store.valid(
-              `${rootId || ''}${rootId ? '.' : ''}${key}.[${i}]`,
+              `${rootId || ''}${rootId ? '.' : ''}${key}[${i}]`,
             );
           }),
         );
@@ -493,10 +490,7 @@ export class FormStore<T> implements FormStoreInstance<T> {
     if (subErrors.length) {
       return subErrors.concat(this.componentStores[key].errors || []);
     }
-    return this.componentStores[key].errors?.map(item => ({
-      ...item,
-      field: `${rootId || ''}${rootId ? '.' : ''}${item.field}`,
-    }));
+    return this.componentStores[key].errors;
   };
 
   validValues = async <U extends ErrorsType<T> = ErrorsType<T>>(
