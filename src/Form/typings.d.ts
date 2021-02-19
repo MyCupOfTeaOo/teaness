@@ -189,6 +189,10 @@ export interface FormStoreProps<T> {
 
 export interface FormStoreInstance<T extends { [key: string]: any }> {
   /**
+   * 父store
+   */
+  fatherStore?: ComponentStoreInterface;
+  /**
    * 全局disabled
    */
   disabled: boolean;

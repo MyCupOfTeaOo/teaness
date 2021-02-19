@@ -120,6 +120,15 @@ export class ComponentStore<U = any, T = {}>
 
   @action
   setSubStore = (store?: SubStore<U>) => {
+    if (Array.isArray(store)) {
+      store.forEach(item => {
+        // eslint-disable-next-line
+        item.fatherStore = this as any;
+      });
+    } else if (store) {
+      // eslint-disable-next-line
+      store.fatherStore = this as any;
+    }
     this.subStore = store;
   };
 
