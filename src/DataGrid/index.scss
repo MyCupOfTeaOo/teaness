@@ -32,6 +32,9 @@
   }
   .tea-footer-grid {
     flex: 0 0 auto;
+    .ag-cell {
+      font-weight: 700;
+    }
   }
   .ag-header {
     background: rgba($color: $text-color, $alpha: 0.08);

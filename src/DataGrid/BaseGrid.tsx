@@ -82,9 +82,7 @@ const BaseGridCom: React.ForwardRefRenderFunction<
           localeText={locale.zh}
           defaultColDef={mergeDefaultColDef}
           {...gridProps}
-          scrollbarWidth={
-            footerGrid?.rowData?.length ? 0 : gridProps.scrollbarWidth
-          }
+          suppressHorizontalScroll={!!footerGrid?.rowData?.length}
           gridOptions={getGridOptions.topOptions}
         />
       </div>
@@ -97,6 +95,7 @@ const BaseGridCom: React.ForwardRefRenderFunction<
             overlayNoRowsTemplate=" "
             domLayout="autoHeight"
             scrollbarWidth={gridProps.scrollbarWidth}
+            rowHeight={gridProps.rowHeight}
             {...footerGrid}
             gridOptions={getGridOptions.bottomOptions}
           />
