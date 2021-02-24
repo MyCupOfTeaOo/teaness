@@ -18,6 +18,8 @@
   background: #fff;
   height: 100%;
   width: 100%;
+  display: flex;
+  flex-direction: column;
   // .ag-body-container,
   // .ag-center-cols-container {
   //   min-width: 100%;
@@ -25,11 +27,32 @@
   // .ag-body {
   //   overflow: auto;
   // }
+  .tea-body-grid {
+    flex: 1 1 auto;
+  }
+  .tea-footer-grid {
+    flex: 0 0 auto;
+  }
   .ag-header {
     background: rgba($color: $text-color, $alpha: 0.08);
     color: #555;
   }
-
+  * {
+    &::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    &::-webkit-scrollbar-track {
+      background: rgba($color: #000000, $alpha: 0);
+    }
+    &::-webkit-scrollbar-thumb {
+      background: rgba(25, 31, 37, 0.4);
+      border-radius: 8px;
+      &:hover {
+        background: rgba(25, 31, 37, 0.72);
+      }
+    }
+  }
   .ag-header-group-cell:not(.ag-column-resizing) + .ag-header-group-cell:hover,
   .ag-header-group-cell:not(.ag-column-resizing)
     + .ag-header-group-cell.ag-column-resizing,

@@ -11,6 +11,8 @@ import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-material.css';
 import classNames from 'classnames';
 import { Empty } from 'antd';
+import { ColDef } from 'ag-grid-community';
+import locale from './locale';
 import './index.scss';
 import { Dots } from '../Spin/index';
 
@@ -19,13 +21,30 @@ const NoData = () => <Empty />;
 export interface BaseGridProps extends AgGridReactProps {
   className?: string;
   style?: CSSProperties;
+  footerGrid?: AgGridReactProps & {
+    className?: string;
+    style?: CSSProperties;
+  };
 }
 
 const BaseGridCom: React.ForwardRefRenderFunction<
   AgGridReact,
   BaseGridProps
-> = ({ className, style, defaultColDef, ...gridProps }, ref) => {
+> = (
+  { className, style, defaultColDef, gridOptions, footerGrid, ...gridProps },
+  ref,
+) => {
   const gridRef = useRef<AgGridReact>(null);
+  const getGridOptions = useMemo(() => {
+    const topOptions = { ...gridOptions, alignedGrids: [] as any };
+    const bottomOptions = { ...gridOptions, alignedGrids: [] as any };
+    topOptions.alignedGrids.push(bottomOptions);
+    bottomOptions.alignedGrids.push(topOptions);
+    return {
+      topOptions,
+      bottomOptions,
+    };
+  }, [gridOptions]);
   const mergeDefaultColDef = useMemo<AgGridReactProps['defaultColDef']>(() => {
     return Object.assign<
       {},
@@ -41,14 +60,48 @@ const BaseGridCom: React.ForwardRefRenderFunction<
     () => classNames('ag-theme-material', 'tea-grid', className),
     [className],
   );
+  const footerGridClassName = useMemo(
+    () =>
+      classNames('ag-theme-material', 'tea-footer-grid', footerGrid?.className),
+    [footerGrid?.className],
+  );
   const gridStyle = useMemo(() => style, [style]);
+  const footerDefaultColumnDefs = useMemo(() => {
+    return gridProps.columnDefs?.map((item: ColDef) => {
+      return {
+        headerName: item.headerName,
+        field: item.field,
+      };
+    });
+  }, [gridProps.columnDefs]);
   return (
     <div className={gridClassName} style={gridStyle}>
-      <AgGridReact
-        ref={gridRef}
-        defaultColDef={mergeDefaultColDef}
-        {...gridProps}
-      />
+      <div className="tea-body-grid">
+        <AgGridReact
+          ref={gridRef}
+          localeText={locale.zh}
+          defaultColDef={mergeDefaultColDef}
+          {...gridProps}
+          scrollbarWidth={
+            footerGrid?.rowData?.length ? 0 : gridProps.scrollbarWidth
+          }
+          gridOptions={getGridOptions.topOptions}
+        />
+      </div>
+      {footerGrid?.rowData?.length ? (
+        <div className={footerGridClassName} style={footerGrid.style}>
+          <AgGridReact
+            localeText={locale.zh}
+            columnDefs={footerDefaultColumnDefs}
+            headerHeight="0"
+            overlayNoRowsTemplate=" "
+            domLayout="autoHeight"
+            scrollbarWidth={gridProps.scrollbarWidth}
+            {...footerGrid}
+            gridOptions={getGridOptions.bottomOptions}
+          />
+        </div>
+      ) : null}
     </div>
   );
 };

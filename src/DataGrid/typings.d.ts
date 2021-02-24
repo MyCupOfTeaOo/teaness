@@ -29,6 +29,7 @@ export interface ResponseData<
 > {
   isCancel?: boolean;
   list: T[];
+  footer?: T[];
   total: number;
 }
 
@@ -62,6 +63,7 @@ export type DataGridRef = {
     sorters?: Sorter[];
   }): void;
   setRowData: Dispatch<SetStateAction<any[] | undefined>>;
+  setFooter: Dispatch<SetStateAction<any[] | undefined>>;
   getDefaultValue(): {
     page: number;
     pageSize: number;

@@ -14,7 +14,6 @@ import { ColDef, GridApi } from 'ag-grid-community';
 import { stringify } from 'qs';
 import { isObject } from 'lodash-es';
 import BaseGrid, { BaseGridProps } from './BaseGrid';
-import locale from './locale';
 import {
   Location,
   Sorter,
@@ -142,6 +141,7 @@ const DataGridCom: React.ForwardRefRenderFunction<
   const [rowData, setRowData] = useState<any[] | undefined>(
     props.firstLoad ? undefined : [],
   );
+  const [footer, setFooter] = useState<any[]>();
 
   const search = useValue<{
     page: number;
@@ -218,6 +218,7 @@ const DataGridCom: React.ForwardRefRenderFunction<
           } else {
             setTotal(data.total);
             setRowData(data.list || []);
+            setFooter(data.footer);
             if (Array.isArray(data.list) && data.list.length > 0) {
               noData = false;
             }
@@ -315,6 +316,7 @@ const DataGridCom: React.ForwardRefRenderFunction<
         search.value = v;
       },
       setRowData,
+      setFooter,
       getDefaultValue() {
         return {
           page: props.defaultPage || DataGridRegister.defaultPage,
@@ -330,13 +332,16 @@ const DataGridCom: React.ForwardRefRenderFunction<
   return (
     <div className={classNames('tea-datagrid', className)}>
       <BaseGrid
-        localeText={locale.zh}
         {...rest}
         defaultColDef={defaultColDef}
         ref={gridRef}
         className={props.gridClassName}
         rowData={rowData}
         onSortChanged={handleSortChange}
+        footerGrid={{
+          rowData: footer,
+          ...rest.footerGrid,
+        }}
       />
       {props.supportPagination && (
         <div className="tea-grid-bottom">
