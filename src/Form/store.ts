@@ -18,6 +18,7 @@ import {
   CheckResult,
   InputStatus,
   SubStore,
+  OnChangeContext,
 } from './typings';
 
 export class ComponentStore<U = any, T = {}>
@@ -27,6 +28,8 @@ export class ComponentStore<U = any, T = {}>
   formStore: FormStoreInstance<T>;
 
   defaultValue: U | undefined = undefined;
+
+  onChangeContext: OnChangeContext = {};
 
   @observable
   isChange = false;
@@ -152,10 +155,18 @@ export class ComponentStore<U = any, T = {}>
     this.crossErr = omit(this.crossErr, ...keys);
   };
 
+  setOnChangeContext = (context?: OnChangeContext) => {
+    this.onChangeContext = context || {};
+  };
+
+  clearOnChangeContext = () => {
+    this.onChangeContext = {};
+  };
+
   @action
   onChange = (value: U | Event | SyntheticEvent | undefined, ...args: any) => {
     let parseValue: U | undefined;
-    if (this.parse) {
+    if (this.parse && !this.onChangeContext.noParse) {
       parseValue = this.parse(value, ...args);
     } else if (!isEmpty(value)) {
       if (value instanceof Event) {
@@ -178,8 +189,8 @@ export class ComponentStore<U = any, T = {}>
     this.source = parseValue;
     // 在值改变后在调用 方便实现自动保存等功能
     this.formStore.onChange?.(this.key, parseValue, value, args, this as any);
-
     this.valid();
+    this.clearOnChangeContext();
   };
 
   @action
@@ -391,21 +402,36 @@ export class FormStore<T> implements FormStoreInstance<T> {
     return values as Partial<U>;
   };
 
-  setValue = (key: keyof T, value?: T[keyof T]) => {
-    if (this.componentStores[key]) this.componentStores[key].onChange(value);
+  setValue = (
+    key: keyof T,
+    value?: T[keyof T],
+    onChangeContext?: OnChangeContext,
+  ) => {
+    const instance = this.componentStores[key];
+    if (instance) {
+      instance.setOnChangeContext(
+        onChangeContext || {
+          noParse: true,
+        },
+      );
+      instance.onChange(value);
+    }
   };
 
-  setValues = (props: Partial<T>) => {
+  setValues = (props: Partial<T>, onChangeContext?: OnChangeContext) => {
     Object.keys(props).forEach(key => {
-      this.setValue(key as keyof T, props[key as keyof T]);
+      this.setValue(key as keyof T, props[key as keyof T], onChangeContext);
     });
   };
 
-  setAllValues = (props: Partial<T>) => {
+  setAllValues = (props: Partial<T>, onChangeContext?: OnChangeContext) => {
     for (const key in this.componentStores) {
       if (Reflect.has(this.componentStores, key)) {
-        if (props[key]) this.setValue(key as keyof T, props[key as keyof T]);
-        else this.setValue(key as keyof T, undefined);
+        if (props[key]) {
+          this.setValue(key as keyof T, props[key as keyof T], onChangeContext);
+        } else {
+          this.setValue(key as keyof T, undefined, onChangeContext);
+        }
       }
     }
   };

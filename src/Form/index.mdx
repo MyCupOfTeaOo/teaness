@@ -134,10 +134,11 @@ type Parse<U> = (...args: any) => U | undefined;
 
 type Format<U> = (value?: U) => any;
 ```
-> 注:在使用 parse 属性的时候会有一个陷阱问题,parse 是在触发 onChange 的时候会自动调用来转化值的,
-一般来说只会在输入时使用该属性,但是 setValue setValues 也是直接调用的 onChange 来改变值的,此时可能 parse 参数会出现不同类型的情况;
+> ~~注:在使用 parse 属性的时候会有一个陷阱问题,parse 是在触发 onChange 的时候会自动调用来转化值的,~~
+~~一般来说只会在输入时使用该属性,但是 setValue setValues 也是直接调用的 onChange 来改变值的,此时可能 parse 参数会出现不同类型的情况;
 例如:Input 输入时 parse 的参数是 `value?: React.ChangeEvent<HTMLInputElement>`,但是如果使用 `store.setValue('xxx',"123")`,
-这个时候 parse 的参数是 `value?: string`
+这个时候 parse 的参数是 `value?: string`~~
+现在setValue,setValues,setAllValues 不会触发 parse,但是你可以调用时增加参数实现触发parse
 
 
 #### 基本用法(Basic usage)

@@ -38,6 +38,9 @@ export type SubStore<U> = U extends object[]
   : U extends { [key: string]: any }
   ? FormStoreInstance<U>
   : undefined;
+export interface OnChangeContext {
+  noParse?: boolean;
+}
 
 export interface ComponentStoreInterface<U = any, T = {}> {
   /**
@@ -54,6 +57,12 @@ export interface ComponentStoreInterface<U = any, T = {}> {
   crossErr: {
     [key: string]: ErrorMessage;
   };
+  /**
+   * onChange上下文,每次onChange结束清空
+   */
+  onChangeContext: OnChangeContext;
+  setOnChangeContext(context?: OnChangeContext): void;
+  clearOnChangeContext: () => void;
   /**
    * 对外数据的错误信息(err and crossErr)
    */
@@ -114,10 +123,6 @@ export interface ComponentStoreInterface<U = any, T = {}> {
    */
   schema?: Schema;
   /**
-   * 注:在使用 parse 属性的时候会有一个陷阱问题,parse 是在触发 onChange 的时候会自动调用来转化值的,
-   * 一般来说只会在输入时使用该属性,但是 setValue setValues 也是直接调用的 onChange 来改变值的,此时可能 parse 参数会出现不同类型的情况;
-   * 例如:Input 输入时 parse 的参数是 `value?: React.ChangeEvent<HTMLInputElement>`,但是如果使用 `store.setValue('xxx',"123")`,
-   * 这个时候 parse 的参数是 `value?: string`
    * @summary 输入的值格式化
    */
   parse?: Parse<U>;
@@ -159,10 +164,6 @@ export interface ComponentStoreProps<U = any, T = {}> {
    */
   rules?: Rules;
   /**
-   * 注:在使用 parse 属性的时候会有一个陷阱问题,parse 是在触发 onChange 的时候会自动调用来转化值的,
-   * 一般来说只会在输入时使用该属性,但是 setValue setValues 也是直接调用的 onChange 来改变值的,此时可能 parse 参数会出现不同类型的情况;
-   * 例如:Input 输入时 parse 的参数是 `value?: React.ChangeEvent<HTMLInputElement>`,但是如果使用 `store.setValue('xxx',"123")`,
-   * 这个时候 parse 的参数是 `value?: string`
    * @summary 输入的值格式化
    */
   parse?: Parse<U>;
@@ -249,13 +250,17 @@ export interface FormStoreInstance<T extends { [key: string]: any }> {
    * @param keys 获取的值
    */
   getValues<U extends T = T>(keys?: (keyof T)[]): Partial<U>;
-  setValue(key: keyof T, value?: T[keyof T]): void;
-  setValues(props: Partial<T>): void;
+  setValue(
+    key: keyof T,
+    value?: T[keyof T],
+    onChangeContext?: OnChangeContext,
+  ): void;
+  setValues(props: Partial<T>, onChangeContext?: OnChangeContext): void;
   /**
    * 跟上面 setValues 区别在于 此接口是把所有值更新成props,setValues({})不会更新任何值,setAllValues({})会把所有值更新成undefined
    * @param props
    */
-  setAllValues(props: Partial<T>): void;
+  setAllValues(props: Partial<T>, onChangeContext?: OnChangeContext): void;
   /**
    * 触发全局验证
    * @param rootId 根id,用于生成errorkey
