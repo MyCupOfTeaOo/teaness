@@ -411,7 +411,7 @@ export class FormStore<T> implements FormStoreInstance<T> {
     if (instance) {
       instance.setOnChangeContext(
         onChangeContext || {
-          noParse: true,
+          noParse: false,
         },
       );
       instance.onChange(value);
