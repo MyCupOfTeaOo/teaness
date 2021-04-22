@@ -40,8 +40,7 @@ https://teaness.org/
 - [x] 升级到 antd 4.0
 - [ ] 重构 api 与不合理的组件结构
   - [x] DataGrid
-  - [ ] Form
-    - [ ] Item 或 AutoWired 增加`显示适配器`的接口,类似于 props.adapter: `[component,options][]`,按顺序利用`compoent`一层层包裹`children`
+  - [x] Form
   - [x] Label
   - [x] ~~Modal~~删除该组件
   - [x] PictureView
@@ -53,9 +52,9 @@ https://teaness.org/
     - [x] blur
     - [x] focus
     - [x] default
-  - [ ] 校验错误
-    - [ ] 校验到一个即停止
-    - [ ] 校验所有
+  - [x] 校验错误
+    - [x] 校验到一个即停止
+    - [x] 校验所有
   - [ ] 显示错误
     - [x] 所有的错误全部显示
     - [ ] 同时显示一个错误
