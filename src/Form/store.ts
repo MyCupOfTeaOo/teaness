@@ -1,4 +1,4 @@
-import { action, observable, flow, computed } from 'mobx';
+import { action, observable, flow, computed, makeObservable } from 'mobx';
 import Schema, { ErrorList, FieldErrorList } from 'async-validator';
 import { omit, isEmpty } from 'lodash-es';
 import { SyntheticEvent } from 'react';
@@ -104,6 +104,7 @@ export class ComponentStore<U = any, T = {}>
     this.key = key;
     this.formStore = formStore;
     this.setProps(rest);
+    makeObservable(this);
   }
 
   setProps = (props: Omit<ComponentStoreProps<U, T>, 'key' | 'formStore'>) => {

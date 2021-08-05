@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import lodash from 'lodash-es';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react-lite';
 import { FormStore } from '../store';
 import { ErrorMessage, CheckResult } from '../typings';
 import FormContext from './FormContext';

@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react-lite';
 import Label from '../Label';
 import { LabelProps } from '../Label/typings';
 import Autowired, { AutowiredProps } from './Context/Autowired';

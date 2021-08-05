@@ -43,7 +43,6 @@ https://teaness.org/
   - [x] Form
   - [x] Label
   - [x] ~~Modal~~删除该组件
-  - [x] PictureView
   - [x] Show
 - [x] 增加错误定位方法
       ~~- [ ] 表单验证去抖~~真有性能问题在加这个机制
