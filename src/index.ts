@@ -6,6 +6,7 @@ import Label from './Label';
 import Form from './Form';
 import Img from './Img';
 import Upload from './Upload';
+import DataGrid from './DataGrid';
 
 export * from './Form';
 export * from './Grid';
@@ -17,4 +18,4 @@ export * from './Transfer';
 export * from './Show';
 export * from './Label';
 export * from './Upload';
-export { Show, FoldCard, GlobalFooter, Label, Form, Img, Upload };
+export { Show, FoldCard, GlobalFooter, Label, Form, Img, Upload, DataGrid };
