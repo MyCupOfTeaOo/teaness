@@ -64,7 +64,7 @@
     "prettier-eslint": "^9.0.0",
     "prettier-eslint-cli": "^5.0.0",
     "react-docgen-props-table": "^1.0.3",
-    "release-it": "^13.7.0",
+    "release-it": "^13.7.2",
     "signale": "^1.4.0",
     "tslint": "^5.20.0",
     "tslint-eslint-rules": "^5.4.0",
