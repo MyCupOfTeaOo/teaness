@@ -7,8 +7,8 @@ menu: 'components'
 import { Playground, Props } from 'docz';
 import 'antd/dist/antd.css';
 import { useState } from 'react'
-import { Button,Input} from 'antd';
-import { DataGrid, BaseGrid, useDataGrid } from './';
+import { Button, Input} from 'antd';
+import { DataGrid, BaseGrid } from './';
 import Decision from '../Show/Decision.tsx'
 
 # DataGrid(数据表格)
@@ -67,39 +67,19 @@ import Decision from '../Show/Decision.tsx'
 ## 属性(Properties)
 
 ```ts
-interface DataGridProps
-  extends Omit<
-    BaseGridProps,
-    'rowData' | 'suppressMultiSort' | 'className'
-  > {
-  /**
-   * 请求地址,相对或绝对路径
-   */
-  fetchUrl: string;
-  /**
-   * 请求失败回调
-   */
-  fetchErrorCallback?: (resp: Error) => void;
-  /**
-   * 请求成功回调
-   */
-  fetchSuccessCallback?: (
-    resp: ResponseData<{
-      [key: string]: any;
-    }>,
-  ) => void;
-  /**
-   * 查询参数
-   */
-  queryData?: any;
+export interface DataGridProps
+  extends Omit<BaseGridProps, 'suppressMultiSort' | 'className'> {
   /**
    * 默认单页显示条数
    */
-  defaultPageSize?: number;
+  pageSize?: number;
   /**
    * 默认页数
    */
-  defaultPage?: number;
+  page?: number;
+  total?: number;
+  error?: Error;
+  onPaginationChange?(page: number, pageSize?: number): void;
   /**
    * 单页显示条数候选项
    */
@@ -110,86 +90,167 @@ interface DataGridProps
    * 默认列参数,由于ag-grid server模式下的排序bug这个参数做了fix
    */
   defaultColDef?: ColDef;
+
   /**
-   * 默认的排序列
+   * 支持分页
+   * @default true
    */
-  defaultSorters?: Sorter[];
+  supportPagination?: boolean;
   /**
-   * 启用浏览器记忆查询参数功能需要传递react-router的location
+   * 排序模型
    */
-  location?: Location;
-  /**
-   * 启用浏览器记忆查询参数功能需要传递一个gridid
-   */
-  historyId?: string;
-  /**
-   * 首次渲染是否请求,默认为true
-   */
-  firstLoad?: boolean;
+  sorters?: SortModelItem[];
 }
-interface Sorter {
-  colId: string;
-  sort: string;
-}
-import * as H from 'history';
-type Location<S = any> = H.Location<S> & {
-  query: { [key: string]: any };
-};
 ```
 
-## hooks
+## 实现一个useSearch
 
-### useDataGrid
+```typeScript
+import { Pagination, PaginationBody, Sort } from '@/models/Pagination';
+import { ReqResponse } from '@/utils/request';
+import { useCallback, useMemo, useRef } from 'react';
+import { useHistory, useLocation } from 'react-router';
+import { GridApi, SortModelItem } from 'ag-grid-community';
+import useSWR, { SWRConfiguration } from 'swr';
+import qs from 'qs';
+import usePureFetch from './usePureFetch';
+import { useQuery } from './useQuery';
+import useValue from './useValue';
 
-<Playground>
-  {() => {
-    const columnDefs = [
-      {
-        headerName: '姓名',
-        field: 'realName',
-      },
-      {
-        headerName: '电话',
-        field: 'mobile',
-      },
-      {
-        headerName: '邮箱',
-        field: 'email',
-      },
-      {
-        headerName: '角色',
-        field: 'roleValue',
-      },
-      {
-        headerName: '用户id',
-        field: 'userId',
-      },
-      {
-        headerName: '电话',
-        field: 'tel',
-      },
-      {
-        headerName: '性别',
-        field: 'gender',
-      },
-    ];
-    const {gridRef, gridProps} = useDataGrid()
-    
-    return (
-      <div style={{ height: 500 }}>
-        <Button onClick={() => gridRef.current.fetch()}>查询</Button>
-        <DataGrid
-          {...gridProps}
-          firstLoad={false}
-          columnDefs={columnDefs}
-          fetchUrl="/api/user/personManage/"
-        />
-      </div>
-    );
-  }}
-</Playground>
+export function getQueryParse<T>(
+  key?: string,
+  query?: Record<string, any>,
+  defaultValue?: T,
+): T | undefined {
+  if (!key) return defaultValue;
+  if (!query) return defaultValue;
+  if (!query[key]) return defaultValue;
+  const search = JSON.parse(query[key]);
+  return search;
+}
 
-<Props of={useDataGrid}/>
+export function useQueryData(
+  key?: string,
+  // 默认查询参数
+  defaultValue?: PaginationBody,
+) {
+  const query = useQuery();
+  const location = useLocation();
+  const history = useHistory();
+  const queryDataV = useValue(() => {
+    return getQueryParse(key, query, defaultValue);
+  });
+
+  const setQuery = useCallback((body: PaginationBody) => {
+    queryDataV.setValue({
+      ...queryDataV.value,
+      ...body,
+    });
+    if (key) {
+      history.replace({
+        pathname: location.pathname,
+        state: location.state,
+        search: qs.stringify({
+          ...query,
+          [key]: JSON.stringify(queryDataV.value),
+        }),
+      });
+    }
+  }, []);
+
+  const resetQuery = useCallback(() => {
+    queryDataV.setValue(defaultValue);
+  }, [defaultValue]);
+
+  return {
+    queryDataV,
+    query: queryDataV.value,
+    setQuery,
+    resetQuery,
+  };
+}
+
+export default function useSearch<T = unknown>(
+  key: string,
+  fetch: (body: PaginationBody) => Promise<ReqResponse<Pagination<T>>>,
+  defaultValue?: PaginationBody,
+  // 默认查询参数
+  swrconfig?: SWRConfiguration<Pagination<T>>,
+) {
+  const queryDataProps = useQueryData(key, defaultValue);
+  const sorters = useRef<SortModelItem[] | undefined>(
+    queryDataProps.query?.sort,
+  );
+  const newFetch = useCallback(
+    (body: string) => {
+      return fetch(JSON.parse(body));
+    },
+    [fetch],
+  );
+
+  const queryStr = useMemo(() => {
+    return JSON.stringify(queryDataProps.query);
+  }, [queryDataProps.query]);
+
+  const swrProps = useSWR(
+    [key, queryStr],
+    usePureFetch(newFetch, true),
+    swrconfig,
+  );
+  const onPaginationChange = useCallback(
+    (page: number, pageSize?: number) => {
+      queryDataProps.setQuery({ page, pageSize });
+    },
+    [queryDataProps.setQuery],
+  );
+
+  const onSortChanged = useCallback(
+    ({ api }: { api: GridApi }) => {
+      const sortModal = api.getSortModel();
+      if (queryDataProps.queryDataV.value?.sort?.length === sortModal.length) {
+        // 浅对比
+        if (queryDataProps.queryDataV.value.sort.length === 0) {
+          return;
+        }
+        // 深对比
+        if (
+          queryDataProps.queryDataV.value.sort.every((sorter) =>
+            sortModal.some(
+              (item) =>
+                item.colId === sorter.colId && item.sort === sorter.sort,
+            ),
+          )
+        ) {
+          return;
+        }
+      }
+      queryDataProps.setQuery({
+        sort: sortModal as Sort[],
+      });
+      sorters.current = sortModal as Sort[];
+    },
+    [queryDataProps.setQuery],
+  );
+  const reload = useCallback(() => {
+    swrProps.mutate();
+  }, [swrProps.mutate, key, queryStr]);
+  return {
+    ...queryDataProps,
+    ...swrProps,
+    reload,
+    gridProps: {
+      onPaginationChange,
+      page: queryDataProps.query?.page,
+      pageSize: queryDataProps.query?.pageSize,
+      total: swrProps.data?.total,
+      rowData: swrProps.data?.items,
+      onSortChanged,
+      error: swrProps.error,
+      sorters: sorters.current,
+    },
+  };
+}
+```
 
 # BaseGrid
 

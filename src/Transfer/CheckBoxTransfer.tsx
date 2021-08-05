@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import classnames from 'classnames';
 import { Input, Checkbox } from 'antd';
-import { CheckboxValueType } from 'antd/lib/checkbox/Group';
+import { CheckboxValueType } from 'antd/es/checkbox/Group';
 import { SearchOutlined } from '@ant-design/icons';
 import { CheckBoxTransferProps } from './typings';
 

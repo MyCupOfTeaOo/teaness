@@ -1,5 +1,6 @@
 import BaseGrid from './BaseGrid';
 import DataGrid from './DataGrid';
 
-export * from './hooks';
-export { BaseGrid, DataGrid };
+export { BaseGrid };
+
+export default DataGrid;

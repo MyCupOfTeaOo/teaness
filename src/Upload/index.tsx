@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useRef, useEffect } from 'react';
-import AntUpload, { UploadChangeParam } from 'antd/lib/upload';
+import AntUpload, { UploadChangeParam } from 'antd/es/upload';
 import MaskModal from '@material-ui/core/Modal';
-import { UploadFile } from 'antd/lib/upload/interface';
+import { UploadFile } from 'antd/es/upload/interface';
 import { message, Modal } from 'antd';
 import { Circle } from '../Spin';
 import { useValue, useMound } from '../hooks';

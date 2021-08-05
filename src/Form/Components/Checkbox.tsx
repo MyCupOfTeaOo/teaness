@@ -3,7 +3,7 @@ import { Checkbox as AntCheckbox } from 'antd';
 import {
   CheckboxProps as AntCheckboxProps,
   CheckboxGroupProps,
-} from 'antd/lib/checkbox';
+} from 'antd/es/checkbox';
 
 export interface CheckboxProps
   extends Omit<AntCheckboxProps, 'value' | 'onChange'> {

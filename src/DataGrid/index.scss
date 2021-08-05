@@ -1,4 +1,9 @@
 @import '../global.scss';
+
+:root {
+  --ag-checkbox-checked-color: #{$primary-5};
+}
+
 .tea-datagrid {
   width: 100%;
   height: 100%;
@@ -42,15 +47,15 @@
   }
   * {
     &::-webkit-scrollbar {
-      width: 8px;
-      height: 8px;
+      width: 6px;
+      height: 6px;
     }
     &::-webkit-scrollbar-track {
       background: rgba($color: #000000, $alpha: 0);
     }
     &::-webkit-scrollbar-thumb {
       background: rgba(25, 31, 37, 0.4);
-      border-radius: 8px;
+      border-radius: 0;
       &:hover {
         background: rgba(25, 31, 37, 0.72);
       }
@@ -94,7 +99,7 @@
     color: rgba(25, 31, 37, 0.4);
   }
   .ag-row-selected {
-    background: $primary-6;
+    background: rgba($color: $primary-5, $alpha: 0.28);
   }
   .ag-icon-checkbox-checked {
     color: $primary-10;

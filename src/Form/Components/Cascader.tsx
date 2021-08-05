@@ -11,7 +11,7 @@ import classnames from 'classnames';
 import {
   CascaderProps as AntCascaderProps,
   CascaderOptionType,
-} from 'antd/lib/cascader';
+} from 'antd/es/cascader';
 import './styles/cascader.scss';
 import { CancellablePromise } from '../../typings';
 

@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { Button, Popover } from 'antd';
 import numeral from 'numeral';
-import { ButtonType } from 'antd/lib/button';
+import { ButtonType } from 'antd/es/button';
 import { isObject } from 'lodash-es';
 import Show, { Decision } from '../Show';
 import { FileRenderProps } from './typings';

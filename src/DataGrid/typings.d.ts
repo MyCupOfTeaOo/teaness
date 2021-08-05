@@ -1,8 +1,10 @@
 import * as H from 'history';
 import { ColDef, ColGroupDef } from 'ag-grid-community';
 import { AgGridReact } from 'ag-grid-react/lib/agGridReact';
-import { Dispatch, SetStateAction } from 'react';
-import { CancellablePromise } from '../typings';
+
+export type CancellablePromise<T> = Promise<T> & {
+  cancel: (str?: string) => void;
+};
 
 export interface Sorter {
   colId: string;
@@ -45,28 +47,4 @@ export type RequestMethod<
 
 export type Fetch<T> = CancellablePromise<ResponseData<T>>;
 
-export type DataGridRef = {
-  gridRef?: AgGridReact | null;
-  fetch(searchProps?: {
-    page?: number;
-    pageSize?: number;
-    sorters?: Sorter[];
-  }): void;
-  getSearch(): {
-    page: number;
-    pageSize: number;
-    sorters?: Sorter[];
-  };
-  setSearch(search: {
-    page: number;
-    pageSize: number;
-    sorters?: Sorter[];
-  }): void;
-  setRowData: Dispatch<SetStateAction<any[] | undefined>>;
-  setFooter: Dispatch<SetStateAction<any[] | undefined>>;
-  getDefaultValue(): {
-    page: number;
-    pageSize: number;
-    sorters: Sorter[];
-  };
-};
+export type DataGridRef = AgGridReact;

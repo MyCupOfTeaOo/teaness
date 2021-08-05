@@ -1,10 +1,10 @@
-import { UploadProps as AntUploadProps } from 'antd/lib/upload';
+import { UploadProps as AntUploadProps } from 'antd/es/upload';
 import {
   UploadFile,
   UploadChangeParam,
   ShowUploadListInterface,
   UploadListType,
-} from 'antd/lib/upload/interface';
+} from 'antd/es/upload/interface';
 import { CancellablePromise } from '../typings';
 
 export interface ProgressStatus {

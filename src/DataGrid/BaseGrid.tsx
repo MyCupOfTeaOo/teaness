@@ -46,14 +46,7 @@ const BaseGridCom: React.ForwardRefRenderFunction<
     };
   }, [gridOptions]);
   const mergeDefaultColDef = useMemo<AgGridReactProps['defaultColDef']>(() => {
-    return Object.assign<
-      {},
-      AgGridReactProps['defaultColDef'],
-      AgGridReactProps['defaultColDef']
-    >({}, defaultColDef, {
-      sortable: true,
-      resizable: true,
-    });
+    return { ...defaultColDef, sortable: true, resizable: true };
   }, [defaultColDef]);
   useImperativeHandle(ref, () => gridRef.current as AgGridReact, []);
   const gridClassName = useMemo(
@@ -107,7 +100,7 @@ const BaseGridCom: React.ForwardRefRenderFunction<
 
 const BaseGridRef = forwardRef(BaseGridCom);
 BaseGridRef.defaultProps = {
-  enableFilter: false,
+  // enableFilter: false,
   suppressDragLeaveHidesColumns: true,
   overlayNoRowsTemplate: '无数据',
   overlayLoadingTemplate: '加载中...',
@@ -115,7 +108,7 @@ BaseGridRef.defaultProps = {
   rowMultiSelectWithClick: true,
   loadingOverlayComponentFramework: Dots,
   noRowsOverlayComponentFramework: NoData,
-  scrollbarWidth: 8,
+  scrollbarWidth: 6,
 };
 
 export default BaseGridRef;

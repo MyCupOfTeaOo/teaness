@@ -1,6 +1,6 @@
 import React, { useMemo, useEffect } from 'react';
 import { Select as AntSelect } from 'antd';
-import { SelectProps as AntSelectProps } from 'antd/lib/select';
+import { SelectProps as AntSelectProps } from 'antd/es/select';
 import classnames from 'classnames';
 import './styles/select.scss';
 import { useEffectState } from '../../hooks/index';
