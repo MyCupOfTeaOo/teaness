@@ -108,7 +108,7 @@ const FileRender: React.FC<FileRenderProps> = ({
             </li>
             <li>
               <strong>文件大小:&nbsp;</strong>
-              {numeral(file.size / 1024 / 1024).format('0.00')}M
+              {numeral((file.size || 0) / 1024 / 1024).format('0.00')}M
             </li>
             <li>
               <strong>状态:&nbsp;</strong>

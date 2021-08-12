@@ -356,7 +356,7 @@ export class FormStore<T> implements FormStoreInstance<T> {
   submit: SubmitType<T> = callback => {
     const values = this.getValues();
     this.valid().then(errs => {
-      callback({ values, errs });
+      callback({ values, errs: errs as ErrorsType<T> });
     });
   };
 
@@ -439,7 +439,7 @@ export class FormStore<T> implements FormStoreInstance<T> {
 
   // @TODO 因为 subStore 只是临时方案,所以暂时不支持 validFirst
   valid = async (rootId?: string) => {
-    const errs: Partial<ErrorsType<T>> = {};
+    const errs: ErrorsType<T> = {};
     if (this.validFirst) {
       for (const key in this.componentStores) {
         if (Reflect.has(this.componentStores, key)) {

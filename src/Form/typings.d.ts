@@ -21,8 +21,8 @@ export type ComponentStoresType<T> = {
 
 export type Rules = RuleItem | RuleItem[];
 
-export type SubmitCallBackType<T> = (props: SubmitCallBackProps<T>) => void;
-export type SubmitType<T> = (callback: SubmitCallBackType<T>) => void;
+export type SubmitCallbackType<T> = (props: SubmitCallbackProps<T>) => void;
+export type SubmitType<T> = (callback: SubmitCallbackType<T>) => void;
 export interface FunctionProperty {
   [key: string]: any;
 }
@@ -177,12 +177,14 @@ export interface ComponentStoreProps<U = any, T = {}> {
   errorOutputTrigger?: InputStatus;
 }
 
-export interface SubmitCallBackProps<T> {
-  values: {
-    [P in keyof T]?: T[P] | undefined;
-  };
-  errs: ErrorsType<T> | undefined;
-}
+export type SubmitCallbackProps<T> =
+  | {
+      values: T;
+    }
+  | {
+      values: Partial<T>;
+      errs: ErrorsType<T>;
+    };
 
 export interface FormStoreProps<T> {
   getInstances: (formStore: FormStoreInstance<T>) => ComponentStoresType<T>;
