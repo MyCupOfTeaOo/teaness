@@ -353,10 +353,12 @@ export class FormStore<T> implements FormStoreInstance<T> {
     }
   };
 
-  submit: SubmitType<T> = callback => {
-    const values = this.getValues();
-    this.valid().then(errs => {
-      callback({ values, errs: errs as ErrorsType<T> });
+  submit: SubmitType<T> = () => {
+    return new Promise(resolve => {
+      const values = this.getValues();
+      this.valid().then(errs => {
+        resolve({ values, errs: errs as any });
+      });
     });
   };
 

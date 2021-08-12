@@ -111,8 +111,10 @@ export const Test3: React.FC<TestProps> = () => {
         <Col span={24} style={{ display: 'flex', justifyContent: 'center' }}>
           <Button
             onClick={() => {
-              // eslint-disable-next-line
-              store.submit(data => console.log(data));
+              store.submit().then(res => {
+                // eslint-disable-next-line
+                console.log(res.values, res.errs);
+              });
             }}
           >
             提交
