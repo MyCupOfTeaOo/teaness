@@ -21,7 +21,9 @@ export type ComponentStoresType<T> = {
 
 export type Rules = RuleItem | RuleItem[];
 
-export type SubmitType<T> = () => Promise<SubmitCallbackProps<T>>;
+export type SubmitCallbackType<T> = (props: SubmitCallbackProps<T>) => void;
+
+export type SubmitType<T> = (callback: SubmitCallbackType<T>) => void;
 export interface FunctionProperty {
   [key: string]: any;
 }
