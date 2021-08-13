@@ -27,6 +27,7 @@ export class ComponentStore<U = any, T = {}>
 
   formStore: FormStoreInstance<T>;
 
+  @observable
   defaultValue: U | undefined = undefined;
 
   onChangeContext: OnChangeContext = {};
@@ -95,8 +96,10 @@ export class ComponentStore<U = any, T = {}>
   @observable
   format?: Format<U>;
 
+  @observable
   schema?: Schema;
 
+  @observable
   parse?: Parse<U>;
 
   constructor(props: ComponentStoreProps<U, T>) {
@@ -156,10 +159,12 @@ export class ComponentStore<U = any, T = {}>
     this.crossErr = omit(this.crossErr, ...keys);
   };
 
+  @action
   setOnChangeContext = (context?: OnChangeContext) => {
     this.onChangeContext = context || {};
   };
 
+  @action
   clearOnChangeContext = () => {
     this.onChangeContext = {};
   };
@@ -259,6 +264,7 @@ export class ComponentStore<U = any, T = {}>
     return err;
   });
 
+  @action
   setRules = (rules: Rules | undefined) => {
     this.rules = rules;
     if (rules) this.schema = new Schema({ [this.key]: rules });
@@ -268,10 +274,12 @@ export class ComponentStore<U = any, T = {}>
     }
   };
 
+  @action
   setParse = (parse?: Parse<U>) => {
     this.parse = parse;
   };
 
+  @action
   setFormat = (format?: Format<U>) => {
     this.format = format;
   };
