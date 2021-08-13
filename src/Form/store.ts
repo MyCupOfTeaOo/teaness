@@ -314,6 +314,7 @@ export class FormStore<T> implements FormStoreInstance<T> {
 
   constructor(props: FormStoreProps<T>) {
     this.componentStores = props.getInstances(this);
+    makeObservable(this);
   }
 
   crossValidFuncsDict: {
