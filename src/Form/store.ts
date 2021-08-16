@@ -96,7 +96,7 @@ export class ComponentStore<U = any, T = {}>
   @observable
   format?: Format<U>;
 
-  @observable
+  @observable.ref
   schema?: Schema;
 
   @observable
