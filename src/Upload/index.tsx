@@ -203,7 +203,11 @@ const Upload: React.FC<UploadProps> = props => {
       } else {
         const uids = value.split(',');
         // 需要删除的文件
-        fileListValue.value?.filter(file => uids.some(uid => file.uid === uid));
+        fileListValue.setValue(
+          fileListValue.value?.filter(file =>
+            uids.some(uid => file.uid === uid),
+          ),
+        );
 
         // 需要停止加载的文件
         Object.keys(getFilesRef.current).forEach(key => {
