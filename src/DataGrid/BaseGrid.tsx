@@ -46,7 +46,7 @@ const BaseGridCom: React.ForwardRefRenderFunction<
     };
   }, [gridOptions]);
   const mergeDefaultColDef = useMemo<AgGridReactProps['defaultColDef']>(() => {
-    return { ...defaultColDef, sortable: true, resizable: true };
+    return { sortable: true, resizable: true, ...defaultColDef };
   }, [defaultColDef]);
   useImperativeHandle(ref, () => gridRef.current as AgGridReact, []);
   const gridClassName = useMemo(
