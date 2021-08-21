@@ -31,6 +31,14 @@ teaness 是一个的 react component 库,主要功能是
 
 `npm i -S teaness`
 
+# style
+
+需要先导入antd样式
+例如 
+```css
+@import 'antd/dist/antd.less';
+```
+
 ## Example
 
 https://teaness.org/
