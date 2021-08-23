@@ -372,7 +372,7 @@ export class FormStore<T> implements FormStoreInstance<T> {
   };
 
   // @TODO subStore 只是临时方案
-  getValue = <U extends T[keyof T]>(key: keyof T) => {
+  getValue = <U extends T[keyof T]>(key: keyof T): U | undefined => {
     if (this.componentStores[key]) {
       const { subStore } = this.componentStores[key];
       if (subStore) {

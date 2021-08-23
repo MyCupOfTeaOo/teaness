@@ -18,7 +18,7 @@ export default function PictureView(params: PictureModalProps) {
     return new Promise(resolve =>
       setTimeout(() => {
         destory();
-        resolve();
+        resolve(undefined);
       }, 200),
     );
   }
