@@ -38,7 +38,11 @@ const Upload: React.FC<UploadProps> = props => {
     if (props.accept) {
       try {
         return new RegExp(
-          props.accept.replace(/\*|^\.|(?<=,)./g, '.*').replace(/,/g, '|'),
+          `${props.accept
+            .replace(/\*/g, '.*')
+            .replace(/^\./g, '.*\\.')
+            .replace(/,\./g, ',.*\\.')
+            .replace(/,/g, '$|')}$`,
           'i',
         );
       } catch (err) {
