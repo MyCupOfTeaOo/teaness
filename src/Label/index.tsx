@@ -12,6 +12,10 @@ const Label: React.FC<LabelProps> = sourceProps => {
     () => ({
       ...labelContext,
       ...sourceProps,
+      colProps: {
+        ...labelContext?.colProps,
+        ...sourceProps.colProps,
+      },
     }),
     [sourceProps, labelContext],
   );
