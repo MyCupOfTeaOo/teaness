@@ -8,6 +8,19 @@ import {
   useRef,
   useMemo,
 } from 'react';
+import merge from 'lodash-es/merge';
+
+export interface Config {
+  useProxies: 'always' | 'never';
+}
+
+export const config: Config = {
+  useProxies: 'always',
+};
+
+export const configure = (newConfig: Partial<Config>) => {
+  merge(config, newConfig);
+};
 
 export function useEffectState<T>(
   props: T | (() => T),
@@ -76,34 +89,47 @@ export function useValue(
     }
     return initialState;
   }, []);
-  const [value, setValue] = useState(myInitialState);
+  const [, setCount] = useState(0);
   const proxyTarget = useMemo(() => {
-    const proxy = new Proxy(
-      {
-        value,
-        setValue(v: typeof value) {
-          proxy.value = v;
+    if (config.useProxies === 'always') {
+      const proxy = new Proxy(
+        {
+          value: myInitialState,
+          setValue(v: typeof myInitialState) {
+            proxy.value = v;
+          },
         },
-      },
-      {
-        set(target, name, v) {
-          // eslint-disable-next-line
-          target[name as keyof typeof target] = v;
-          if (name === 'value') {
-            if (options?.storageKey) {
-              localStorage.setItem(options.storageKey, JSON.stringify(v));
+        {
+          set(target, name, v) {
+            // eslint-disable-next-line
+            target[name as keyof typeof target] = v;
+            if (name === 'value') {
+              if (options?.storageKey) {
+                localStorage.setItem(options.storageKey, JSON.stringify(v));
+              }
+              setCount(prev => prev + 1);
             }
-            setValue(v);
-          }
-          return true;
+            return true;
+          },
+          get(target, name) {
+            return target[name as keyof typeof target];
+          },
         },
-        get(target, name) {
-          return target[name as keyof typeof target];
-        },
+      );
+      return proxy;
+    }
+    const obj = {
+      value: myInitialState,
+      setValue(v: typeof myInitialState) {
+        this.value = v;
+        if (options?.storageKey) {
+          localStorage.setItem(options.storageKey, JSON.stringify(v));
+        }
+        setCount(prev => prev + 1);
       },
-    );
-    return proxy;
-  }, []);
+    };
+    return obj;
+  }, [options?.storageKey]);
   return proxyTarget;
 }
 
