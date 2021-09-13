@@ -89,13 +89,13 @@ export function useValue(
     }
     return initialState;
   }, []);
-  const [, setCount] = useState(0);
+  const [state, setState] = useState(myInitialState);
   const proxyTarget = useMemo(() => {
     if (config.useProxies === 'always') {
       const proxy = new Proxy(
         {
-          value: myInitialState,
-          setValue(v: typeof myInitialState) {
+          value: state,
+          setValue(v: typeof state) {
             proxy.value = v;
           },
         },
@@ -107,7 +107,7 @@ export function useValue(
               if (options?.storageKey) {
                 localStorage.setItem(options.storageKey, JSON.stringify(v));
               }
-              setCount(prev => prev + 1);
+              setState(v);
             }
             return true;
           },
@@ -119,13 +119,13 @@ export function useValue(
       return proxy;
     }
     const obj = {
-      value: myInitialState,
-      setValue(v: typeof myInitialState) {
+      value: state,
+      setValue(v: typeof state) {
         this.value = v;
         if (options?.storageKey) {
           localStorage.setItem(options.storageKey, JSON.stringify(v));
         }
-        setCount(prev => prev + 1);
+        setState(v);
       },
     };
     return obj;
