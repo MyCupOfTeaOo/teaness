@@ -180,6 +180,7 @@ export interface ComponentStoreProps<U = any, T = {}> {
 export type SubmitCallbackProps<T> =
   | {
       values: T;
+      errs: undefined;
     }
   | {
       values: Partial<T>;

@@ -22,6 +22,7 @@ export interface FileRenderProps {
   onDownload?(file: UploadFile): void;
   onPreview?(file: UploadFile): void;
   showUploadList?: boolean | ShowUploadListInterface;
+  listType?: UploadListType | 'file-info';
 }
 
 export interface UploadProps

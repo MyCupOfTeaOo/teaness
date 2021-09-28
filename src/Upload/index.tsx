@@ -77,7 +77,7 @@ const Upload: React.FC<UploadProps> = props => {
         }
         default: {
           // 文件大小验证
-          if (maxSize && file.size / 1024 > maxSize) {
+          if (maxSize && (file.size || 0) / 1024 > maxSize) {
             message.error(
               <span>
                 文件最大只能上传<strong className="danger">{maxSize}</strong>KB
@@ -88,6 +88,7 @@ const Upload: React.FC<UploadProps> = props => {
           // 文件类型验证
           if (
             checkRegexp &&
+            info.file.type &&
             !(
               checkRegexp.test(info.file.type) ||
               checkRegexp.test(info.file.name)
@@ -296,6 +297,7 @@ const Upload: React.FC<UploadProps> = props => {
                 fileList: fileListValue.value || [],
               });
             }}
+            listType={listType}
             onPreview={rest.onPreview}
             onDownload={rest.onDownload}
             showUploadList={showUploadList}

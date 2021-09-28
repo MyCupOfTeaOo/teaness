@@ -1,4 +1,3 @@
-import 'antd/dist/antd.less';
 import Show from './Show';
 import FoldCard from './FoldCard';
 import GlobalFooter from './GlobalFooter';

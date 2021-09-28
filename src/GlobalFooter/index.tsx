@@ -35,6 +35,7 @@ const GlobalFooter: React.FC<GlobalFooterProps> = ({
               key={link.key}
               target={link.blankTarget ? '_blank' : '_self'}
               href={link.href}
+              rel="noreferrer"
             >
               {link.title}
             </a>
