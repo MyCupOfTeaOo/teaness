@@ -101,7 +101,7 @@
     "async-validator": "^3.2.4",
     "classnames": "^2.2.6",
     "framer-motion": "^1.11.0",
-    "get-pkg-repo": "^4.1.1",
+    "get-pkg-repo": "4.1.1",
     "hosted-git-info": "^2.1.4",
     "install": "^0.13.0",
     "lodash-es": "^4.17.15",
