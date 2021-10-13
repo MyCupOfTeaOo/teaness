@@ -248,12 +248,18 @@ export interface FormStoreInstance<T extends { [key: string]: any }> {
    */
   setChangeState: (isChange: boolean) => void;
   reset: () => void;
-  getValue<U extends T[keyof T]>(key: keyof T): U | undefined;
+  getValue<K extends keyof T>(key: K): T[K] | undefined;
   /**
    * keys不传的情况下返回所有值
    * @param keys 获取的值
    */
-  getValues<U extends T = T>(keys?: (keyof T)[]): Partial<U>;
+  getValues<KEYS extends (keyof T)[]>(
+    keys?: KEYS,
+  ): Partial<
+    {
+      [K in KEYS[number]]: T[K];
+    }
+  >;
   setValue(
     key: keyof T,
     value?: T[keyof T],

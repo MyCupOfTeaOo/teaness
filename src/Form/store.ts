@@ -379,25 +379,25 @@ export class FormStore<T> implements FormStoreInstance<T> {
   };
 
   // @TODO subStore 只是临时方案
-  getValue = <U extends T[keyof T]>(key: keyof T): U | undefined => {
+  getValue = <K extends keyof T>(key: K): T[K] | undefined => {
     if (this.componentStores[key]) {
       const { subStore } = this.componentStores[key];
       if (subStore) {
         if (Array.isArray(subStore)) {
           return ((subStore as FormStore<any>[]).map(store => {
             return store.getValues() as any;
-          }) as any) as U | undefined;
+          }) as any) as T[K] | undefined;
         } else {
-          return ((subStore as unknown) as FormStore<U>).getValues() as
-            | U
+          return ((subStore as unknown) as FormStore<T[K]>).getValues() as
+            | T[K]
             | undefined;
         }
       }
-      return this.componentStores[key].source as U | undefined;
+      return this.componentStores[key].source as T[K] | undefined;
     }
   };
 
-  getValues = <U extends T = T>(keys?: (keyof T)[]) => {
+  getValues = <KEYS extends (keyof T)[]>(keys?: KEYS) => {
     const values: Partial<T> = {};
 
     if (!Array.isArray(keys)) {
@@ -409,7 +409,11 @@ export class FormStore<T> implements FormStoreInstance<T> {
         values[key] = this.getValue(key);
       }
     }
-    return values as Partial<U>;
+    return values as Partial<
+      {
+        [K in KEYS[number]]: T[K];
+      }
+    >;
   };
 
   setValue = (
