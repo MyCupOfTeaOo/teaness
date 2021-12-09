@@ -118,6 +118,29 @@ export function parseFormConfigs<T = {}>(
   };
 }
 
+export function parseAddFormConfigs<T = {}>(
+  formStore: FormStore<T>,
+  formConfigs: { [P in keyof T]: FormConfig<T[P]> },
+  options?: GlobalOptions<T>,
+) {
+  const componentStores: Partial<ComponentStoresType<T>> = {};
+  for (const key in formConfigs) {
+    if (Reflect.has(formConfigs, key)) {
+      componentStores[key] = configToComponentStore({
+        key,
+        formStore,
+        errorOutputTrigger: options?.errorOutputTrigger,
+        ...formConfigs[key],
+      });
+      formStore.addComponentStore(componentStores[key] as any);
+    }
+  }
+
+  return {
+    componentStores,
+  };
+}
+
 export function genFormId(id: string | string[], replaceId?: string) {
   if (replaceId) {
     return replaceId;

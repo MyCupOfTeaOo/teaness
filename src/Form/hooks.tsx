@@ -9,6 +9,7 @@ import {
   runCrossValid,
   crossValidFunc,
   runHandle,
+  parseAddFormConfigs,
 } from './utils';
 import { ComponentStore, FormStore } from './store';
 import Autowired, { AutowiredProps } from './Context/Autowired';
@@ -60,6 +61,33 @@ export function useStore<T>(
   }, deps);
   useAutoLink(formStore, options, deps);
   return formStore;
+}
+
+export function useAddSubStore<T>(
+  formStore: FormStore<T>,
+  /**
+   * 表单配置
+   */
+  formConfigs: FormConfigs<T>,
+  deps: DependencyList = [],
+  /**
+   * 可选配置,目前支持交联验证,交联handle
+   */
+  options?: GlobalOptions<T>,
+) {
+  useEffect(() => {
+    const componentStores = parseAddFormConfigs(
+      formStore,
+      formConfigs,
+      options,
+    );
+    return () => {
+      Object.values(componentStores).forEach(subStore => {
+        formStore.removeComponentStore(subStore as any);
+      });
+    };
+  }, deps);
+  useAutoLink(formStore, options, deps);
 }
 
 export function useAutoLink<T>(
