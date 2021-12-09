@@ -68,7 +68,7 @@ export function useAddSubStore<T>(
   /**
    * 表单配置
    */
-  formConfigs: FormConfigs<T>,
+  formConfigs: Partial<FormConfigs<T>>,
   deps: DependencyList = [],
   /**
    * 可选配置,目前支持交联验证,交联handle

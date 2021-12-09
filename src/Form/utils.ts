@@ -120,7 +120,7 @@ export function parseFormConfigs<T = {}>(
 
 export function parseAddFormConfigs<T = {}>(
   formStore: FormStore<T>,
-  formConfigs: { [P in keyof T]: FormConfig<T[P]> },
+  formConfigs: Partial<{ [P in keyof T]: FormConfig<T[P]> }>,
   options?: GlobalOptions<T>,
 ) {
   const componentStores: Partial<ComponentStoresType<T>> = {};
