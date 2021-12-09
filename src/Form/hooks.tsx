@@ -1,5 +1,6 @@
 import React, { useMemo, useEffect, DependencyList } from 'react';
 import { IReactionDisposer } from 'mobx';
+import uniqueId from 'lodash-es/uniqueId';
 import { useEffectExcludeFirst } from '../hooks';
 import { FormConfigs, GlobalOptions, AutoValid } from './typings';
 import {
@@ -29,27 +30,6 @@ export function useStore<T>(
     () => parseFormConfigs(formConfigs, options),
     [],
   );
-  const autoValidMaps = useMemo<{ key: string; primaryKey: keyof T }[]>(() => {
-    if (options && options.autoValid) {
-      if (Array.isArray(options.autoValid)) {
-        return [...Array(options.autoValid.length)].map((_, i) => ({
-          key: `${
-            (options.autoValid as AutoValid<T, keyof T>[])[i].primaryKey
-          }-${i}`,
-          primaryKey: (options.autoValid as AutoValid<T, keyof T>[])[i]
-            .primaryKey,
-        }));
-      } else {
-        return [
-          {
-            key: `${options.autoValid.primaryKey}-0`,
-            primaryKey: options.autoValid.primaryKey,
-          },
-        ];
-      }
-    }
-    return [];
-  }, deps);
   useEffectExcludeFirst(() => {
     for (const key in formStore.componentStores) {
       if (Reflect.has(formStore.componentStores, key)) {
@@ -77,6 +57,36 @@ export function useStore<T>(
         }
       }
     }
+  }, deps);
+  useAutoLink(formStore, options, deps);
+  return formStore;
+}
+
+export function useAutoLink<T>(
+  formStore: FormStore<T>,
+  options?: GlobalOptions<T>,
+  deps: DependencyList = [],
+) {
+  const autoValidMaps = useMemo<{ key: string; primaryKey: keyof T }[]>(() => {
+    if (options && options.autoValid) {
+      if (Array.isArray(options.autoValid)) {
+        return [...Array(options.autoValid.length)].map((_, i) => ({
+          key: uniqueId(
+            `${(options.autoValid as AutoValid<T, keyof T>[])[i].primaryKey}-`,
+          ),
+          primaryKey: (options.autoValid as AutoValid<T, keyof T>[])[i]
+            .primaryKey,
+        }));
+      } else {
+        return [
+          {
+            key: uniqueId(`${options.autoValid.primaryKey}-`),
+            primaryKey: options.autoValid.primaryKey,
+          },
+        ];
+      }
+    }
+    return [];
   }, deps);
   useEffect(() => {
     const unlisten: IReactionDisposer[] = [];
@@ -136,6 +146,7 @@ export function useStore<T>(
               crossValidFunc(autoValid, formStore, autoValidMaps[i].key),
             );
           } else {
+            // eslint-disable-next-line no-param-reassign
             formStore.crossValidFuncsDict[autoValid.primaryKey] = [
               crossValidFunc(autoValid, formStore, autoValidMaps[i].key),
             ];
@@ -143,6 +154,7 @@ export function useStore<T>(
           i += 1;
         }
       } else {
+        // eslint-disable-next-line no-param-reassign
         formStore.crossValidFuncsDict[options.autoValid.primaryKey] = [
           crossValidFunc(options.autoValid, formStore, autoValidMaps[0].key),
         ];
@@ -150,6 +162,7 @@ export function useStore<T>(
     }
     // 生命周期结束删除crossValid及其验证结果,但是不验证新的valid func
     return () => {
+      // eslint-disable-next-line no-param-reassign
       formStore.crossValidFuncsDict = {};
       autoValidMaps.forEach(autoValidMap => {
         const componentStore =
@@ -160,7 +173,6 @@ export function useStore<T>(
       });
     };
   }, deps);
-  return formStore;
 }
 
 /**
