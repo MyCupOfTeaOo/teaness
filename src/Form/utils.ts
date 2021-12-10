@@ -136,9 +136,7 @@ export function parseAddFormConfigs<T = {}>(
     }
   }
 
-  return {
-    componentStores,
-  };
+  return componentStores;
 }
 
 export function genFormId(id: string | string[], replaceId?: string) {
