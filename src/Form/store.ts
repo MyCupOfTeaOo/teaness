@@ -441,7 +441,7 @@ export class FormStore<T> implements FormStoreInstance<T> {
   setAllValues = (props: Partial<T>, onChangeContext?: OnChangeContext) => {
     for (const key in this.componentStores) {
       if (Reflect.has(this.componentStores, key)) {
-        if (props[key]) {
+        if (Reflect.has(props, key)) {
           this.setValue(key as keyof T, props[key as keyof T], onChangeContext);
         } else {
           this.setValue(key as keyof T, undefined, onChangeContext);
