@@ -174,7 +174,7 @@ export class ComponentStore<U = any, T = {}>
     let parseValue: U | undefined;
     if (this.parse && !this.onChangeContext.noParse) {
       parseValue = this.parse(value, ...args);
-    } else if (!isEmpty(value)) {
+    } else if (value !== null && value !== undefined) {
       if (value instanceof Event) {
         parseValue = (value.target as { value?: U }).value;
       } else if ((value as SyntheticEvent).nativeEvent instanceof Event) {
