@@ -8,15 +8,24 @@ import React, {
 } from 'react';
 import { Cascader as AntCascader } from 'antd';
 import classnames from 'classnames';
-import {
-  CascaderProps as AntCascaderProps,
-  CascaderOptionType,
-} from 'antd/es/cascader';
+import { CascaderProps as AntCascaderProps } from 'antd/es/cascader';
 import './styles/cascader.scss';
 import { CancellablePromise } from '../../typings';
 
+export interface CascaderOptionType {
+  value?: string | number;
+  label?: React.ReactNode;
+  disabled?: boolean;
+  isLeaf?: boolean;
+  loading?: boolean;
+  children?: Array<CascaderOptionType>;
+  [key: string]: any;
+}
 export interface CascaderProps
-  extends Omit<AntCascaderProps, 'options' | 'value' | 'onChange'> {
+  extends Omit<
+    AntCascaderProps<CascaderOptionType>,
+    'options' | 'value' | 'onChange'
+  > {
   requestMethod?: (
     fatherCode?: string | number,
   ) => CancellablePromise<CascaderOptionType[]>;
@@ -293,12 +302,12 @@ const Cascader: React.FC<CascaderProps> = props => {
     }
   }, [defaultOptions, root]);
   return (
-    <AntCascader
+    <AntCascader<CascaderOptionType>
       className={classnames('tea-cascader', className)}
       value={value ?? undefined}
-      onChange={handle}
+      onChange={handle as any}
       options={options}
-      loadData={loadData}
+      loadData={loadData as any}
       {...otherProps}
     />
   );

@@ -97,7 +97,7 @@
     "@types/qs": "^6.9.3",
     "ag-grid-community": "^25.3.0",
     "ag-grid-react": "^25.3.0",
-    "antd": "^4.1.0",
+    "antd": "^4.18.5",
     "async-validator": "^3.2.4",
     "classnames": "^2.2.6",
     "framer-motion": "^1.11.0",
